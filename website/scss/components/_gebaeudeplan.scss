@@ -3,22 +3,30 @@
 //  Floating building-plan navigator for the map view.
 //
 //  Closed  -> a round button in the bottom-right corner.
-//  Open    -> a panel with the three floors stacked into one thick slab.
-//  Hover   -> the hovered floor stays where it is and the other two fan away
-//             from it; leaving the stage collapses everything back.
+//  Hover   -> the panel opens and the three floors sit in one thick slab.
+//  Hover a floor -> that floor stays exactly where it is and the other two are
+//                   pushed away from it. The push grows with distance: the
+//                   neighbouring floor moves by one step, the far floor by
+//                   clearly more than two, so the hovered floor gets real air
+//                   around it.
+//  Leaving -> everything collapses back and the panel closes.
 //
-//  The fan is one line of maths, driven by two custom properties:
-//
-//      offset(i) = (h - 1) * compact + (i - h) * spread
-//
-//  where `i` is the floor index (0 = 2.OG, 1 = 1.OG, 2 = EG) and `h` is the
-//  hovered floor. With `spread == compact` the formula collapses to the resting
-//  stack, so the idle state needs no special case - it is the same equation
-//  with `--s` swapped back to `--compact`.
+//  The offsets are generated below from a small distance -> multiplier map, so
+//  the nine possible arrangements stay in one place and cannot drift apart.
 // =============================================================================
 
+@use "sass:map";
 @use "../abstracts/variables" as v;
 @use "../abstracts/mixins" as mx;
+
+// How far a floor is pushed, by its distance from the hovered one.
+// Distance 2 is deliberately far more than 2 x distance 1 - that is what opens
+// the stack up instead of just sliding it apart evenly.
+$gplan-fan: (
+  0: 0,
+  1: 1,
+  2: 2.55,
+);
 
 .gplan {
   position: fixed;
@@ -28,6 +36,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  // The gap belongs to the flex container, so travelling from the button up to
+  // the panel never leaves the hover region.
   gap: 0.75rem;
   font-family: v.$font-base;
 
@@ -56,13 +66,10 @@
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
 
-  &:hover {
+  &:hover,
+  &[aria-expanded="true"] {
     background-color: #24417c;
     transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
   }
 
   svg {
@@ -71,7 +78,6 @@
     flex: none;
   }
 
-  // The label is dropped on very small screens - the icon carries the meaning.
   @include mx.down("small") {
     padding: 0.9rem;
 
@@ -87,8 +93,8 @@
 
 .gplan__panel {
   order: 1;
-  width: min(26rem, calc(100vw - 2rem));
-  max-height: min(42rem, calc(100dvh - 8rem));
+  width: min(30rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 5.5rem);
   overflow-y: auto;
   overscroll-behavior: contain;
   background-color: #fff;
@@ -100,8 +106,7 @@
     display: none;
   }
 
-  // Opening animation; suppressed under prefers-reduced-motion by base/_reset.
-  animation: gplan-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: gplan-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes gplan-in {
@@ -120,12 +125,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem 1.25rem;
+  padding: 0.9rem 1.25rem;
   border-block-end: 1px solid #ececec;
 
   h2 {
     margin: 0;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: v.$text;
   }
 }
@@ -157,48 +162,59 @@
 
 .gplan__stage {
   // --compact : gap between floors in the resting stack
-  // --spread  : gap between floors while one is hovered
-  // --h       : index of the hovered floor (JS); 1 while nothing is hovered
-  // --s       : the gap actually in use (JS swaps it between the two above)
-  --compact: 26px;
-  --spread: 88px;
-  --h: 1;
-  --s: var(--compact);
+  // --spread  : one step of separation while a floor is hovered
+  // --plate-h : rendered height of one floor plate
+  //
+  // Turn these two up for an even wider fan - the stage resizes itself.
+  --compact: 24px;
+  --spread: 118px;
+  --plate-h: 115px;
 
   position: relative;
-  // Tall enough for the widest fan: +/- (2 * spread - compact) plus half a plate.
-  block-size: 27rem;
-  padding-inline: 0.75rem;
+
+  // Exactly tall enough for the widest arrangement. The furthest a floor ever
+  // travels from the centre is (far-step x spread) - compact, in both
+  // directions, plus one plate. Deriving it means the spacing can be retuned
+  // without hand-measuring a new height.
+  block-size: calc(
+    2 * ((#{map.get($gplan-fan, 2)} * var(--spread)) - var(--compact)) + var(--plate-h)
+  );
+
+  @include mx.down("collapse") {
+    --compact: 18px;
+    --spread: 74px;
+    --plate-h: 105px;
+  }
 
   @include mx.down("small") {
-    --compact: 18px;
-    --spread: 58px;
-    block-size: 19rem;
+    --spread: 62px;
+    --plate-h: 100px;
   }
 }
 
 .gplan__floors {
   position: absolute;
   inset: 0;
-  // Floors are listed top-to-bottom in the DOM, so the ground floor paints last
-  // and sits in front - which is what the viewing angle calls for.
+  // Floors run top-to-bottom in the DOM, so the ground floor paints last and
+  // sits in front - which is what the viewing angle calls for.
 }
 
 .gplan__floor {
   --i: 0;
 
   position: absolute;
-  inset-inline: 0.75rem;
+  inset-inline: 0;
   inset-block-start: 50%;
   display: block;
+  inline-size: min(20rem, calc(100% - 2.5rem));
+  margin-inline: auto;
   padding: 0;
   background: none;
   cursor: pointer;
 
-  translate: 0 calc(
-    -50% + ((var(--h) - 1) * var(--compact)) + ((var(--i) - var(--h)) * var(--s))
-  );
-  transition: translate 520ms cubic-bezier(0.22, 1, 0.36, 1),
+  // Resting stack. The fan states below override this.
+  translate: 0 calc(-50% + ((var(--i) - 1) * var(--compact)));
+  transition: translate 560ms cubic-bezier(0.22, 1, 0.36, 1),
               filter 260ms ease;
 
   svg {
@@ -206,12 +222,12 @@
     block-size: auto;
     overflow: visible;
     filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.16));
-    transition: filter 260ms ease;
+    transition: filter 260ms ease, opacity 260ms ease;
   }
 
   &:hover svg,
   &:focus-visible svg {
-    filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.26));
+    filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.28));
   }
 
   &:focus-visible {
@@ -225,9 +241,47 @@
   }
 }
 
+// -----------------------------------------------------------------------------
+//  Die neun Fächer-Stellungen
+//
+//    offset(i) = (h - 1) * compact  +  fan(|i - h|) * spread
+//
+//  The first term keeps the hovered floor on the spot it occupies in the
+//  resting stack; the second pushes the others away from it.
+// -----------------------------------------------------------------------------
+
+.gplan__stage {
+  @each $h in (0, 1, 2) {
+    &[data-active="#{$h}"] {
+      @each $i in (0, 1, 2) {
+        $distance: $i - $h;
+        $magnitude: $distance;
+
+        @if $distance < 0 {
+          $magnitude: -$distance;
+        }
+
+        $step: map.get($gplan-fan, $magnitude);
+
+        @if $distance < 0 {
+          $step: -$step;
+        }
+
+        $anchor: $h - 1;
+
+        .gplan__floor[data-floor-index="#{$i}"] {
+          translate: 0 calc(
+            -50% + (#{$anchor} * var(--compact)) + (#{$step} * var(--spread))
+          );
+        }
+      }
+    }
+  }
+}
+
 // Floors that are not the active one step back while the stack is fanned.
 .gplan__stage[data-active] .gplan__floor:not([data-active]) svg {
-  opacity: 0.62;
+  opacity: 0.55;
 }
 
 // -----------------------------------------------------------------------------
@@ -247,7 +301,6 @@
     stroke-width: 18;
     stroke-linejoin: miter;
     stroke-linecap: butt;
-    transition: stroke-width 200ms ease;
   }
 
   &__inner {
@@ -284,12 +337,12 @@
 // -----------------------------------------------------------------------------
 
 .gplan__rooms {
-  padding: 0 1.25rem 1.25rem;
+  padding: 0 1.25rem 1.1rem;
 }
 
 .gplan__rooms-title {
-  margin: 0 0 0.65rem;
-  font-size: 0.8rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
   font-weight: bold;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -300,7 +353,7 @@
 .gplan__room-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.4rem 1rem;
+  gap: 0.35rem 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -309,8 +362,8 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.8rem;
-    line-height: 1.35;
+    font-size: 0.78rem;
+    line-height: 1.3;
     color: v.$text;
   }
 
@@ -323,7 +376,6 @@
   }
 }
 
-// Only the active floor's list is shown; the hint takes its place at rest.
 .gplan__room-group {
   display: none;
 
@@ -334,8 +386,8 @@
 
 .gplan__hint {
   margin: 0;
-  padding: 0 1.25rem 1.25rem;
-  font-size: 0.8rem;
+  padding: 0 1.25rem 1.1rem;
+  font-size: 0.78rem;
   line-height: 1.5;
   color: #8a8a8a;
 

@@ -1,13 +1,13 @@
 /* =============================================================================
  *  Gebäudeplan - floating floor navigator for the map view
  *
- *  The fan itself is pure CSS maths; this file only decides *which* floor is
- *  active and writes two custom properties:
+ *  Everything is hover-driven: hovering the button opens the panel, hovering a
+ *  floor fans the stack around it, and leaving the widget closes it again.
  *
- *      --h : index of the active floor
- *      --s : the gap in use (--spread while fanned, --compact at rest)
+ *  The fan itself is pure CSS - this file only records *which* floor is active
+ *  via `data-active`, and the stylesheet holds the nine resulting positions.
  *
- *  Pointer devices drive it by hover, keyboards by focus, touch by tap.
+ *  Touch screens have no hover at all, so there tapping stands in for it.
  * ========================================================================== */
 
 (() => {
@@ -25,13 +25,13 @@
 
   if (!fab || !panel || !stage || !floors.length) return;
 
-  // Touch devices get tap-to-select, because they never produce a hover state.
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   let active = null;
+  let closeTimer = 0;
 
   // ---------------------------------------------------------------------------
-  //  Aktive Etage setzen
+  //  Aktive Etage
   // ---------------------------------------------------------------------------
 
   const setActive = (index) => {
@@ -39,13 +39,8 @@
     active = index;
 
     if (index === null) {
-      // Resting stack: `--s` back to `--compact` makes the fan formula collapse.
-      stage.style.setProperty("--h", "1");
-      stage.style.setProperty("--s", "var(--compact)");
       stage.removeAttribute("data-active");
     } else {
-      stage.style.setProperty("--h", String(index));
-      stage.style.setProperty("--s", "var(--spread)");
       stage.setAttribute("data-active", String(index));
     }
 
@@ -61,62 +56,83 @@
   };
 
   // ---------------------------------------------------------------------------
-  //  Etagen-Interaktion
-  // ---------------------------------------------------------------------------
-
-  floors.forEach((floor, i) => {
-    if (canHover) {
-      floor.addEventListener("pointerenter", () => setActive(i));
-    }
-
-    // Keyboard: focusing a floor fans the stack around it.
-    floor.addEventListener("focus", () => setActive(i));
-
-    // Tap (and click) toggles - the only way in on a touch screen.
-    floor.addEventListener("click", () => {
-      setActive(active === i ? null : i);
-    });
-  });
-
-  if (canHover) {
-    // Leaving the whole stage returns it to the thick resting state.
-    stage.addEventListener("pointerleave", () => setActive(null));
-  }
-
-  // Tabbing out of the stack collapses it again.
-  stage.addEventListener("focusout", (event) => {
-    if (!stage.contains(event.relatedTarget)) setActive(null);
-  });
-
-  // ---------------------------------------------------------------------------
-  //  Panel öffnen / schließen
+  //  Panel
   // ---------------------------------------------------------------------------
 
   const isOpen = () => !panel.hidden;
 
   const open = () => {
+    window.clearTimeout(closeTimer);
+    if (isOpen()) return;
     panel.hidden = false;
     fab.setAttribute("aria-expanded", "true");
-    // Send focus into the panel so keyboard users land where the action is.
-    (floors[1] || floors[0]).focus({ preventScroll: true });
   };
 
-  const close = ({ restoreFocus = true } = {}) => {
+  const close = () => {
+    window.clearTimeout(closeTimer);
+    if (!isOpen()) return;
     panel.hidden = true;
     fab.setAttribute("aria-expanded", "false");
     setActive(null);
-    if (restoreFocus) fab.focus({ preventScroll: true });
   };
 
-  fab.addEventListener("click", () => (isOpen() ? close() : open()));
-  closeBtn?.addEventListener("click", () => close());
+  // A short grace period keeps the panel open across the gap between the button
+  // and the card, and survives the pointer skimming an edge.
+  const closeSoon = () => {
+    window.clearTimeout(closeTimer);
+    closeTimer = window.setTimeout(close, 220);
+  };
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && isOpen()) close();
+  if (canHover) {
+    root.addEventListener("pointerenter", open);
+    root.addEventListener("pointerleave", closeSoon);
+  } else {
+    // Touch: the button toggles, since hover does not exist here.
+    fab.addEventListener("click", () => (isOpen() ? close() : open()));
+  }
+
+  // ---------------------------------------------------------------------------
+  //  Etagen
+  // ---------------------------------------------------------------------------
+
+  floors.forEach((floor, i) => {
+    if (canHover) {
+      floor.addEventListener("pointerenter", () => setActive(i));
+    } else {
+      floor.addEventListener("click", () => setActive(active === i ? null : i));
+    }
+
+    // Keyboard equivalent of hovering a floor.
+    floor.addEventListener("focus", () => {
+      open();
+      setActive(i);
+    });
   });
 
-  // A click anywhere outside dismisses the panel, as overlays are expected to.
-  document.addEventListener("pointerdown", (event) => {
-    if (isOpen() && !root.contains(event.target)) close({ restoreFocus: false });
+  if (canHover) {
+    // Moving off the plan - but still inside the panel - collapses the stack.
+    stage.addEventListener("pointerleave", () => setActive(null));
+  }
+
+  // ---------------------------------------------------------------------------
+  //  Tastatur
+  // ---------------------------------------------------------------------------
+
+  fab.addEventListener("focus", open);
+
+  root.addEventListener("focusout", (event) => {
+    if (!root.contains(event.relatedTarget)) close();
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    close();
+    fab.focus({ preventScroll: true });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && isOpen()) {
+      close();
+      fab.focus({ preventScroll: true });
+    }
   });
 })();
