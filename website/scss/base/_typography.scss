@@ -1,0 +1,93 @@
+// =============================================================================
+//  base/typography
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
+  font-family: v.$font-display;
+  letter-spacing: v.$tracking-tight;
+  text-wrap: balance;
+  color: v.$ink;
+}
+
+h1, .h1 { line-height: v.$lh-tight; }
+h2, .h2 { line-height: 1.12; }
+
+p {
+  text-wrap: pretty;
+}
+
+// Constrained measure for running prose - long lines are the #1 readability bug.
+.prose {
+  max-width: var(--adbk-measure);
+
+  > * + * {
+    margin-block-start: 1.1em;
+  }
+
+  a:not(.btn) {
+    font-weight: 600;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size v.$dur v.$ease-out;
+
+    &:hover {
+      background-size: 0% 1px;
+      text-decoration: none;
+    }
+  }
+}
+
+.lead {
+  font-size: v.$fs-lead;
+  line-height: 1.6;
+  color: v.$ink-soft;
+}
+
+.display-type {
+  @include mx.display-type(v.$fs-display);
+}
+
+.eyebrow {
+  @include mx.eyebrow(v.$blue);
+
+  &::before {
+    content: "";
+    inline-size: 1.75rem;
+    block-size: 2px;
+    background-color: currentColor;
+    flex: none;
+  }
+
+  &--light {
+    color: rgba(#fff, 0.72);
+  }
+}
+
+// Highlighted run of words inside a heading.
+.accent {
+  color: v.$blue;
+}
+
+.accent-underline {
+  position: relative;
+  white-space: nowrap;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: -0.08em;
+    bottom: 0.06em;
+    block-size: 0.34em;
+    background-color: rgba(v.$lime, 0.55);
+    border-radius: v.$radius-sm;
+    z-index: -1;
+  }
+}
+
+.text-balance { text-wrap: balance; }
+.text-pretty  { text-wrap: pretty; }

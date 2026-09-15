@@ -1,0 +1,180 @@
+// =============================================================================
+//  vendors/bootstrap
+//  Bootstrap 5.3 loaded from source and configured through the Sass module
+//  system (`@use ... with`), not a CDN link. Every framework default we change
+//  is declared here, in one place, so the rest of the codebase never has to
+//  fight Bootstrap's cascade with overrides.
+//
+//  Why `with ()` and not `@import`: `@import` is deprecated in Dart Sass and
+//  leaks every Bootstrap variable into the global scope. `@use ... with ()`
+//  configures the module's `!default` variables before it is evaluated, so our
+//  values are the ones Bootstrap builds its maps, utilities and CSS variables
+//  from - buttons, badges, accordions and the utility API all come out on brand
+//  without a single `!important`.
+// =============================================================================
+
+@use "sass:map";
+@use "../abstracts/variables" as v;
+@use "../abstracts/functions" as fn;
+
+// -----------------------------------------------------------------------------
+//  $theme-colors is declared in full rather than map-merged, because a module
+//  configuration cannot reference the default it is replacing. Bootstrap's own
+//  eight keys are kept so .btn-success, .text-danger etc. keep working; the
+//  ADBK signet colours are appended.
+// -----------------------------------------------------------------------------
+
+$adbk-theme-colors: (
+  // Bootstrap's semantic set, re-pointed at the brand palette.
+  "primary":   v.$blue,
+  "secondary": v.$stone,
+  "success":   #1f8a5b,
+  "info":      #2d7ec4,
+  "warning":   v.$yellow,
+  "danger":    v.$magenta,
+  "light":     v.$surface-alt,
+  "dark":      v.$blue-night,
+
+  // The signet mosaic. Each key generates .btn-*, .bg-*, .text-*, .border-*
+  // and a --bs-* custom property, for free, from the utility API.
+  "lime":      v.$lime,
+  "yellow":    v.$yellow,
+  "magenta":   v.$magenta,
+  "mint":      v.$mint,
+  "orange":    v.$orange,
+  "sand":      v.$sand,
+  "stone":     v.$stone,
+  "blue-deep": v.$blue-deep,
+  "night":     v.$blue-night,
+);
+
+// Bootstrap's 0-5 scale plus three editorial steps, so section rhythm can be
+// expressed as `py-7` / `gap-6` instead of one-off custom CSS.
+$adbk-spacers: (
+  0: 0,
+  1: 0.25rem,
+  2: 0.5rem,
+  3: 1rem,
+  4: 1.5rem,
+  5: 3rem,
+  6: 4rem,
+  7: 6rem,
+  8: 8rem,
+);
+
+@use "bootstrap/scss/bootstrap" with (
+  // --- Palette --------------------------------------------------------------
+  $primary:   v.$blue,
+  $secondary: v.$stone,
+  $success:   #1f8a5b,
+  $info:      #2d7ec4,
+  $warning:   v.$yellow,
+  $danger:    v.$magenta,
+  $light:     v.$surface-alt,
+  $dark:      v.$blue-night,
+  $theme-colors: $adbk-theme-colors,
+
+  // --- Options --------------------------------------------------------------
+  $enable-shadows:          false,
+  $enable-gradients:        false,
+  $enable-smooth-scroll:    true,
+  $enable-negative-margins: true,
+  $enable-cssgrid:          true,
+  $enable-dark-mode:        true,
+  $enable-reduced-motion:   true,
+
+  // --- Spacing --------------------------------------------------------------
+  $spacer:  1rem,
+  $spacers: $adbk-spacers,
+
+  // --- Typography -----------------------------------------------------------
+  $font-family-sans-serif: v.$font-sans,
+  $body-color:             v.$ink-soft,
+  $body-bg:                v.$surface,
+  $headings-color:         v.$ink,
+  $headings-font-family:   v.$font-display,
+  $headings-font-weight:   700,
+  $headings-line-height:   v.$lh-snug,
+  $line-height-base:       v.$lh-base,
+  $lead-font-size:         v.$fs-lead,
+  $lead-font-weight:       400,
+  $h1-font-size:           v.$fs-h1,
+  $h2-font-size:           v.$fs-h2,
+  $h3-font-size:           v.$fs-h3,
+  $h4-font-size:           v.$fs-h4,
+  $link-color:             v.$blue,
+  $link-hover-color:       v.$blue-deep,
+  $link-decoration:        none,
+  $link-hover-decoration:  underline,
+
+  // --- Shape ----------------------------------------------------------------
+  $border-color:       v.$line,
+  $border-radius-sm:   v.$radius-sm,
+  $border-radius:      v.$radius,
+  $border-radius-lg:   v.$radius-lg,
+  $border-radius-xl:   v.$radius-xl,
+  $border-radius-pill: v.$radius-pill,
+
+  // --- Grid -----------------------------------------------------------------
+  $grid-gutter-width: 2rem,
+  $container-max-widths: (
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1160px,
+    xxl: 1320px,
+  ),
+
+  // --- Buttons --------------------------------------------------------------
+  $btn-padding-y:        0.72rem,
+  $btn-padding-x:        1.6rem,
+  $btn-font-weight:      600,
+  $btn-border-radius:    v.$radius-pill,
+  $btn-border-radius-sm: v.$radius-pill,
+  $btn-border-radius-lg: v.$radius-pill,
+  $btn-focus-width:      3px,
+
+  // --- Cards ----------------------------------------------------------------
+  $card-border-color:  v.$line,
+  $card-border-radius: v.$radius-lg,
+  $card-spacer-y:      1.6rem,
+  $card-spacer-x:      1.6rem,
+
+  // --- Accordion ------------------------------------------------------------
+  $accordion-border-color:  v.$line,
+  $accordion-border-radius: v.$radius,
+  $accordion-padding-y:     1.15rem,
+  $accordion-padding-x:     1.35rem,
+
+  // --- Forms ----------------------------------------------------------------
+  $input-border-color:       v.$line,
+  $input-border-radius:      v.$radius-pill,
+  $input-padding-y:          0.7rem,
+  $input-padding-x:          1.15rem,
+  $input-focus-border-color: v.$blue,
+  $input-placeholder-color:  v.$muted,
+
+  // --- Nav / offcanvas ------------------------------------------------------
+  $navbar-padding-y:          0,
+  $navbar-nav-link-padding-x: 0.9rem,
+  $nav-link-font-weight:      600,
+  $nav-link-color:            v.$ink,
+  $nav-link-hover-color:      v.$blue,
+  $offcanvas-horizontal-width: 22rem,
+  $offcanvas-bg-color:         v.$surface,
+  $offcanvas-border-width:     0,
+
+  // --- Badges / breadcrumb --------------------------------------------------
+  $badge-font-weight:        600,
+  $badge-padding-y:          0.42em,
+  $badge-padding-x:          0.85em,
+  $badge-border-radius:      v.$radius-pill,
+  $breadcrumb-divider-color: v.$muted,
+  $breadcrumb-active-color:  v.$ink,
+  $breadcrumb-font-size:     v.$fs-micro,
+  $breadcrumb-margin-bottom: 0
+);
+
+// Re-export so any partial can read Bootstrap's finished maps if it needs to,
+// e.g. `@use "../vendors/bootstrap" as bs;  bs.$grid-breakpoints`.
+@forward "bootstrap/scss/bootstrap";

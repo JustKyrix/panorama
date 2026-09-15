@@ -1,0 +1,89 @@
+// =============================================================================
+//  base/reset
+//  Small opinionated layer on top of Bootstrap's Reboot.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  font-size: v.$fs-body;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+// Media never overflows and never causes layout shift.
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Text elements inherit the type system instead of the UA font.
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+// A single, consistent focus treatment everywhere.
+:focus-visible {
+  outline: 3px solid v.$blue;
+  outline-offset: 3px;
+}
+
+:target {
+  scroll-margin-top: calc(var(--adbk-header-h) + 2rem);
+}
+
+::selection {
+  background-color: rgba(v.$blue, 0.18);
+  color: v.$ink;
+}
+
+// Respect the user's motion preference across the whole document.
+@include mx.reduced-motion {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: -100%;
+  z-index: 2000;
+  padding: 0.85rem 1.4rem;
+  background-color: v.$blue;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0 0 v.$radius v.$radius;
+  transition: top v.$dur v.$ease-out;
+
+  &:focus-visible {
+    top: 0;
+    color: #fff;
+  }
+}

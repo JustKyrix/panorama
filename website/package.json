@@ -1,0 +1,23 @@
+{
+  "name": "adbk-panorama",
+  "version": "1.0.0",
+  "description": "Modernisierter Nachbau der Startseite des Albrecht-Dürer-Berufskollegs Düsseldorf - Bootstrap 5.3 + Sass",
+  "private": true,
+  "scripts": {
+    "start": "npm run watch",
+    "watch": "sass --watch scss/main.scss:assets/css/main.css --style=expanded --load-path=node_modules",
+    "build:css": "sass scss/main.scss:assets/css/main.css --style=expanded --load-path=node_modules --no-source-map",
+    "build:min": "sass scss/main.scss:assets/css/main.min.css --style=compressed --load-path=node_modules --no-source-map",
+    "prefix": "postcss assets/css/main.css --use autoprefixer --replace",
+    "build": "npm run build:css && npm run prefix && npm run build:min",
+    "serve": "npx --yes serve ."
+  },
+  "browserslist": ["> 0.5%", "last 2 versions", "not dead"],
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "bootstrap": "^5.3.3",
+    "postcss": "^8.4.49",
+    "postcss-cli": "^11.0.0",
+    "sass": "^1.83.0"
+  }
+}

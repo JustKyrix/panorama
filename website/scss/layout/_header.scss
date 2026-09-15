@@ -1,0 +1,306 @@
+// =============================================================================
+//  layout/header
+//  Sticky, condensing header. The contact strip scrolls away, the nav bar stays.
+//  Mobile navigation uses a Bootstrap offcanvas (focus trap + ARIA for free).
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+@use "../abstracts/functions" as fn;
+
+.topbar {
+  background-color: v.$blue-night;
+  color: rgba(#fff, 0.74);
+  font-size: v.$fs-micro;
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-block: 0.6rem;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: inherit;
+    transition: color v.$dur-fast v.$ease-out;
+
+    &:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+  svg {
+    inline-size: 1em;
+    block-size: 1em;
+    flex: none;
+    opacity: 0.75;
+  }
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: rgba(#fff, 0.86);
+  backdrop-filter: blur(16px) saturate(1.6);
+  border-block-end: 1px solid transparent;
+  transition: border-color v.$dur v.$ease-out,
+              box-shadow v.$dur v.$ease-out,
+              background-color v.$dur v.$ease-out;
+
+  &.is-stuck {
+    background-color: rgba(#fff, 0.95);
+    border-block-end-color: v.$line;
+    box-shadow: 0 6px 24px -18px rgba(v.$ink, 0.5);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-block-size: var(--adbk-header-h);
+  }
+}
+
+// Logo lockup: signet + wordmark. Flex - one axis, content-driven sizes.
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: none;
+  color: v.$ink;
+
+  &:hover { text-decoration: none; }
+
+  &__mark {
+    inline-size: 46px;
+    block-size: auto;
+    flex: none;
+    transition: transform v.$dur v.$ease-out;
+  }
+
+  &:hover &__mark { transform: rotate(-4deg) scale(1.05); }
+
+  &__text {
+    display: none;
+    line-height: 1.2;
+
+    @include mx.up("sm") { display: block; }
+  }
+
+  &__name {
+    display: block;
+    font-family: v.$font-display;
+    font-size: fn.rem(16);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: v.$ink;
+  }
+
+  &__sub {
+    display: block;
+    font-size: fn.rem(11.5);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: v.$muted;
+  }
+}
+
+.mainnav {
+  display: none;
+
+  @include mx.up("lg") { display: block; }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__link {
+    position: relative;
+    display: block;
+    padding: 0.55rem 0.85rem;
+    font-size: fn.rem(15);
+    font-weight: 600;
+    color: v.$ink;
+    border-radius: v.$radius-sm;
+    transition: color v.$dur-fast v.$ease-out;
+
+    // Wipe-in underline rather than a colour-only hover state.
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0.85rem;
+      bottom: 0.25rem;
+      block-size: 2px;
+      background-color: v.$blue;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform v.$dur v.$ease-out;
+    }
+
+    &:hover,
+    &[aria-current="page"] {
+      color: v.$blue;
+      text-decoration: none;
+
+      &::after { transform: scaleX(1); }
+    }
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+}
+
+// Compact search field that widens on focus.
+.header-search {
+  display: none;
+  position: relative;
+
+  @include mx.up("xl") { display: block; }
+
+  input {
+    inline-size: 9.5rem;
+    padding-block: 0.5rem;
+    padding-inline: 2.4rem 1rem;
+    font-size: fn.rem(14);
+    background-color: v.$surface-alt;
+    border: 1px solid v.$line;
+    border-radius: v.$radius-pill;
+    transition: inline-size v.$dur v.$ease-out,
+                background-color v.$dur v.$ease-out,
+                border-color v.$dur v.$ease-out;
+
+    &:focus {
+      inline-size: 14rem;
+      background-color: #fff;
+      border-color: v.$blue;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(v.$blue, 0.16);
+    }
+  }
+
+  svg {
+    position: absolute;
+    inset-inline-start: 0.85rem;
+    top: 50%;
+    translate: 0 -50%;
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: v.$muted;
+    pointer-events: none;
+  }
+}
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  font-size: fn.rem(14);
+  font-weight: 600;
+  color: v.$ink;
+  background-color: v.$surface-alt;
+  border: 1px solid v.$line;
+  border-radius: v.$radius-pill;
+
+  @include mx.up("lg") { display: none; }
+
+  svg {
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+  }
+}
+
+.navdrawer {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1rem;
+    font-family: v.$font-display;
+    font-size: fn.rem(17);
+    font-weight: 600;
+    color: v.$ink;
+    border-radius: v.$radius;
+    transition: background-color v.$dur-fast v.$ease-out;
+
+    &:hover {
+      background-color: v.$surface-alt;
+      text-decoration: none;
+    }
+
+    // Colour chip mirrors the pillar colours.
+    &::before {
+      content: "";
+      inline-size: 6px;
+      block-size: 1.5rem;
+      margin-inline-end: 0.85rem;
+      flex: none;
+      background-color: var(--chip, #{v.$blue});
+      border-radius: v.$radius-pill;
+    }
+  }
+}
+
+// Floating advice-team tab, carried over from the original side rail.
+.advice-tab {
+  position: fixed;
+  inset-inline-end: 0;
+  top: 55%;
+  z-index: 1020;
+  display: none;
+  padding: 1.1rem 0.7rem;
+  font-size: fn.rem(13);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: v.$blue;
+  border-radius: v.$radius 0 0 v.$radius;
+  box-shadow: v.$shadow-md;
+  writing-mode: vertical-rl;
+  transition: background-color v.$dur v.$ease-out, translate v.$dur v.$ease-out;
+
+  @include mx.up("lg") { display: block; }
+
+  &:hover {
+    color: #fff;
+    background-color: v.$blue-deep;
+    translate: -4px 0;
+    text-decoration: none;
+  }
+}

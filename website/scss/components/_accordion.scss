@@ -1,0 +1,156 @@
+// =============================================================================
+//  components/accordion
+//  Brand skin over Bootstrap's accordion. Behaviour, ARIA and focus handling
+//  stay with Bootstrap; only the look is ours.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+@use "../abstracts/functions" as fn;
+
+.accordion {
+  --bs-accordion-border-color: #{v.$line};
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 3px #{rgba(v.$blue, 0.22)};
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.accordion-item {
+  overflow: hidden;
+  background-color: v.$surface;
+  border: 1px solid v.$line;
+  border-radius: v.$radius-lg !important;
+  transition: border-color v.$dur v.$ease-out, box-shadow v.$dur v.$ease-out;
+
+  &:has(.accordion-button:not(.collapsed)) {
+    border-color: rgba(v.$blue, 0.35);
+    box-shadow: var(--adbk-shadow-sm);
+  }
+}
+
+.accordion-button {
+  gap: 1rem;
+  font-family: v.$font-display;
+  font-size: fn.rem(17);
+  font-weight: 600;
+  color: v.$ink;
+  border-radius: v.$radius-lg !important;
+
+  &:not(.collapsed) {
+    color: v.$blue-deep;
+    background-color: rgba(v.$blue, 0.06);
+    box-shadow: none;
+  }
+
+  // Replace the default chevron with a brand-coloured plus/minus.
+  &::after {
+    inline-size: 1.65rem;
+    block-size: 1.65rem;
+    flex: none;
+    display: grid;
+    place-items: center;
+    content: "";
+    background-image: none;
+    background-color: v.$surface-alt;
+    border-radius: 50%;
+    position: relative;
+    transition: background-color v.$dur v.$ease-out, rotate v.$dur v.$ease-out;
+  }
+
+  &:not(.collapsed)::after {
+    background-color: v.$blue;
+    rotate: 180deg;
+  }
+
+  // Plus / minus drawn with two pseudo bars on the icon wrapper.
+  .accordion-icon {
+    position: relative;
+    inline-size: 1.65rem;
+    block-size: 1.65rem;
+    flex: none;
+    margin-inline-start: auto;
+    display: grid;
+    place-items: center;
+    background-color: v.$surface-alt;
+    border-radius: 50%;
+    transition: background-color v.$dur v.$ease-out, rotate v.$dur-slow v.$ease-out;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      background-color: v.$ink;
+      border-radius: 2px;
+      transition: opacity v.$dur v.$ease-out, background-color v.$dur v.$ease-out;
+    }
+
+    &::before { inline-size: 0.75rem; block-size: 2px; }
+    &::after  { inline-size: 2px; block-size: 0.75rem; }
+  }
+
+  &:not(.collapsed) .accordion-icon {
+    background-color: v.$blue;
+    rotate: 180deg;
+
+    &::before { background-color: #fff; }
+    &::after  { opacity: 0; }
+  }
+
+  // Hide Bootstrap's own chevron since we supply our own icon element.
+  &:has(.accordion-icon)::after { display: none; }
+
+  &__lead {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+}
+
+.accordion-body {
+  padding-block-start: 0.25rem;
+  font-size: fn.rem(15.5);
+  line-height: 1.7;
+  color: v.$ink-soft;
+}
+
+// Date list inside the accordion bodies.
+.date-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem 1.25rem;
+    padding-block: 0.7rem;
+    border-block-start: 1px dashed v.$line;
+
+    &:first-child { border-block-start: 0; }
+
+    @include mx.up("sm") {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+  }
+
+  &__when {
+    font-weight: 600;
+    color: v.$ink;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  &__what {
+    color: v.$muted;
+    font-size: fn.rem(14.5);
+
+    @include mx.up("sm") { text-align: end; }
+  }
+}

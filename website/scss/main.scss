@@ -1,0 +1,49 @@
+// =============================================================================
+//  ADBK / Panorama - main stylesheet
+//
+//  Architecture: 7-1 pattern on the Sass module system (@use / @forward).
+//  There is no `@import` anywhere in this codebase - it is deprecated in Dart
+//  Sass and leaks globals. Every partial declares exactly what it needs.
+//
+//  Load order matters:
+//    1. vendors  - Bootstrap, configured through `@use ... with ()`
+//    2. abstracts- compile-time only (variables/functions/mixins), emits no CSS
+//    3. base     - tokens, reset, typography, project utilities
+//    4. layout   - page regions (header, footer, section rhythm)
+//    5. components - reusable pieces (cards, buttons, mosaic)
+//    6. sections - page-specific composition
+// =============================================================================
+
+// 1) Framework -----------------------------------------------------------------
+@use "vendors/bootstrap";
+
+// 2) Base ----------------------------------------------------------------------
+@use "base/tokens";
+@use "base/reset";
+@use "base/typography";
+@use "base/utilities";
+
+// 3) Layout --------------------------------------------------------------------
+@use "layout/section";
+@use "layout/header";
+@use "layout/footer";
+
+// 4) Components ----------------------------------------------------------------
+@use "components/buttons";
+@use "components/mosaic";
+@use "components/pillar-card";
+@use "components/news-card";
+@use "components/field-card";
+@use "components/stat";
+@use "components/partner";
+@use "components/accordion";
+@use "components/reveal";
+
+// 5) Sections ------------------------------------------------------------------
+@use "sections/hero";
+@use "sections/pillars";
+@use "sections/about";
+@use "sections/news";
+@use "sections/fields";
+@use "sections/dates";
+@use "sections/contact";

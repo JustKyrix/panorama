@@ -1,0 +1,57 @@
+// =============================================================================
+//  components/stat
+//  Key-figure tile. Used in the hero rail and in the facts band.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+@use "../abstracts/functions" as fn;
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  &__value {
+    font-family: v.$font-display;
+    font-size: fn.fluid(30, 46);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: v.$tracking-tight;
+    color: v.$ink;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__label {
+    font-size: fn.rem(14);
+    line-height: 1.4;
+    color: v.$muted;
+  }
+
+  &--light {
+    .stat__value { color: #fff; }
+    .stat__label { color: rgba(#fff, 0.64); }
+  }
+
+  &--accent .stat__value { color: v.$lime; }
+}
+
+// Row of stats separated by hairlines.
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: fn.fluid(20, 32);
+
+  @include mx.up("md") {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  &--divided {
+    .stat + .stat {
+      @include mx.up("md") {
+        padding-inline-start: fn.fluid(20, 32);
+        border-inline-start: 1px solid var(--rule, #{v.$line});
+      }
+    }
+  }
+}

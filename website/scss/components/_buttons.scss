@@ -1,0 +1,106 @@
+// =============================================================================
+//  components/buttons
+//  Bootstrap owns .btn sizing and states; this file only adds the brand feel
+//  and the two variants Bootstrap does not ship.
+// =============================================================================
+
+@use "sass:map";
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+@use "../abstracts/functions" as fn;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-family: v.$font-sans;
+  letter-spacing: -0.01em;
+  will-change: transform;
+
+  svg {
+    inline-size: 1.05em;
+    block-size: 1.05em;
+    flex: none;
+    transition: translate v.$dur v.$ease-out;
+  }
+
+  &:hover svg { translate: 3px 0; }
+
+  &:active { transform: translateY(1px); }
+}
+
+// Primary: solid brand blue with a lift on hover.
+.btn-primary {
+  --bs-btn-bg: #{v.$blue};
+  --bs-btn-border-color: #{v.$blue};
+  --bs-btn-hover-bg: #{v.$blue-deep};
+  --bs-btn-hover-border-color: #{v.$blue-deep};
+  --bs-btn-active-bg: #{v.$blue-deep};
+  box-shadow: 0 10px 24px -14px rgba(v.$blue, 0.9);
+  transition: box-shadow v.$dur v.$ease-out, transform v.$dur-fast v.$ease-out,
+              background-color v.$dur-fast v.$ease-out;
+
+  &:hover {
+    box-shadow: 0 16px 32px -14px rgba(v.$blue, 0.95);
+    transform: translateY(-2px);
+  }
+}
+
+// Ghost button for dark grounds.
+.btn-ghost {
+  --bs-btn-color: #fff;
+  --bs-btn-border-color: #{rgba(#fff, 0.32)};
+  --bs-btn-hover-color: #{v.$blue-night};
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-hover-border-color: #fff;
+  --bs-btn-focus-shadow-rgb: 255, 255, 255;
+  border-width: 1px;
+  background-color: transparent;
+  transition: background-color v.$dur v.$ease-out, color v.$dur v.$ease-out,
+              transform v.$dur-fast v.$ease-out;
+
+  &:hover { transform: translateY(-2px); }
+}
+
+// Quiet text link that behaves like a button.
+.btn-quiet {
+  --bs-btn-color: #{v.$blue};
+  --bs-btn-hover-color: #{v.$blue-deep};
+  padding-inline: 0;
+  font-weight: 600;
+  background: none;
+  border: 0;
+
+  &:hover { text-decoration: none; }
+}
+
+// Small pill used for filters and meta chips.
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  font-size: v.$fs-micro;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: v.$ink;
+  background-color: v.$surface-alt;
+  border: 1px solid v.$line;
+  border-radius: v.$radius-pill;
+
+  &--light {
+    color: rgba(#fff, 0.9);
+    background-color: rgba(#fff, 0.1);
+    border-color: rgba(#fff, 0.18);
+  }
+
+  // One chip variant per brand colour, generated from the map.
+  @each $name, $color in v.$brand-colors {
+    &--#{$name} {
+      color: #{map.get(v.$brand-contrast, $name)};
+      background-color: $color;
+      border-color: $color;
+    }
+  }
+}

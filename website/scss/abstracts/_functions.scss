@@ -1,0 +1,62 @@
+// =============================================================================
+//  abstracts/functions
+//  Compile-time helpers. Pure functions only - no output is generated here.
+// =============================================================================
+
+@use "sass:math";
+@use "sass:map";
+@use "sass:color";
+
+/// Convert a px value to rem, based on a 16px root.
+/// @example rem(24) => 1.5rem
+@function rem($px, $root: 16) {
+  @if math.is-unitless($px) == false {
+    $px: math.div($px, ($px * 0 + 1));
+  }
+  @return math.div($px, $root) * 1rem;
+}
+
+/// Fluid value between two viewport widths using clamp().
+/// Produces a single declaration instead of a stack of media queries.
+/// @example fluid(28, 56) => clamp(1.75rem, 1.2rem + 2.7vw, 3.5rem)
+@function fluid($min-px, $max-px, $min-vw: 360, $max-vw: 1440) {
+  $slope: math.div($max-px - $min-px, $max-vw - $min-vw);
+  $intercept: $min-px - ($slope * $min-vw);
+
+  @return clamp(
+    #{rem($min-px)},
+    #{rem($intercept)} + #{math.round($slope * 10000) * 0.01}vw,
+    #{rem($max-px)}
+  );
+}
+
+/// Read a token out of a nested map with a readable error when it is missing.
+@function token($map, $keys...) {
+  $value: $map;
+
+  @each $key in $keys {
+    @if type-of($value) != "map" or map.has-key($value, $key) == false {
+      @error "token(): unknown key `#{$key}` in `#{$keys}`.";
+    }
+    $value: map.get($value, $key);
+  }
+
+  @return $value;
+}
+
+/// Mix a colour with white / black without losing the source hue.
+@function tint($color, $amount) {
+  @return color.mix(#fff, $color, $amount);
+}
+
+@function shade($color, $amount) {
+  @return color.mix(#000, $color, $amount);
+}
+
+/// Strip the unit from a number so it can be used inside calc()/custom props.
+@function strip-unit($number) {
+  @if math.is-unitless($number) {
+    @return $number;
+  }
+  @return math.div($number, ($number * 0 + 1));
+}

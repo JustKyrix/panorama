@@ -1,0 +1,68 @@
+// =============================================================================
+//  base/tokens
+//  Sass variables -> CSS custom properties. Anything that must be readable at
+//  runtime (by JS, by a theme switch, or per-component) lives here.
+// =============================================================================
+
+@use "sass:map";
+@use "../abstracts/variables" as v;
+@use "../abstracts/functions" as fn;
+
+:root {
+  // Brand ramp, generated from the map so there is a single source of truth.
+  @each $name, $color in v.$brand-colors {
+    --adbk-#{$name}: #{$color};
+    --adbk-#{$name}-contrast: #{map.get(v.$brand-contrast, $name)};
+    --adbk-#{$name}-soft: #{fn.tint($color, 86%)};
+  }
+
+  --adbk-ink: #{v.$ink};
+  --adbk-ink-soft: #{v.$ink-soft};
+  --adbk-muted: #{v.$muted};
+  --adbk-line: #{v.$line};
+  --adbk-surface: #{v.$surface};
+  --adbk-surface-alt: #{v.$surface-alt};
+  --adbk-surface-sunk: #{v.$surface-sunk};
+  --adbk-night: #{v.$blue-night};
+  --adbk-blue-deep: #{v.$blue-deep};
+
+  // Rhythm
+  --adbk-section-y: #{v.$section-y};
+  --adbk-section-y-lg: #{v.$section-y-lg};
+  --adbk-gutter: #{v.$gutter};
+  --adbk-measure: #{v.$measure};
+
+  // Shape & depth
+  --adbk-radius-sm: #{v.$radius-sm};
+  --adbk-radius: #{v.$radius};
+  --adbk-radius-lg: #{v.$radius-lg};
+  --adbk-radius-xl: #{v.$radius-xl};
+  --adbk-shadow-sm: #{v.$shadow-sm};
+  --adbk-shadow-md: #{v.$shadow-md};
+  --adbk-shadow-lg: #{v.$shadow-lg};
+
+  // Motion
+  --adbk-ease: #{v.$ease-out};
+  --adbk-dur-fast: #{v.$dur-fast};
+  --adbk-dur: #{v.$dur};
+  --adbk-dur-slow: #{v.$dur-slow};
+
+  // Chrome
+  --adbk-header-h: #{v.$header-h-sm};
+  scroll-padding-top: calc(var(--adbk-header-h) + 1.5rem);
+
+  @media (min-width: 992px) {
+    --adbk-header-h: #{v.$header-h};
+  }
+}
+
+// Bootstrap token bridge - keeps .btn, .card, .accordion on our palette without
+// overriding component rules one by one.
+:root {
+  --bs-body-font-family: #{v.$font-sans};
+  --bs-body-color: #{v.$ink-soft};
+  --bs-emphasis-color: #{v.$ink};
+  --bs-border-color: #{v.$line};
+  --bs-link-color-rgb: 51, 87, 161;
+  --bs-focus-ring-color: #{rgba(v.$blue, 0.25)};
+}

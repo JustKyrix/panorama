@@ -1,0 +1,80 @@
+// =============================================================================
+//  base/utilities
+//  A handful of project utilities Bootstrap does not ship. Everything else
+//  comes from Bootstrap's utility API - do not duplicate what already exists.
+// =============================================================================
+
+@use "sass:map";
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+@use "../abstracts/functions" as fn;
+
+// Layout: the two shapes this project uses everywhere.
+// "image + text" -> flex (one axis, content-driven sizes)
+.split {
+  @include mx.split;
+
+  &--reverse {
+    @include mx.split($reverse: true);
+  }
+
+  &--top {
+    @include mx.up("lg") { align-items: start; }
+  }
+
+  &--wide-text {
+    @include mx.up("lg") {
+      > :first-child { flex: 1.15 1 0; }
+      > :last-child  { flex: 0.85 1 0; }
+    }
+  }
+}
+
+// "4 / 4" card sections -> grid (two-dimensional, structure-first)
+.auto-grid {
+  @include mx.auto-grid;
+
+  &--sm { @include mx.auto-grid(200px); }
+  &--lg { @include mx.auto-grid(320px); }
+}
+
+.grid-2 { @include mx.grid-cols(2); }
+.grid-3 { @include mx.grid-cols(3, $from: "md"); }
+.grid-4 { @include mx.grid-cols(4, $from: "lg"); }
+
+// Surfaces
+.surface-alt  { background-color: var(--adbk-surface-alt); }
+.surface-sunk { background-color: var(--adbk-surface-sunk); }
+.surface-night {
+  background-color: var(--adbk-night);
+  color: rgba(#fff, 0.78);
+}
+
+.glass { @include mx.glass; }
+
+.rounded-xl { border-radius: v.$radius-xl; }
+
+// Brand ink helpers, generated from the palette map.
+@each $name, $color in v.$brand-colors {
+  .ink-#{$name} { color: $color !important; }
+  .rule-#{$name} { border-color: $color !important; }
+}
+
+.shadow-soft { box-shadow: var(--adbk-shadow-md); }
+.shadow-deep { box-shadow: var(--adbk-shadow-lg); }
+
+.visually-hidden-focusable-block { @include mx.visually-hidden; }
+
+// Fixed aspect media box - prevents layout shift (CLS).
+.ratio-media {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: fn.fluid(12, 20);
+}

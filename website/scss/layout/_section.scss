@@ -1,0 +1,64 @@
+// =============================================================================
+//  layout/section
+//  One rhythm system for every band on the page. Sections own their vertical
+//  space via padding; the space *between* items inside them comes from gap.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+@use "../abstracts/functions" as fn;
+
+.section {
+  position: relative;
+  padding-block: var(--adbk-section-y);
+
+  &--lg    { padding-block: var(--adbk-section-y-lg); }
+  &--tight { padding-block: fn.fluid(44, 80); }
+  &--flush-top { padding-block-start: 0; }
+}
+
+// Heading block that sits above a grid or a split.
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: fn.fluid(12, 18);
+  max-width: 62ch;
+  margin-block-end: fn.fluid(36, 64);
+
+  h2 { margin: 0; }
+  p  { margin: 0; }
+
+  &--center {
+    align-items: center;
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  // Heading on the left, supporting copy on the right.
+  &--split {
+    max-width: none;
+
+    @include mx.up("lg") {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: fn.fluid(24, 64);
+
+      > :first-child { max-width: 34ch; }
+      > :last-child  { max-width: 44ch; }
+    }
+  }
+}
+
+// Thin rule built from the six signet colours.
+.brand-rule {
+  display: flex;
+  block-size: 6px;
+  inline-size: 100%;
+  overflow: hidden;
+
+  span {
+    display: block;
+    flex: 1;
+  }
+}

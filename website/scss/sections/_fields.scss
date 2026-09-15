@@ -1,0 +1,51 @@
+// =============================================================================
+//  sections/fields
+//  The Fachbereiche tiles. Equal cards, unknown count -> auto-fit grid, which
+//  reflows at any width without a single media query.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+@use "../abstracts/functions" as fn;
+
+.fields {
+  &__grid {
+    @include mx.auto-grid(248px, fn.fluid(16, 24));
+  }
+
+  // Wide call-out that closes the section.
+  &__callout {
+    display: flex;
+    flex-direction: column;
+    gap: fn.fluid(16, 24);
+    align-items: flex-start;
+    margin-block-start: fn.fluid(28, 44);
+    padding: fn.fluid(26, 40);
+    color: rgba(#fff, 0.78);
+    background-color: v.$blue-deep;
+    border-radius: v.$radius-xl;
+
+    @include mx.up("md") {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: fn.fluid(24, 48);
+    }
+
+    h3 {
+      margin: 0 0 0.35rem;
+      color: #fff;
+      font-size: fn.fluid(20, 26);
+    }
+
+    p {
+      margin: 0;
+      max-width: 56ch;
+      font-size: fn.rem(15.5);
+      line-height: 1.6;
+      color: rgba(#fff, 0.72);
+    }
+
+    .btn { flex: none; }
+  }
+}

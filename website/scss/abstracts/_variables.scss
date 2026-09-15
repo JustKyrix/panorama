@@ -1,0 +1,116 @@
+// =============================================================================
+//  abstracts/variables
+//  Brand tokens. Sass variables for compile-time logic (maps, loops, colour
+//  maths); these are re-exported as CSS custom properties in base/_tokens.
+// =============================================================================
+
+@use "sass:map";
+@use "functions" as fn;
+
+// -----------------------------------------------------------------------------
+//  Brand palette
+//  Taken from the ADBK signet: the six-square mosaic plus the institutional blue.
+// -----------------------------------------------------------------------------
+
+$blue:        #3357a1; // institutional blue - primary
+$blue-deep:   #16295a; // darker blue for large surfaces
+$blue-night:  #0c1730; // hero / footer ground
+$lime:        #c3d62f; // Ausbildungs- + Berufsvorbereitung
+$yellow:      #fad200; // Berufsqualifizierung
+$magenta:     #b80d48; // Studienqualifizierung
+$mint:        #a3dec7; // signet accent
+$orange:      #d47217; // signet accent
+$sand:        #928767; // signet accent
+$stone:       #756d6b; // legacy footer grey
+
+$ink:         #14161a;
+$ink-soft:    #3d434e;
+$muted:       #6d7482;
+$line:        #e3e6ec;
+$surface:     #ffffff;
+$surface-alt: #f5f7fa;
+$surface-sunk:#eef1f6;
+
+// Named brand map - drives utilities, the pillar cards and the mosaic motif.
+$brand-colors: (
+  "blue":    $blue,
+  "lime":    $lime,
+  "yellow":  $yellow,
+  "magenta": $magenta,
+  "mint":    $mint,
+  "orange":  $orange,
+  "sand":    $sand,
+  "stone":   $stone,
+);
+
+// Foreground colour to pair with each brand colour (contrast-checked).
+$brand-contrast: (
+  "blue":    #ffffff,
+  "lime":    #23290a,
+  "yellow":  #3a2f00,
+  "magenta": #ffffff,
+  "mint":    #123528,
+  "orange":  #ffffff,
+  "sand":    #ffffff,
+  "stone":   #ffffff,
+);
+
+// -----------------------------------------------------------------------------
+//  Typography
+// -----------------------------------------------------------------------------
+
+$font-sans: "Inter", "Myriad Web Pro", -apple-system, BlinkMacSystemFont,
+            "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-display: "Space Grotesk", $font-sans;
+
+// Fluid type scale - no breakpoints needed, scales 360px -> 1440px.
+$fs-display: fn.fluid(38, 78);
+$fs-h1:      fn.fluid(32, 60);
+$fs-h2:      fn.fluid(26, 42);
+$fs-h3:      fn.fluid(20, 28);
+$fs-h4:      fn.fluid(18, 22);
+$fs-lead:    fn.fluid(17, 21);
+$fs-body:    fn.fluid(16, 17);
+$fs-small:   fn.rem(14);
+$fs-micro:   fn.rem(12.5);
+
+$lh-tight: 1.06;
+$lh-snug:  1.25;
+$lh-base:  1.7;
+
+$tracking-tight: -0.03em;
+$tracking-wide:   0.14em;
+
+// -----------------------------------------------------------------------------
+//  Space / radius / motion
+// -----------------------------------------------------------------------------
+
+// Vertical rhythm for full-width sections.
+$section-y:      fn.fluid(64, 128);
+$section-y-lg:   fn.fluid(88, 168);
+$gutter:         fn.fluid(20, 40);
+
+$radius-sm: 6px;
+$radius:    12px;
+$radius-lg: 20px;
+$radius-xl: 32px;
+$radius-pill: 999px;
+
+$shadow-xs: 0 1px 2px rgba(20, 22, 26, 0.06);
+$shadow-sm: 0 2px 8px rgba(20, 22, 26, 0.06);
+$shadow-md: 0 12px 28px -12px rgba(20, 22, 26, 0.18);
+$shadow-lg: 0 32px 64px -28px rgba(12, 23, 48, 0.32);
+
+$ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+$ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+$dur-fast: 160ms;
+$dur:      280ms;
+$dur-slow: 620ms;
+
+// -----------------------------------------------------------------------------
+//  Layout
+// -----------------------------------------------------------------------------
+
+$measure: 68ch;            // readable line length
+$header-h: 78px;           // sticky header height (desktop)
+$header-h-sm: 66px;
