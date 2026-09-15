@@ -1,0 +1,345 @@
+// =============================================================================
+//  components/gebaeudeplan
+//  Floating building-plan navigator for the map view.
+//
+//  Closed  -> a round button in the bottom-right corner.
+//  Open    -> a panel with the three floors stacked into one thick slab.
+//  Hover   -> the hovered floor stays where it is and the other two fan away
+//             from it; leaving the stage collapses everything back.
+//
+//  The fan is one line of maths, driven by two custom properties:
+//
+//      offset(i) = (h - 1) * compact + (i - h) * spread
+//
+//  where `i` is the floor index (0 = 2.OG, 1 = 1.OG, 2 = EG) and `h` is the
+//  hovered floor. With `spread == compact` the formula collapses to the resting
+//  stack, so the idle state needs no special case - it is the same equation
+//  with `--s` swapped back to `--compact`.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+
+.gplan {
+  position: fixed;
+  inset-block-end: 1.5rem;
+  inset-inline-end: 1.5rem;
+  z-index: 1080;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  font-family: v.$font-base;
+
+  @include mx.down("small") {
+    inset-block-end: 1rem;
+    inset-inline-end: 1rem;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  Auslöser
+// -----------------------------------------------------------------------------
+
+.gplan__fab {
+  order: 2; // button stays below the panel
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.3rem;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: v.$schulfarbe;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #24417c;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    flex: none;
+  }
+
+  // The label is dropped on very small screens - the icon carries the meaning.
+  @include mx.down("small") {
+    padding: 0.9rem;
+
+    .gplan__fab-text {
+      @include mx.visually-hidden;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  Panel
+// -----------------------------------------------------------------------------
+
+.gplan__panel {
+  order: 1;
+  width: min(26rem, calc(100vw - 2rem));
+  max-height: min(42rem, calc(100dvh - 8rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45);
+  transform-origin: bottom right;
+
+  &[hidden] {
+    display: none;
+  }
+
+  // Opening animation; suppressed under prefers-reduced-motion by base/_reset.
+  animation: gplan-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes gplan-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.gplan__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-block-end: 1px solid #ececec;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: v.$text;
+  }
+}
+
+.gplan__close {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  background-color: #f3f3f3;
+  border-radius: 50%;
+  color: v.$text;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #e4e4e4;
+  }
+
+  svg {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  Bühne - hier passiert das Auffächern
+// -----------------------------------------------------------------------------
+
+.gplan__stage {
+  // --compact : gap between floors in the resting stack
+  // --spread  : gap between floors while one is hovered
+  // --h       : index of the hovered floor (JS); 1 while nothing is hovered
+  // --s       : the gap actually in use (JS swaps it between the two above)
+  --compact: 26px;
+  --spread: 88px;
+  --h: 1;
+  --s: var(--compact);
+
+  position: relative;
+  // Tall enough for the widest fan: +/- (2 * spread - compact) plus half a plate.
+  block-size: 27rem;
+  padding-inline: 0.75rem;
+
+  @include mx.down("small") {
+    --compact: 18px;
+    --spread: 58px;
+    block-size: 19rem;
+  }
+}
+
+.gplan__floors {
+  position: absolute;
+  inset: 0;
+  // Floors are listed top-to-bottom in the DOM, so the ground floor paints last
+  // and sits in front - which is what the viewing angle calls for.
+}
+
+.gplan__floor {
+  --i: 0;
+
+  position: absolute;
+  inset-inline: 0.75rem;
+  inset-block-start: 50%;
+  display: block;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+
+  translate: 0 calc(
+    -50% + ((var(--h) - 1) * var(--compact)) + ((var(--i) - var(--h)) * var(--s))
+  );
+  transition: translate 520ms cubic-bezier(0.22, 1, 0.36, 1),
+              filter 260ms ease;
+
+  svg {
+    inline-size: 100%;
+    block-size: auto;
+    overflow: visible;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.16));
+    transition: filter 260ms ease;
+  }
+
+  &:hover svg,
+  &:focus-visible svg {
+    filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.26));
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    svg {
+      outline: 3px solid v.$schulfarbe;
+      outline-offset: 6px;
+      border-radius: 4px;
+    }
+  }
+}
+
+// Floors that are not the active one step back while the stack is fanned.
+.gplan__stage[data-active] .gplan__floor:not([data-active]) svg {
+  opacity: 0.62;
+}
+
+// -----------------------------------------------------------------------------
+//  Etagenbeschriftung im Plan
+// -----------------------------------------------------------------------------
+
+.gplan-plate {
+  &__ring {
+    fill: none;
+    stroke-width: 18;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+  }
+
+  &__band {
+    fill: none;
+    stroke-width: 18;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    transition: stroke-width 200ms ease;
+  }
+
+  &__inner {
+    fill: none;
+    stroke: #e6e6e6;
+    stroke-width: 2;
+  }
+
+  &__corridor {
+    fill: #bdbdbd;
+    font-size: 13px;
+    font-weight: bold;
+    text-anchor: middle;
+  }
+
+  &__level {
+    fill: #c4c4c4;
+    font-size: 46px;
+    font-weight: bold;
+    text-anchor: middle;
+  }
+
+  &__level-suffix {
+    font-size: 17px;
+  }
+
+  &__you {
+    fill: v.$schulfarbe;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  Raumliste zur aktiven Etage
+// -----------------------------------------------------------------------------
+
+.gplan__rooms {
+  padding: 0 1.25rem 1.25rem;
+}
+
+.gplan__rooms-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+// Equal, tightly packed entries => grid.
+.gplan__room-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.4rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: v.$text;
+  }
+
+  i {
+    inline-size: 0.7rem;
+    block-size: 0.7rem;
+    flex: none;
+    border-radius: 2px;
+    background-color: var(--swatch);
+  }
+}
+
+// Only the active floor's list is shown; the hint takes its place at rest.
+.gplan__room-group {
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+}
+
+.gplan__hint {
+  margin: 0;
+  padding: 0 1.25rem 1.25rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #8a8a8a;
+
+  .gplan__stage[data-active] ~ & {
+    display: none;
+  }
+}
