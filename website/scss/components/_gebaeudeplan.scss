@@ -2,17 +2,19 @@
 //  components/gebaeudeplan
 //  Floating building-plan navigator for the map view.
 //
-//  Closed  -> a round button in the bottom-right corner.
-//  Hover   -> the panel opens and the three floors sit in one thick slab.
-//  Hover a floor -> that floor stays exactly where it is and the other two are
-//                   pushed away from it. The push grows with distance: the
-//                   neighbouring floor moves by one step, the far floor by
-//                   clearly more than two, so the hovered floor gets real air
-//                   around it.
-//  Leaving -> everything collapses back and the panel closes.
+//  Closed        -> a button in the bottom-right corner.
+//  Hover         -> the panel opens; the three floors sit in one thick slab.
+//  Hover a floor -> that floor holds its position and the other two are pushed
+//                   away from it, further the more floors apart they are.
+//  Click a floor -> it is selected: the panel locks open so its rooms can be
+//                   picked, and each room highlights its band in the plan.
 //
-//  The offsets are generated below from a small distance -> multiplier map, so
-//  the nine possible arrangements stay in one place and cannot drift apart.
+//  IMPORTANT - the panel must keep a CONSTANT height. It is anchored to the
+//  bottom of the viewport, so any change in content height makes it grow
+//  upwards and drags the whole stack with it, which completely masks the fan
+//  (the hovered floor appears to move even though its offset is correct).
+//  That is why the room area and the info line below have reserved heights
+//  instead of sizing to their content.
 // =============================================================================
 
 @use "sass:map";
@@ -20,8 +22,7 @@
 @use "../abstracts/mixins" as mx;
 
 // How far a floor is pushed, by its distance from the hovered one.
-// Distance 2 is deliberately far more than 2 x distance 1 - that is what opens
-// the stack up instead of just sliding it apart evenly.
+// Distance 2 is deliberately far more than 2 x distance 1.
 $gplan-fan: (
   0: 0,
   1: 1,
@@ -36,8 +37,8 @@ $gplan-fan: (
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  // The gap belongs to the flex container, so travelling from the button up to
-  // the panel never leaves the hover region.
+  // The gap belongs to the flex container, so moving from the button up to the
+  // panel never leaves the hover region.
   gap: 0.75rem;
   font-family: v.$font-base;
 
@@ -52,7 +53,7 @@ $gplan-fan: (
 // -----------------------------------------------------------------------------
 
 .gplan__fab {
-  order: 2; // button stays below the panel
+  order: 2;
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -88,15 +89,15 @@ $gplan-fan: (
 }
 
 // -----------------------------------------------------------------------------
-//  Panel
+//  Panel - feste Höhe, siehe Kommentar oben
 // -----------------------------------------------------------------------------
 
 .gplan__panel {
   order: 1;
+  display: flex;
+  flex-direction: column;
   width: min(30rem, calc(100vw - 2rem));
   max-height: calc(100dvh - 5.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
   background-color: #fff;
   border-radius: 1rem;
   box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45);
@@ -125,6 +126,7 @@ $gplan-fan: (
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  flex: none;
   padding: 0.9rem 1.25rem;
   border-block-end: 1px solid #ececec;
 
@@ -162,20 +164,17 @@ $gplan-fan: (
 
 .gplan__stage {
   // --compact : gap between floors in the resting stack
-  // --spread  : one step of separation while a floor is hovered
+  // --spread  : one step of separation while a floor is active
   // --plate-h : rendered height of one floor plate
-  //
-  // Turn these two up for an even wider fan - the stage resizes itself.
   --compact: 24px;
   --spread: 118px;
   --plate-h: 115px;
 
   position: relative;
+  flex: none;
 
-  // Exactly tall enough for the widest arrangement. The furthest a floor ever
-  // travels from the centre is (far-step x spread) - compact, in both
-  // directions, plus one plate. Deriving it means the spacing can be retuned
-  // without hand-measuring a new height.
+  // Exactly tall enough for the widest arrangement, derived from the fan map so
+  // retuning --spread resizes the stage automatically.
   block-size: calc(
     2 * ((#{map.get($gplan-fan, 2)} * var(--spread)) - var(--compact)) + var(--plate-h)
   );
@@ -246,8 +245,8 @@ $gplan-fan: (
 //
 //    offset(i) = (h - 1) * compact  +  fan(|i - h|) * spread
 //
-//  The first term keeps the hovered floor on the spot it occupies in the
-//  resting stack; the second pushes the others away from it.
+//  The first term parks the active floor on the spot it occupies in the resting
+//  stack; the second pushes the others away from it.
 // -----------------------------------------------------------------------------
 
 .gplan__stage {
@@ -284,6 +283,13 @@ $gplan-fan: (
   opacity: 0.55;
 }
 
+// A selected (clicked) floor keeps a ring so it is clear which one is pinned.
+.gplan__floor[data-selected] svg {
+  outline: 3px solid v.$schulfarbe;
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+
 // -----------------------------------------------------------------------------
 //  Etagenbeschriftung im Plan
 // -----------------------------------------------------------------------------
@@ -301,6 +307,16 @@ $gplan-fan: (
     stroke-width: 18;
     stroke-linejoin: miter;
     stroke-linecap: butt;
+    transition: opacity 220ms ease, stroke-width 220ms ease;
+  }
+
+  // While a room is selected, its band is emphasised and the rest recede.
+  &__band.is-dim {
+    opacity: 0.2;
+  }
+
+  &__band.is-highlight {
+    stroke-width: 24;
   }
 
   &__inner {
@@ -333,11 +349,19 @@ $gplan-fan: (
 }
 
 // -----------------------------------------------------------------------------
-//  Raumliste zur aktiven Etage
+//  Raumliste - RESERVIERTE Höhe, damit das Panel nicht wächst
 // -----------------------------------------------------------------------------
 
 .gplan__rooms {
-  padding: 0 1.25rem 1.1rem;
+  flex: none;
+  block-size: 8.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 1.25rem;
+
+  @include mx.down("small") {
+    block-size: 8.5rem;
+  }
 }
 
 .gplan__rooms-title {
@@ -353,18 +377,34 @@ $gplan-fan: (
 .gplan__room-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.35rem 1rem;
+  gap: 0.15rem 0.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
+}
 
-  li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.78rem;
-    line-height: 1.3;
-    color: v.$text;
+.gplan__room {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  inline-size: 100%;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  text-align: start;
+  color: v.$text;
+  background: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+
+  &:hover {
+    background-color: #f1f3f7;
+  }
+
+  &[aria-pressed="true"] {
+    background-color: rgba(v.$schulfarbe, 0.12);
+    font-weight: bold;
   }
 
   i {
@@ -374,6 +414,8 @@ $gplan-fan: (
     border-radius: 2px;
     background-color: var(--swatch);
   }
+
+  @include mx.focus-ring;
 }
 
 .gplan__room-group {
@@ -386,12 +428,42 @@ $gplan-fan: (
 
 .gplan__hint {
   margin: 0;
-  padding: 0 1.25rem 1.1rem;
   font-size: 0.78rem;
   line-height: 1.5;
   color: #8a8a8a;
 
-  .gplan__stage[data-active] ~ & {
+  // Hidden as soon as a floor is active - the room list takes the same space.
+  .gplan__stage[data-active] ~ .gplan__rooms & {
     display: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  Infozeile - ebenfalls feste Höhe
+// -----------------------------------------------------------------------------
+
+.gplan__info {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  block-size: 3rem;
+  margin: 0;
+  padding: 0 1.25rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: #8a8a8a;
+  border-block-start: 1px solid #ececec;
+
+  b {
+    color: v.$text;
+  }
+
+  i {
+    inline-size: 0.7rem;
+    block-size: 0.7rem;
+    flex: none;
+    border-radius: 2px;
+    background-color: var(--swatch, transparent);
   }
 }

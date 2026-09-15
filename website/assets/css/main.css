@@ -14770,10 +14770,10 @@ p {
 
 .gplan__panel {
   order: 1;
+  display: flex;
+  flex-direction: column;
   width: min(30rem, 100vw - 2rem);
   max-height: calc(100dvh - 5.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
   background-color: #fff;
   border-radius: 1rem;
   box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45);
@@ -14801,6 +14801,7 @@ p {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  flex: none;
   padding: 0.9rem 1.25rem;
   border-block-end: 1px solid #ececec;
 }
@@ -14834,6 +14835,7 @@ p {
   --spread: 118px;
   --plate-h: 115px;
   position: relative;
+  flex: none;
   block-size: calc(2 * (2.55 * var(--spread) - var(--compact)) + var(--plate-h));
 }
 @media (max-width: 960px) {
@@ -14920,6 +14922,12 @@ p {
   opacity: 0.55;
 }
 
+.gplan__floor[data-selected] svg {
+  outline: 3px solid #3357a1;
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+
 .gplan-plate__ring {
   fill: none;
   stroke-width: 18;
@@ -14931,6 +14939,13 @@ p {
   stroke-width: 18;
   stroke-linejoin: miter;
   stroke-linecap: butt;
+  transition: opacity 220ms ease, stroke-width 220ms ease;
+}
+.gplan-plate__band.is-dim {
+  opacity: 0.2;
+}
+.gplan-plate__band.is-highlight {
+  stroke-width: 24;
 }
 .gplan-plate__inner {
   fill: none;
@@ -14957,7 +14972,16 @@ p {
 }
 
 .gplan__rooms {
-  padding: 0 1.25rem 1.1rem;
+  flex: none;
+  block-size: 8.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 1.25rem;
+}
+@media (max-width: 454px) {
+  .gplan__rooms {
+    block-size: 8.5rem;
+  }
 }
 
 .gplan__rooms-title {
@@ -14972,25 +14996,44 @@ p {
 .gplan__room-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.35rem 1rem;
+  gap: 0.15rem 0.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.gplan__room-list li {
+
+.gplan__room {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  inline-size: 100%;
+  padding: 0.2rem 0.35rem;
   font-size: 0.78rem;
   line-height: 1.3;
+  text-align: start;
   color: #333;
+  background: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 160ms ease;
 }
-.gplan__room-list i {
+.gplan__room:hover {
+  background-color: #f1f3f7;
+}
+.gplan__room[aria-pressed=true] {
+  background-color: rgba(51, 87, 161, 0.12);
+  font-weight: bold;
+}
+.gplan__room i {
   inline-size: 0.7rem;
   block-size: 0.7rem;
   flex: none;
   border-radius: 2px;
   background-color: var(--swatch);
+}
+.gplan__room:focus-visible {
+  outline: 3px solid #3357a1;
+  outline-offset: 2px;
 }
 
 .gplan__room-group {
@@ -15002,11 +15045,34 @@ p {
 
 .gplan__hint {
   margin: 0;
-  padding: 0 1.25rem 1.1rem;
   font-size: 0.78rem;
   line-height: 1.5;
   color: #8a8a8a;
 }
-.gplan__stage[data-active] ~ .gplan__hint {
+.gplan__stage[data-active] ~ .gplan__rooms .gplan__hint {
   display: none;
+}
+
+.gplan__info {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  block-size: 3rem;
+  margin: 0;
+  padding: 0 1.25rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: #8a8a8a;
+  border-block-start: 1px solid #ececec;
+}
+.gplan__info b {
+  color: #333;
+}
+.gplan__info i {
+  inline-size: 0.7rem;
+  block-size: 0.7rem;
+  flex: none;
+  border-radius: 2px;
+  background-color: var(--swatch, transparent);
 }

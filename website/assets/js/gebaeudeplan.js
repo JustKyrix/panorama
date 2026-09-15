@@ -1,13 +1,17 @@
 /* =============================================================================
  *  Gebäudeplan - floating floor navigator for the map view
  *
- *  Everything is hover-driven: hovering the button opens the panel, hovering a
- *  floor fans the stack around it, and leaving the widget closes it again.
+ *  Three layers of interaction:
  *
- *  The fan itself is pure CSS - this file only records *which* floor is active
- *  via `data-active`, and the stylesheet holds the nine resulting positions.
+ *    hover the button  -> the panel opens
+ *    hover a floor     -> preview: that floor holds still, the others fan away
+ *    click a floor     -> select it: the panel locks open so its rooms can be
+ *                         picked, and picking one highlights its band
  *
- *  Touch screens have no hover at all, so there tapping stands in for it.
+ *  The fan itself is pure CSS; this file only records which floor is active
+ *  (`data-active` on the stage) and which room is selected.
+ *
+ *  Touch screens have no hover, so there a tap stands in for it.
  * ========================================================================== */
 
 (() => {
@@ -20,15 +24,66 @@
   const panel = root.querySelector("[data-gplan-panel]");
   const closeBtn = root.querySelector("[data-gplan-close]");
   const stage = root.querySelector("[data-gplan-stage]");
+  const info = root.querySelector("[data-gplan-info]");
   const floors = [...root.querySelectorAll("[data-gplan-floor]")];
   const groups = [...root.querySelectorAll("[data-gplan-rooms]")];
+  const rooms = [...root.querySelectorAll("[data-gplan-room]")];
 
   if (!fab || !panel || !stage || !floors.length) return;
 
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  let active = null;
+  const FLOOR_NAMES = ["2. Obergeschoss", "1. Obergeschoss", "Erdgeschoss"];
+  const INFO_DEFAULT = "Etage anklicken, um ihre Räume auszuwählen.";
+  const INFO_PICK = "Raum auswählen, um ihn im Plan zu markieren.";
+
+  let active = null; // floor currently fanned (hover preview or selection)
+  let pinned = null; // floor committed by a click
   let closeTimer = 0;
+
+  // ---------------------------------------------------------------------------
+  //  Raumauswahl
+  // ---------------------------------------------------------------------------
+
+  const clearRoom = () => {
+    rooms.forEach((room) => room.setAttribute("aria-pressed", "false"));
+    root.querySelectorAll(".gplan-plate__band").forEach((band) => {
+      band.classList.remove("is-highlight", "is-dim");
+    });
+  };
+
+  const setInfo = (html) => {
+    if (info) info.innerHTML = html;
+  };
+
+  const selectRoom = (room) => {
+    const wasSelected = room.getAttribute("aria-pressed") === "true";
+    clearRoom();
+
+    if (wasSelected) {
+      setInfo(pinned === null ? INFO_DEFAULT : INFO_PICK);
+      return;
+    }
+
+    room.setAttribute("aria-pressed", "true");
+
+    // Emphasise this room's band on the selected floor, recede the rest.
+    const floor = floors[active];
+    if (floor) {
+      floor.querySelectorAll(".gplan-plate__band").forEach((band) => {
+        const match = band.dataset.band === room.dataset.band;
+        band.classList.toggle("is-highlight", match);
+        band.classList.toggle("is-dim", !match);
+      });
+    }
+
+    const swatch = room.querySelector("i")?.style.getPropertyValue("--swatch") || "";
+    const name = room.querySelector("span")?.textContent || "";
+    setInfo(
+      `<i style="--swatch:${swatch}"></i>` +
+        `<span><b>${name}</b> · ${room.dataset.fach} · ${FLOOR_NAMES[active]}</span>`
+    );
+  };
 
   // ---------------------------------------------------------------------------
   //  Aktive Etage
@@ -46,13 +101,27 @@
 
     floors.forEach((floor, i) => {
       floor.toggleAttribute("data-active", i === index);
-      floor.setAttribute("aria-pressed", String(i === index));
     });
 
     groups.forEach((group) => {
-      const isActive = index !== null && Number(group.dataset.gplanRooms) === index;
-      group.classList.toggle("is-active", isActive);
+      group.classList.toggle(
+        "is-active",
+        index !== null && Number(group.dataset.gplanRooms) === index
+      );
     });
+
+    // Changing floors invalidates any room selection.
+    clearRoom();
+    setInfo(pinned === null ? INFO_DEFAULT : INFO_PICK);
+  };
+
+  const setPinned = (index) => {
+    pinned = index;
+    floors.forEach((floor, i) => {
+      floor.toggleAttribute("data-selected", i === index);
+      floor.setAttribute("aria-pressed", String(i === index));
+    });
+    setInfo(index === null ? INFO_DEFAULT : INFO_PICK);
   };
 
   // ---------------------------------------------------------------------------
@@ -73,12 +142,14 @@
     if (!isOpen()) return;
     panel.hidden = true;
     fab.setAttribute("aria-expanded", "false");
+    setPinned(null);
     setActive(null);
   };
 
   // A short grace period keeps the panel open across the gap between the button
-  // and the card, and survives the pointer skimming an edge.
+  // and the card. A selected floor keeps it open indefinitely.
   const closeSoon = () => {
+    if (pinned !== null) return;
     window.clearTimeout(closeTimer);
     closeTimer = window.setTimeout(close, 220);
   };
@@ -87,7 +158,6 @@
     root.addEventListener("pointerenter", open);
     root.addEventListener("pointerleave", closeSoon);
   } else {
-    // Touch: the button toggles, since hover does not exist here.
     fab.addEventListener("click", () => (isOpen() ? close() : open()));
   }
 
@@ -98,11 +168,18 @@
   floors.forEach((floor, i) => {
     if (canHover) {
       floor.addEventListener("pointerenter", () => setActive(i));
-    } else {
-      floor.addEventListener("click", () => setActive(active === i ? null : i));
     }
 
-    // Keyboard equivalent of hovering a floor.
+    floor.addEventListener("click", () => {
+      if (pinned === i) {
+        setPinned(null);
+        setActive(null);
+      } else {
+        setPinned(i);
+        setActive(i);
+      }
+    });
+
     floor.addEventListener("focus", () => {
       open();
       setActive(i);
@@ -110,9 +187,13 @@
   });
 
   if (canHover) {
-    // Moving off the plan - but still inside the panel - collapses the stack.
-    stage.addEventListener("pointerleave", () => setActive(null));
+    // Moving off the plan falls back to the selected floor, or collapses.
+    stage.addEventListener("pointerleave", () => setActive(pinned));
   }
+
+  rooms.forEach((room) => {
+    room.addEventListener("click", () => selectRoom(room));
+  });
 
   // ---------------------------------------------------------------------------
   //  Tastatur
@@ -121,7 +202,7 @@
   fab.addEventListener("focus", open);
 
   root.addEventListener("focusout", (event) => {
-    if (!root.contains(event.relatedTarget)) close();
+    if (pinned === null && !root.contains(event.relatedTarget)) close();
   });
 
   closeBtn?.addEventListener("click", () => {
@@ -134,5 +215,10 @@
       close();
       fab.focus({ preventScroll: true });
     }
+  });
+
+  // With a floor selected the panel stays put, so it needs a way out.
+  document.addEventListener("pointerdown", (event) => {
+    if (isOpen() && !root.contains(event.target)) close();
   });
 })();
