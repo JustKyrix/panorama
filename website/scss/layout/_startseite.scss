@@ -142,8 +142,9 @@
   padding-block: 1rem 2rem;
   clear: both;
 
-  // Intro block and section headings run the full width of the content column.
+  // Intro block, section headings and the map run the full width.
   > .post-start,
+  > .karte,
   > h1,
   > h2 {
     grid-column: span 2;
@@ -153,6 +154,7 @@
     grid-template-columns: 1fr;
 
     > .post-start,
+    > .karte,
     > h1,
     > h2 {
       grid-column: span 1;

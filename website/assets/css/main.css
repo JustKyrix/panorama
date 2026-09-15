@@ -14513,6 +14513,7 @@ p {
   clear: both;
 }
 .entry > .post-start,
+.entry > .karte,
 .entry > h1,
 .entry > h2 {
   grid-column: span 2;
@@ -14522,6 +14523,7 @@ p {
     grid-template-columns: 1fr;
   }
   .entry > .post-start,
+  .entry > .karte,
   .entry > h1,
   .entry > h2 {
     grid-column: span 1;
@@ -14661,6 +14663,50 @@ p {
   .icon-bar {
     display: none;
   }
+}
+
+.karte {
+  margin-block-start: 1rem;
+}
+.karte__title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding-block: 0.5rem;
+  color: #333;
+}
+.karte__frame {
+  position: relative;
+  block-size: 24rem;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background-color: #e8eaed;
+}
+@media (max-width: 960px) {
+  .karte__frame {
+    block-size: 18rem;
+  }
+}
+.karte iframe {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+}
+.karte__placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #7d7d7d;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.karte__placeholder strong {
+  display: block;
+  margin-block-end: 0.35rem;
+  font-size: 1rem;
+  color: #5a5a5a;
 }
 
 .gplan {

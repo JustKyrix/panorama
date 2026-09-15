@@ -1,0 +1,62 @@
+// =============================================================================
+//  components/karte
+//  Container for the Google Maps embed on the start page. Until the map is
+//  wired up it renders as a neutral grid placeholder of the same size, so the
+//  surrounding layout is already final.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+
+.karte {
+  // Sits in the content grid; spans both news columns.
+  margin-block-start: 1rem;
+
+  &__title {
+    font-size: v.$fs-entry-h2;
+    font-weight: bold;
+    padding-block: 0.5rem;
+    color: v.$text;
+  }
+
+  &__frame {
+    position: relative;
+    block-size: 24rem;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background-color: #e8eaed;
+
+    @include mx.down("collapse") {
+      block-size: 18rem;
+    }
+  }
+
+  // The embed fills the frame once it is inserted.
+  iframe {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+  }
+
+  // Placeholder look while no embed is present.
+  &__placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: #7d7d7d;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+    background-size: 48px 48px;
+
+    strong {
+      display: block;
+      margin-block-end: 0.35rem;
+      font-size: 1rem;
+      color: #5a5a5a;
+    }
+  }
+}
