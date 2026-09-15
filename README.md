@@ -34,8 +34,9 @@ npx --yes http-server website -p 4173 -c-1
 | `npm start` / `npm run watch` | Sass im Watch-Modus (Entwicklung) |
 | `npm run build:css` | Einmalig nach `assets/css/main.css` kompilieren |
 | `npm run build:min` | Zusätzlich eine komprimierte `main.min.css` erzeugen |
-| `npm run prefix` | Autoprefixer über das kompilierte CSS laufen lassen |
 | `npm run build` | Kompletter Produktions-Build |
+| `npm run package` | Build + `adbk-site.zip` fürs Deployment schnüren |
+| `npm run serve` | Lokalen Server auf Port 4173 starten |
 
 ---
 
@@ -160,6 +161,43 @@ Rein additiv, ohne das Erscheinungsbild zu verändern:
 - semantisches Markup (`header`, `nav`, `main`, `article`, `footer`)
 - `loading="lazy"` und feste Maße bei Bildern gegen Layout-Shift
 - `prefers-reduced-motion` schaltet Übergänge ab
+
+---
+
+## Deployment
+
+Die Seite läuft auf Plesk unter **<https://panorama.artline-studio.de>**.
+
+Zwei Ziele bei jeder Änderung:
+
+1. **GitHub** – `git push origin main`
+2. **Plesk** – Paket bauen und im Webspace entpacken
+
+### Paket bauen
+
+```bash
+cd website
+npm run package
+```
+
+Das erzeugt `website/adbk-site.zip` (CSS wird vorher neu kompiliert) mit
+`index.html` und dem kompletten `assets/`-Ordner – rund 2 MB.
+
+`tar` schreibt Pfade mit Schrägstrich. Das ist wichtig: ein mit PowerShells
+`Compress-Archive` erzeugtes Archiv nutzt Backslashes, und das Entpacken unter
+Linux quittiert das mit einer Warnung.
+
+### Im Plesk hochladen
+
+1. Plesk öffnen → Domain `panorama.artline-studio.de` → **Files**
+2. **+ → Upload File** → `adbk-site.zip` auswählen
+3. Archiv markieren → **Archive → Extract Files**
+4. **„Replace existing files" ankreuzen** – sonst bleibt die alte `index.html` stehen
+5. `adbk-site.zip` anschließend wieder löschen, damit sie nicht öffentlich
+   abrufbar ist
+
+Der Webspace enthält danach nur `index.html`, `assets/` sowie Plesks eigene
+`.php-ini` und `.php-version`.
 
 ---
 
