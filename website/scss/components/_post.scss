@@ -1,0 +1,79 @@
+// =============================================================================
+//  components/post
+//  A news item inside the content grid, plus the fixed advice-team tab.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+
+.post {
+  min-width: 0;
+
+  &__title {
+    font-size: v.$fs-entry-h2;
+    font-weight: bold;
+    padding-block: 0.5rem;
+
+    a {
+      color: v.$text;
+
+      &:hover {
+        color: v.$schulfarbe;
+      }
+    }
+  }
+
+  &__summary {
+    h2 {
+      font-size: v.$fs-entry-h2;
+      padding-block: 0.5rem;
+    }
+
+    p + p {
+      margin-block-start: 1em;
+    }
+  }
+
+  // "Posted in <category> | Kommentare deaktiviert"
+  &__meta {
+    margin-block-start: 1rem;
+    font-size: v.$fs-teaser-text;
+    color: v.$text;
+
+    a {
+      color: v.$schulfarbe;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  Beratungsteam - rotated tab pinned to the right edge of the viewport.
+// -----------------------------------------------------------------------------
+
+.icon-bar {
+  position: fixed;
+  top: 50vh;
+  inset-inline-end: 0;
+  z-index: 2;
+  transform: translateX(33.333%) rotate(90deg);
+
+  &__link {
+    display: block;
+    padding: 16px;
+    font-size: v.$fs-icon-bar;
+    color: #fff;
+    text-align: center;
+    background-color: v.$schulfarbe;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      color: #fff;
+      background-color: rgba(192, 192, 192, 0.75);
+    }
+  }
+
+  // The rotated tab costs too much width on phones.
+  @include mx.down("collapse") {
+    display: none;
+  }
+}

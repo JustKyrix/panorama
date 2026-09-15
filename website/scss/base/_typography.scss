@@ -1,93 +1,67 @@
 // =============================================================================
 //  base/typography
+//  Type sizes mirror the original theme: 16px root, 0.8rem body copy inside the
+//  content area, 1.5rem h1, 1.3rem h2.
 // =============================================================================
 
 @use "../abstracts/variables" as v;
-@use "../abstracts/mixins" as mx;
 
-h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
-  font-family: v.$font-display;
-  letter-spacing: v.$tracking-tight;
-  text-wrap: balance;
-  color: v.$ink;
+h1,
+h2,
+h3,
+h4 {
+  font-weight: bold;
+  color: v.$text;
+  margin: 0;
 }
-
-h1, .h1 { line-height: v.$lh-tight; }
-h2, .h2 { line-height: 1.12; }
 
 p {
-  text-wrap: pretty;
+  margin: 0;
 }
 
-// Constrained measure for running prose - long lines are the #1 readability bug.
-.prose {
-  max-width: var(--adbk-measure);
+// Running copy inside the content column.
+.entry {
+  font-size: v.$fs-entry;
+  font-weight: normal;
+  color: v.$text;
 
-  > * + * {
-    margin-block-start: 1.1em;
+  h1 {
+    font-size: v.$fs-h1;
   }
 
-  a:not(.btn) {
-    font-weight: 600;
-    background-image: linear-gradient(currentColor, currentColor);
-    background-size: 100% 1px;
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    transition: background-size v.$dur v.$ease-out;
+  h2 {
+    font-size: v.$fs-entry-h2;
+    padding-block: 0.5rem;
+  }
+
+  h3 {
+    font-size: v.$fs-entry-h3;
+    padding-block: 2rem 0.8rem;
+  }
+
+  p + p {
+    margin-block-start: 1em;
+  }
+
+  a {
+    color: v.$schulfarbe;
 
     &:hover {
-      background-size: 0% 1px;
-      text-decoration: none;
+      text-decoration: underline;
     }
   }
-}
 
-.lead {
-  font-size: v.$fs-lead;
-  line-height: 1.6;
-  color: v.$ink-soft;
-}
-
-.display-type {
-  @include mx.display-type(v.$fs-display);
-}
-
-.eyebrow {
-  @include mx.eyebrow(v.$blue);
-
-  &::before {
-    content: "";
-    inline-size: 1.75rem;
-    block-size: 2px;
-    background-color: currentColor;
-    flex: none;
+  strong,
+  b {
+    font-weight: bold;
   }
 
-  &--light {
-    color: rgba(#fff, 0.72);
+  em,
+  i {
+    font-style: italic;
+  }
+
+  img {
+    width: 100%;
   }
 }
-
-// Highlighted run of words inside a heading.
-.accent {
-  color: v.$blue;
-}
-
-.accent-underline {
-  position: relative;
-  white-space: nowrap;
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset-inline: -0.08em;
-    bottom: 0.06em;
-    block-size: 0.34em;
-    background-color: rgba(v.$lime, 0.55);
-    border-radius: v.$radius-sm;
-    z-index: -1;
-  }
-}
-
-.text-balance { text-wrap: balance; }
-.text-pretty  { text-wrap: pretty; }

@@ -1,0 +1,115 @@
+// =============================================================================
+//  layout/hauptnavi
+//  Full-width photo band, 33.25rem tall, with the four colour-coded entry
+//  tiles centred on top of it. One row of equal tiles on a single axis => flex.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+
+.hauptnavi {
+  position: relative;
+  height: v.$hauptnavi-h;
+  background-color: v.$hauptnavi-bg;
+  background-image: url("../images/titelbild.jpg");
+  background-size: auto 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  &__list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    max-width: v.$hauptnavi-ul;
+    margin-inline: auto;
+  }
+
+  &__item {
+    display: flex;
+    margin-block-start: v.$tile-top;
+    margin-inline-end: v.$tile-gap;
+
+    &:last-child {
+      margin-inline-end: 0;
+    }
+  }
+
+  &__link {
+    display: block;
+    width: v.$tile;
+    height: v.$tile;
+    padding: v.$tile-pad-top 1rem 0;
+    font-size: v.$fs-hauptnavi;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    // Long compound words are broken by hand with <br>, so hyphenation is off.
+    hyphens: none;
+    background-color: var(--tile);
+    transition: background-color 0.2s ease;
+
+    &:hover,
+    &:focus-visible {
+      background-color: v.$nav-hover;
+      color: #fff;
+    }
+  }
+
+  // The four tiles, in the original's order and colours.
+  &__item--vorbereitung { --tile: #{v.$nav-vorbereitung}; }
+  &__item--ausbildung   { --tile: #{v.$nav-ausbildung}; }
+  &__item--fachschule   { --tile: #{v.$nav-fachschule}; }
+  &__item--verwaltung   { --tile: #{v.$nav-verwaltung}; }
+
+  // "Über die Schule" is the only label the original lets the browser hyphenate.
+  &__item--fachschule &__link {
+    hyphens: auto;
+  }
+
+  // ---------------------------------------------------------------------------
+  //  Responsive
+  //  Below 960px the original drops the photo and stacks the tiles. Here they
+  //  reflow into a grid instead, so nothing is cut off on the way down.
+  // ---------------------------------------------------------------------------
+  @include mx.down("collapse") {
+    height: auto;
+    background-image: none;
+    background-color: transparent;
+    padding-block: 1.5rem;
+
+    &__list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      max-width: none;
+      padding-inline: 1rem;
+    }
+
+    &__item {
+      display: block;
+      margin: 0;
+    }
+
+    &__link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      min-height: 8.5rem;
+      padding: 1rem;
+      background-color: color-mix(in srgb, var(--tile) 100%, transparent);
+    }
+  }
+
+  @include mx.down("small") {
+    &__list {
+      grid-template-columns: 1fr;
+    }
+
+    &__link {
+      min-height: 6rem;
+    }
+  }
+}

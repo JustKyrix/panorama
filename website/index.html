@@ -3,15 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Albrecht-Dürer-Berufskolleg Düsseldorf – Berufliche Bildung in Benrath</title>
-  <meta name="description" content="Das Albrecht-Dürer-Berufskolleg in Düsseldorf-Benrath: Ausbildungs- und Berufsvorbereitung, Berufsqualifizierung, Fachschulen und Weiterbildung unter einem Dach.">
-  <meta name="theme-color" content="#0c1730">
-
+  <title>ADBK</title>
+  <meta name="description" content="Albrecht-Dürer-Berufskolleg, Städtische Schule der Sekundarstufe II, Düsseldorf.">
   <link rel="icon" href="assets/images/adbk-logo.png" type="image/png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
@@ -19,969 +13,350 @@
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
   <!-- ===================================================================== -->
-  <!--  Kontaktleiste                                                         -->
-  <!-- ===================================================================== -->
-  <div class="topbar">
-    <div class="container">
-      <div class="topbar__inner">
-        <ul class="topbar__list">
-          <li>
-            <a href="tel:+4921189973 00">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
-              0211 89 973 00
-            </a>
-          </li>
-          <li>
-            <a href="mailto:info@adbk.nrw.schule">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
-              info@adbk.nrw.schule
-            </a>
-          </li>
-          <li class="d-none d-md-block">
-            <a href="#kontakt">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-              Paulsmühlenstraße 1, 40597 Düsseldorf
-            </a>
-          </li>
-        </ul>
-
-        <ul class="topbar__list">
-          <li><a href="#">Moodle</a></li>
-          <li><a href="#">WebUntis</a></li>
-          <li><a href="#">Interner Bereich</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================================================================== -->
   <!--  Kopfbereich                                                           -->
   <!-- ===================================================================== -->
-  <header class="site-header" id="siteHeader">
-    <div class="container">
-      <div class="site-header__inner">
+  <header class="site-header">
+    <div class="site-header__inner">
 
-        <a class="brand" href="#" aria-label="Albrecht-Dürer-Berufskolleg – zur Startseite">
-          <img class="brand__mark" src="assets/images/adbk-logo.png" width="92" height="92"
-               alt="Signet des Albrecht-Dürer-Berufskollegs">
-          <span class="brand__text">
-            <span class="brand__name">Albrecht-Dürer-Berufskolleg</span>
-            <span class="brand__sub">Sekundarstufe II · Düsseldorf</span>
-          </span>
-        </a>
+      <div class="logo">
+        <figure>
+          <a href="index.html">
+            <img class="logo__img" src="assets/images/adbk-logo.png" width="119" height="120"
+                 alt="Logo des ADBK">
+          </a>
+        </figure>
+        <p class="logo__text">
+          Albrecht-Dürer-Berufskolleg<br>
+          Städtische Schule der Sekundarstufe II<br>
+          Paulsmühlenstraße 1<br>
+          40597 Düsseldorf
+        </p>
+      </div>
 
-        <nav class="mainnav" aria-label="Hauptnavigation">
-          <ul class="mainnav__list">
-            <li><a class="mainnav__link" href="#bildungswege" aria-current="page">Bildungswege</a></li>
-            <li><a class="mainnav__link" href="#fachbereiche">Fachbereiche</a></li>
-            <li><a class="mainnav__link" href="#aktuelles">Aktuelles</a></li>
-            <li><a class="mainnav__link" href="#termine">Termine</a></li>
-            <li><a class="mainnav__link" href="#kontakt">Kontakt</a></li>
+      <div class="header-right">
+        <form class="suche" role="search" method="get" action="#">
+          <label class="suche__label" for="s">Suchbegriff eingeben</label>
+          <input class="suche__input" type="text" name="s" id="s" placeholder="Suchbegriff eingeben...">
+          <button class="suche__submit" type="submit">Suchen</button>
+        </form>
+
+        <button class="open-menu" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#menuDrawer" aria-controls="menuDrawer" aria-label="Menü öffnen">
+          &#9776;
+        </button>
+
+        <nav class="navi-oben" aria-label="Servicenavigation">
+          <ul class="navi-oben__list">
+            <li class="navi-oben__item"><a class="navi-oben__link" href="#">Alle Berufe</a></li>
+            <li class="navi-oben__item"><a class="navi-oben__link" href="#">Stundenplan</a></li>
+            <li class="navi-oben__item"><a class="navi-oben__link" href="#">Anmeldung</a></li>
+            <li class="navi-oben__item"><a class="navi-oben__link" href="#">Kontakt</a></li>
           </ul>
         </nav>
-
-        <div class="header-actions">
-          <form class="header-search" role="search" action="#" onsubmit="return false;">
-            <label class="visually-hidden" for="q">Website durchsuchen</label>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="search" id="q" name="q" placeholder="Suchen …" autocomplete="off">
-          </form>
-
-          <a class="btn btn-primary btn-sm d-none d-sm-inline-flex" href="#termine">
-            Anmeldung
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-
-          <button class="nav-toggle" type="button" data-bs-toggle="offcanvas"
-                  data-bs-target="#navDrawer" aria-controls="navDrawer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            Menü
-          </button>
-        </div>
-
       </div>
-    </div>
-    <div class="brand-rule" aria-hidden="true">
-      <span style="background:#a3dec7"></span>
-      <span style="background:#b80d48"></span>
-      <span style="background:#16295a"></span>
-      <span style="background:#d47217"></span>
-      <span style="background:#928767"></span>
-      <span style="background:#c3d62f"></span>
+
     </div>
   </header>
 
   <!-- Mobile Navigation -->
-  <div class="offcanvas offcanvas-end navdrawer" tabindex="-1" id="navDrawer" aria-labelledby="navDrawerLabel">
-    <div class="offcanvas-header border-bottom">
-      <h2 class="offcanvas-title h5 mb-0" id="navDrawerLabel">Navigation</h2>
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="menuDrawer" aria-labelledby="menuDrawerLabel">
+    <div class="offcanvas-header">
+      <h2 class="offcanvas-title h5 mb-0" id="menuDrawerLabel">Navigation</h2>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Menü schließen"></button>
     </div>
-    <div class="offcanvas-body d-flex flex-column gap-4">
-      <ul class="navdrawer__list">
-        <li><a class="navdrawer__link" href="#bildungswege" style="--chip:#c3d62f" data-bs-dismiss="offcanvas">Bildungswege</a></li>
-        <li><a class="navdrawer__link" href="#fachbereiche" style="--chip:#fad200" data-bs-dismiss="offcanvas">Fachbereiche</a></li>
-        <li><a class="navdrawer__link" href="#aktuelles" style="--chip:#b80d48" data-bs-dismiss="offcanvas">Aktuelles</a></li>
-        <li><a class="navdrawer__link" href="#termine" style="--chip:#3357a1" data-bs-dismiss="offcanvas">Termine</a></li>
-        <li><a class="navdrawer__link" href="#partner" style="--chip:#d47217" data-bs-dismiss="offcanvas">Partner</a></li>
-        <li><a class="navdrawer__link" href="#kontakt" style="--chip:#928767" data-bs-dismiss="offcanvas">Kontakt</a></li>
-      </ul>
+    <div class="offcanvas-body">
+      <nav class="menu-drawer" aria-label="Mobile Navigation">
+        <ul class="menu-drawer__list">
+          <li><a class="menu-drawer__link" href="#">Alle Berufe</a></li>
+          <li><a class="menu-drawer__link" href="#">Stundenplan</a></li>
+          <li><a class="menu-drawer__link" href="#">Anmeldung</a></li>
+          <li><a class="menu-drawer__link" href="#">Kontakt</a></li>
+          <li><a class="menu-drawer__link" href="#">Beratungsteam</a></li>
+        </ul>
+      </nav>
 
-      <div class="d-grid gap-2">
-        <a class="btn btn-primary" href="#termine">Zur Anmeldung</a>
-        <a class="btn btn-outline-secondary" href="#kontakt">Beratungsteam</a>
-      </div>
-
-      <form class="mt-auto" role="search" action="#" onsubmit="return false;">
-        <label class="form-label small fw-semibold" for="q-mobile">Website durchsuchen</label>
-        <input class="form-control" type="search" id="q-mobile" placeholder="Suchbegriff eingeben …">
+      <form class="mt-4" role="search" method="get" action="#">
+        <label class="visually-hidden" for="s-mobile">Suchbegriff eingeben</label>
+        <input class="form-control" type="text" id="s-mobile" placeholder="Suchbegriff eingeben...">
       </form>
     </div>
   </div>
 
-  <a class="advice-tab" href="#kontakt">Beratungsteam</a>
+  <!-- Beratungsteam -->
+  <div class="icon-bar">
+    <a class="icon-bar__link" href="#">Beratungsteam</a>
+  </div>
 
-  <main id="main">
+  <!-- ===================================================================== -->
+  <!--  Hauptnavigation mit Titelbild                                         -->
+  <!-- ===================================================================== -->
+  <nav class="hauptnavi" aria-label="Hauptnavigation">
+    <ul class="hauptnavi__list">
+      <li class="hauptnavi__item hauptnavi__item--vorbereitung">
+        <a class="hauptnavi__link" href="#">Ausbildungs-<br>+<br>Berufs-<br>vorbereitung</a>
+      </li>
+      <li class="hauptnavi__item hauptnavi__item--ausbildung">
+        <a class="hauptnavi__link" href="#">Berufs-<br>qualifizierung<br>+<br>Zusatz-<br>qualifikation</a>
+      </li>
+      <li class="hauptnavi__item hauptnavi__item--fachschule">
+        <a class="hauptnavi__link" href="#">Studien-<br>qualifizierung<br>+<br>Weiterbildung</a>
+      </li>
+      <li class="hauptnavi__item hauptnavi__item--verwaltung">
+        <a class="hauptnavi__link" href="#">Über die Schule</a>
+      </li>
+    </ul>
+  </nav>
 
-    <!-- =================================================================== -->
-    <!--  Hero — Text + Grafik: zwei Elemente auf einer Achse => flex         -->
-    <!-- =================================================================== -->
-    <section class="hero">
-      <div class="floaters" aria-hidden="true">
-        <span style="--tile:#c3d62f; --size:120px; top:12%; left:6%;  --dur:22s"></span>
-        <span style="--tile:#fad200; --size:80px;  top:64%; left:14%; --dur:18s; --delay:-4s"></span>
-        <span style="--tile:#b80d48; --size:140px; top:22%; right:8%; --dur:26s; --delay:-8s"></span>
-        <span style="--tile:#a3dec7; --size:64px;  top:76%; right:18%;--dur:20s; --delay:-2s"></span>
-      </div>
+  <!-- ===================================================================== -->
+  <!--  Breadcrumb                                                            -->
+  <!-- ===================================================================== -->
+  <div class="breadcrumb-bar">
+    <p>Aktuelle Seite:</p>
+    <span><a href="index.html" title="Gehe zu ADBK.">ADBK</a></span>
+  </div>
 
-      <div class="container">
-        <div class="hero__layout">
+  <!-- ===================================================================== -->
+  <!--  Startseite: Inhalt + Teaserspalte                                     -->
+  <!-- ===================================================================== -->
+  <div class="startseite">
 
-          <div class="hero__copy">
-            <p class="eyebrow eyebrow--light" data-reveal>Städtische Schule der Sekundarstufe II</p>
-
-            <h1 class="hero__title" data-reveal style="--reveal-delay:80ms">
-              Berufliche Bildung,<br>
-              die <em>Zukunft</em> baut.
-            </h1>
-
-            <p class="hero__text" data-reveal style="--reveal-delay:160ms">
-              Das Albrecht-Dürer-Berufskolleg ist das größte gewerblich-technische
-              Berufskolleg der Landeshauptstadt Düsseldorf. Von der Berufsvorbereitung
-              über die duale Ausbildung bis zur Fachschule begleiten wir Menschen auf
-              ihrem Weg in den Beruf – in Werkstätten, Laboren und Küchen, die dem
-              Arbeitsalltag von morgen entsprechen.
-            </p>
-
-            <div class="hero__actions" data-reveal style="--reveal-delay:240ms">
-              <a class="btn btn-primary btn-lg" href="#bildungswege">
-                Bildungswege entdecken
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </a>
-              <a class="btn btn-ghost btn-lg" href="#termine">Einschulungstermine</a>
-            </div>
-
-            <div class="hero__stats" data-reveal style="--reveal-delay:320ms">
-              <div class="stat stat--light">
-                <span class="stat__value count-up" data-count="4500">4.500</span>
-                <span class="stat__label">Schüler*innen pro Jahr</span>
-              </div>
-              <div class="stat stat--light">
-                <span class="stat__value count-up" data-count="40">40</span>
-                <span class="stat__label">Ausbildungsberufe</span>
-              </div>
-              <div class="stat stat--light">
-                <span class="stat__value count-up" data-count="7">7</span>
-                <span class="stat__label">Fachbereiche</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero__visual" data-reveal="right" style="--reveal-delay:200ms">
-            <div class="hero__panel">
-              <div class="hero__panel-head">
-                <span>Signet</span>
-                <span>seit 1968</span>
-              </div>
-
-              <div class="mosaic mosaic--live" aria-hidden="true">
-                <span class="mosaic__tile" style="--tile:#a3dec7; --i:0"></span>
-                <span class="mosaic__tile" style="--tile:#b80d48; --i:1"></span>
-                <span class="mosaic__tile" style="--tile:#16295a; --i:2"></span>
-                <span class="mosaic__tile" style="--tile:#d47217; --i:3"></span>
-                <span class="mosaic__tile" style="--tile:#928767; --i:4"></span>
-                <span class="mosaic__tile" style="--tile:#c3d62f; --i:5"></span>
-              </div>
-
-              <ul class="hero__legend">
-                <li><i style="--tile:#c3d62f"></i> Ausbildungs- + Berufsvorbereitung</li>
-                <li><i style="--tile:#fad200"></i> Berufsqualifizierung + Zusatzqualifikation</li>
-                <li><i style="--tile:#b80d48"></i> Studienqualifizierung + Weiterbildung</li>
-              </ul>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Laufband der Fachbereiche -->
-    <div class="ticker" aria-hidden="true">
-      <div class="ticker__track">
-        <span>Gastgewerbe</span><span>Bau- und Holztechnik</span><span>Druck- und Medientechnik</span>
-        <span>Gestaltungstechnik</span><span>Gesundheitstechnik</span><span>Farbtechnik</span>
-        <span>Vermessungstechnik</span>
-        <span>Gastgewerbe</span><span>Bau- und Holztechnik</span><span>Druck- und Medientechnik</span>
-        <span>Gestaltungstechnik</span><span>Gesundheitstechnik</span><span>Farbtechnik</span>
-        <span>Vermessungstechnik</span>
-      </div>
-    </div>
-
-    <!-- =================================================================== -->
-    <!--  Bildungswege — vier gleichwertige Karten => grid                    -->
-    <!-- =================================================================== -->
-    <section class="section pillars pillars--overlap" id="bildungswege">
-      <div class="container">
-        <div class="pillars__grid reveal-stagger">
-
-          <article class="pillar pillar--lime" data-index="01" data-reveal style="--i:0">
-            <p class="pillar__label">Einstieg</p>
-            <h2 class="pillar__title">Ausbildungs- und Berufsvorbereitung</h2>
-            <p class="pillar__text">
-              Orientierung in mehreren Berufsfeldern, Praxisphasen bei Partnerbetrieben
-              und der Weg zum allgemeinbildenden Schulabschluss.
-            </p>
-            <a class="pillar__cta" href="#fachbereiche">
-              Mehr erfahren
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-          <article class="pillar pillar--yellow" data-index="02" data-reveal style="--i:1">
-            <p class="pillar__label">Duale Ausbildung</p>
-            <h2 class="pillar__title">Berufsqualifizierung und Zusatzqualifikation</h2>
-            <p class="pillar__text">
-              Berufsschulunterricht für rund 40 Ausbildungsberufe aus Industrie,
-              Handwerk und Dienstleistung – mit Zusatzqualifikationen obendrauf.
-            </p>
-            <a class="pillar__cta" href="#fachbereiche">
-              Mehr erfahren
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-          <article class="pillar pillar--magenta" data-index="03" data-reveal style="--i:2">
-            <p class="pillar__label">Aufstieg</p>
-            <h2 class="pillar__title">Studienqualifizierung und Weiterbildung</h2>
-            <p class="pillar__text">
-              Fachschulen in Voll- und Teilzeit bereiten auf Führungsaufgaben in
-              Hotellerie, Gastronomie und Mediendesign oder die Selbstständigkeit vor.
-            </p>
-            <a class="pillar__cta" href="#fachbereiche">
-              Mehr erfahren
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-          <article class="pillar pillar--blue" data-index="04" data-reveal style="--i:3">
-            <p class="pillar__label">Schulleben</p>
-            <h2 class="pillar__title">Über die Schule</h2>
-            <p class="pillar__text">
-              Schulleitung, Beratungsteam, Termine und Service – alles, was den
-              Schulalltag am ADBK ausmacht.
-            </p>
-            <a class="pillar__cta" href="#kontakt">
-              Mehr erfahren
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!--  Willkommen — Text + Visual: zwei Blöcke, eine Achse => flex         -->
-    <!-- =================================================================== -->
-    <section class="section about" id="willkommen">
-      <div class="container">
-        <div class="about__layout">
-
-          <div class="about__copy">
-            <p class="eyebrow" data-reveal>Willkommen am ADBK</p>
-            <h2 data-reveal style="--reveal-delay:60ms">
-              Eine Schule, <span class="accent-underline">drei Wege</span> in den Beruf.
-            </h2>
-            <p class="lead" data-reveal style="--reveal-delay:120ms">
-              Ob erster Schritt, duale Ausbildung oder Weiterbildung auf Fachschulniveau –
-              am Albrecht-Dürer-Berufskolleg in Düsseldorf-Benrath finden Sie den
-              passenden Bildungsgang und Menschen, die Sie dabei begleiten.
-            </p>
-
-            <ul class="about__points reveal-stagger">
-              <li class="about__point" data-reveal style="--i:0">
-                <i style="--tile:#c3d62f"></i>
-                <div>
-                  <strong>Sie möchten sich fit für den Berufseinstieg machen?</strong>
-                  <p>
-                    In der Ausbildungs- und Berufsvorbereitung sammeln Sie Praxiserfahrung
-                    in verschiedenen Berufsfeldern und holen Schulabschlüsse nach –
-                    gemeinsam mit zahlreichen außerschulischen Partnern.
-                  </p>
-                </div>
-              </li>
-              <li class="about__point" data-reveal style="--i:1">
-                <i style="--tile:#fad200"></i>
-                <div>
-                  <strong>Sie bilden aus oder starten Ihre Berufsschulzeit?</strong>
-                  <p>
-                    Als dualer Partner begleiten wir den Erwerb beruflicher
-                    Qualifikationen in rund 40 Berufen – fachlich fundiert und eng
-                    abgestimmt mit den Betrieben der Region.
-                  </p>
-                </div>
-              </li>
-              <li class="about__point" data-reveal style="--i:2">
-                <i style="--tile:#b80d48"></i>
-                <div>
-                  <strong>Sie wollen sich weiterbilden?</strong>
-                  <p>
-                    Die Fachschulen qualifizieren Sie in Voll- oder Teilzeit für die
-                    mittlere Führungsebene in Hotellerie und Gastronomie sowie im
-                    Mediendesign – oder für den Schritt in die Selbstständigkeit.
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div class="about__visual" data-reveal="right">
-            <div class="about__frame">
-              <div class="mosaic" aria-hidden="true">
-                <span class="mosaic__tile" style="--tile:#c3d62f; --i:0"></span>
-                <span class="mosaic__tile" style="--tile:#3357a1; --i:1"></span>
-                <span class="mosaic__tile" style="--tile:#fad200; --i:2"></span>
-                <span class="mosaic__tile" style="--tile:#928767; --i:3"></span>
-                <span class="mosaic__tile" style="--tile:#b80d48; --i:4"></span>
-                <span class="mosaic__tile" style="--tile:#a3dec7; --i:5"></span>
-              </div>
-            </div>
-
-            <figure class="about__quote">
-              <blockquote>
-                „Wir bilden dort aus, wo später gearbeitet wird: in echten Werkstätten,
-                Laboren und Küchen.“
-              </blockquote>
-              <figcaption>Leitgedanke des Albrecht-Dürer-Berufskollegs</figcaption>
-            </figure>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!--  Fachbereiche — viele gleichwertige Kacheln => grid (auto-fit)       -->
-    <!-- =================================================================== -->
-    <section class="section surface-alt fields" id="fachbereiche">
-      <div class="container">
-
-        <div class="section-head section-head--split">
-          <div>
-            <p class="eyebrow" data-reveal>Fachbereiche</p>
-            <h2 data-reveal style="--reveal-delay:60ms">Sieben Fachbereiche unter einem Dach</h2>
-          </div>
-          <p data-reveal style="--reveal-delay:120ms">
-            Von der Zahntechnik bis zum Hochbau: Jeder Fachbereich bringt eigene
-            Werkstätten, eigene Partnerbetriebe und ein eigenes Team mit.
-          </p>
-        </div>
-
-        <div class="fields__grid reveal-stagger">
-
-          <article class="field-card field-card--magenta" data-reveal style="--i:0">
-            <span class="field-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 3v8a5 5 0 0 0 10 0V3"/><path d="M12 16v5"/><path d="M8 21h8"/></svg>
-            </span>
-            <h3 class="field-card__title"><a href="#">Gastgewerbe</a></h3>
-            <p class="field-card__text">
-              Köch*innen, Hotelfachleute, Systemgastronomie und die Fachschule für
-              Ernährungs- und Versorgungsmanagement.
-            </p>
-            <p class="field-card__count">11 Bildungsgänge</p>
-          </article>
-
-          <article class="field-card field-card--mint" data-reveal style="--i:1">
-            <span class="field-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3a4 4 0 0 0-4 4v4a4 4 0 0 0 8 0V7a4 4 0 0 0-4-4Z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
-            </span>
-            <h3 class="field-card__title"><a href="#">Gesundheitstechnik</a></h3>
-            <p class="field-card__text">
-              Zahntechnik als Handwerk zwischen Präzisionsarbeit, Werkstoffkunde und
-              digitaler Fertigung.
-            </p>
-            <p class="field-card__count">2 Bildungsgänge</p>
-          </article>
-
-          <article class="field-card field-card--lime" data-reveal style="--i:2">
-            <span class="field-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="m16.5 7.5-3 3"/></svg>
-            </span>
-            <h3 class="field-card__title"><a href="#">Gestaltungstechnik</a></h3>
-            <p class="field-card__text">
-              Visuelles Marketing, Raumausstattung, Fahrzeuglackierung, Malerhandwerk
-              und Steinmetzarbeit.
-            </p>
-            <p class="field-card__count">6 Bildungsgänge</p>
-          </article>
-
-          <article class="field-card field-card--blue" data-reveal style="--i:3">
-            <span class="field-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 20h10"/><path d="M7 8h6"/><path d="M7 12h10"/></svg>
-            </span>
-            <h3 class="field-card__title"><a href="#">Druck- und Medientechnik</a></h3>
-            <p class="field-card__text">
-              Mediengestaltung, Medientechnologie und alles dazwischen – von der Datei
-              bis zum fertigen Druckbogen.
-            </p>
-            <p class="field-card__count">5 Bildungsgänge</p>
-          </article>
-
-          <article class="field-card field-card--sand" data-reveal style="--i:4">
-            <span class="field-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
-            </span>
-            <h3 class="field-card__title"><a href="#">Bau- und Holztechnik</a></h3>
-            <p class="field-card__text">
-              Tischlerei, Hochbau, Ausbau und Stuckateurarbeiten – Handwerk vom Rohbau
-              bis zur fertigen Oberfläche.
-            </p>
-            <p class="field-card__count">8 Bildungsgänge</p>
-          </article>
-
-          <article class="field-card field-card--orange" data-reveal style="--i:5">
-            <span class="field-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 17 9 7l6 10"/><path d="M13 13 17 7l4 10"/><path d="M2 21h20"/></svg>
-            </span>
-            <h3 class="field-card__title"><a href="#">Vermessungstechnik</a></h3>
-            <p class="field-card__text">
-              Vermessungstechnik und Geomatik: Daten erfassen, auswerten und in Karten
-              und Modelle übersetzen.
-            </p>
-            <p class="field-card__count">3 Bildungsgänge</p>
-          </article>
-
-          <article class="field-card field-card--stone" data-reveal style="--i:6">
-            <span class="field-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20v-6a8 8 0 0 1 16 0v6"/><path d="M2 20h20"/><path d="M12 6V3"/></svg>
-            </span>
-            <h3 class="field-card__title"><a href="#">Schornsteinfeger- und Glaserhandwerk</a></h3>
-            <p class="field-card__text">
-              Zwei traditionsreiche Gewerke mit hoher technischer Verantwortung –
-              landesweit am ADBK gebündelt.
-            </p>
-            <p class="field-card__count">2 Bildungsgänge</p>
-          </article>
-
-        </div>
-
-        <div class="fields__callout" data-reveal>
-          <div>
-            <h3>Noch unsicher, welcher Weg passt?</h3>
-            <p>
-              Unser Beratungsteam aus Schulsozialarbeit, Berufsorientierung und
-              Bildungsgangleitungen nimmt sich Zeit – persönlich, telefonisch oder
-              per E-Mail.
-            </p>
-          </div>
-          <a class="btn btn-lime btn-lg" href="#kontakt">
-            Beratung anfragen
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    <!-- Teaserspalte -->
+    <section class="teaser" aria-label="Aktuelle Hinweise">
+      <ul class="teaser__list">
+        <li class="teaser__item">
+          <a class="teaser__link" href="#">
+            <span class="teaser__head">Achtung!</span>
+            <span class="teaser__sub">Neues<br>Anmeldeverfahren!</span>
+            <span class="teaser__text"></span>
           </a>
-        </div>
-
-      </div>
+        </li>
+        <li class="teaser__item">
+          <a class="teaser__link" href="#">
+            <span class="teaser__head">Das ADBK als Teil</span>
+            <span class="teaser__sub">des regionalen<br>Bildungszentrums</span>
+            <span class="teaser__text"></span>
+          </a>
+        </li>
+      </ul>
     </section>
 
-    <!-- =================================================================== -->
-    <!--  Aktuelles — Karten-Raster => grid                                   -->
-    <!-- =================================================================== -->
-    <section class="section news" id="aktuelles">
-      <div class="container">
+    <!-- Inhaltsspalte -->
+    <main class="start" id="main">
+      <h2>Willkommen auf der Homepage des Albrecht-Dürer-Berufskollegs</h2>
 
-        <div class="section-head section-head--split">
-          <div>
-            <p class="eyebrow" data-reveal>Aktuelles</p>
-            <h2 data-reveal style="--reveal-delay:60ms">Neues aus dem Schulleben</h2>
-          </div>
-          <p data-reveal style="--reveal-delay:120ms">
-            Termine, Projekte und Hinweise aus den Fachbereichen – kurz zusammengefasst.
+      <div class="entry">
+
+        <div class="post-start">
+          <h1>Willkommen auf der Homepage des Albrecht-Dürer-Berufs&shy;kollegs</h1>
+
+          <p>
+            Herzlich willkommen auf den Internetseiten des Albrecht-Dürer-Berufskollegs
+            in Düsseldorf-Benrath. Hier stellen wir uns vor und zeigen, welches Angebot
+            rund um die berufliche Bildung Sie beim größten und modernsten
+            gewerblich-technischen Berufskolleg der Landeshauptstadt erwartet.
           </p>
-        </div>
 
-        <div class="news__grid reveal-stagger">
-
-          <article class="news-card news-card--feature news__feature" data-reveal style="--i:0">
-            <div class="news-card__meta">
-              <span class="news-card__date">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-                16. Juli 2026
-              </span>
-              <span>Schulorganisation</span>
-            </div>
-            <h3 class="news-card__title"><a href="#termine">Einschulungstermine 2026</a></h3>
-            <p class="news-card__text">
-              Die Termine für den Schulstart im Schuljahr 2026/27 stehen fest – sortiert
-              nach Fachbereich, mit Uhrzeit und Raum. Bitte beachten Sie zusätzlich die
-              Klassenzuweisung auf schulbewerbung.de.
-            </p>
-            <a class="news-card__more" href="#termine">
-              Alle Termine ansehen
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-          <article class="news-card" style="--accent:#c3d62f; --i:1" data-reveal>
-            <div class="news-card__meta">
-              <span class="news-card__date" style="color:#7d8a19">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-                Neues Verfahren
-              </span>
-              <span>Anmeldung</span>
-            </div>
-            <h3 class="news-card__title"><a href="#termine">Anmeldung läuft jetzt digital</a></h3>
-            <p class="news-card__text">
-              Für die vollzeitschulischen Bildungsgänge erfolgt die Anmeldung über das
-              Portal schulbewerbung.de. Alle Schritte und Fristen im Überblick.
-            </p>
-            <a class="news-card__more" href="#termine">
-              Weiterlesen
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-          <article class="news-card" style="--accent:#b80d48; --i:2" data-reveal>
-            <div class="news-card__meta">
-              <span class="news-card__date" style="color:#b80d48">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-                Kooperation
-              </span>
-              <span>Region</span>
-            </div>
-            <h3 class="news-card__title"><a href="#">Teil des Regionalen Bildungszentrums</a></h3>
-            <p class="news-card__text">
-              Gemeinsam mit den Düsseldorfer Berufskollegs bündelt das ADBK Angebote der
-              beruflichen Bildung im Regionalen Bildungszentrum.
-            </p>
-            <a class="news-card__more" href="#">
-              Weiterlesen
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-          <article class="news-card" style="--accent:#fad200; --i:3" data-reveal>
-            <div class="news-card__meta">
-              <span class="news-card__date" style="color:#8a7400">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-                Service
-              </span>
-              <span>Downloads</span>
-            </div>
-            <h3 class="news-card__title"><a href="#">Zeugnisanlagen zum Download</a></h3>
-            <p class="news-card__text">
-              Anlagen und Formulare rund um Zeugnisse und Abschlüsse stehen im
-              Downloadbereich bereit.
-            </p>
-            <a class="news-card__more" href="#">
-              Zum Downloadbereich
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-          <article class="news-card" style="--accent:#3357a1; --i:4" data-reveal>
-            <div class="news-card__meta">
-              <span class="news-card__date">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-                Stundenplan
-              </span>
-              <span>Organisation</span>
-            </div>
-            <h3 class="news-card__title"><a href="#">Stundenpläne über WebUntis</a></h3>
-            <p class="news-card__text">
-              Aktuelle Pläne, Vertretungen und Raumänderungen finden Schüler*innen und
-              Lehrkräfte tagesaktuell in WebUntis.
-            </p>
-            <a class="news-card__more" href="#">
-              Zu WebUntis
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!--  Einschulungstermine — Text + Akkordeon => flex                      -->
-    <!-- =================================================================== -->
-    <section class="section dates" id="termine">
-      <div class="container">
-        <div class="dates__layout">
-
-          <div class="dates__aside">
-            <p class="eyebrow" data-reveal>Schuljahr 2026/27</p>
-            <h2 data-reveal style="--reveal-delay:60ms">Einschulungstermine</h2>
-            <p class="lead" data-reveal style="--reveal-delay:120ms">
-              Wählen Sie Ihren Fachbereich, um Datum, Uhrzeit und Raum für den ersten
-              Schultag zu sehen. Weitere Termine kommen laufend dazu.
-            </p>
-
-            <div class="dates__note" data-reveal style="--reveal-delay:180ms">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
-              <p class="mb-0">
-                <strong>Wichtig:</strong> Bitte beachten Sie zusätzlich Ihre
-                Klassenzuweisung auf <a href="#">schulbewerbung.de</a>.
-              </p>
-            </div>
-
-            <a class="btn btn-primary align-self-start d-none d-lg-inline-flex" href="#kontakt">
-              Fragen zur Einschulung?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </div>
-
-          <div class="accordion" id="dateAccordion" data-reveal="right">
-
-            <div class="accordion-item">
-              <h3 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#d1" aria-expanded="true" aria-controls="d1">
-                  Gastgewerbe
-                  <span class="accordion-icon" aria-hidden="true"></span>
-                </button>
-              </h3>
-              <div id="d1" class="accordion-collapse collapse show" data-bs-parent="#dateAccordion">
-                <div class="accordion-body">
-                  <ul class="date-list">
-                    <li><span class="date-list__when">Do, 03.09. · 09:00 · Aula</span><span class="date-list__what">Hotelfachleute HO26A</span></li>
-                    <li><span class="date-list__when">Do, 03.09. · 12:00 · Aula</span><span class="date-list__what">Hotelfachleute HO26B</span></li>
-                    <li><span class="date-list__when">Do, 03.09. · 09:50 · B209</span><span class="date-list__what">Fachpraktiker*innen Gastgewerbe und Küche</span></li>
-                    <li><span class="date-list__when">Fr, 04.09. · 08:00 · SLZ</span><span class="date-list__what">Kaufleute für Hotelmanagement</span></li>
-                    <li><span class="date-list__when">Fr, 04.09. · 08:00 · Foyer</span><span class="date-list__what">Köch*innen KO26A / Fachkraft Küche FK26K</span></li>
-                    <li><span class="date-list__when">Fr, 04.09. · 08:00 · Foyer</span><span class="date-list__what">Köch*innen KO26C</span></li>
-                    <li><span class="date-list__when">Fr, 04.09. · 10:00 · SLZ</span><span class="date-list__what">Fachleute für Systemgastronomie</span></li>
-                    <li><span class="date-list__when">Mo, 07.09. · 08:00 · Foyer</span><span class="date-list__what">Köch*innen KO26B und KO26D</span></li>
-                    <li><span class="date-list__when">Mo, 07.09. · 11:00 · B219</span><span class="date-list__what">Fachschule für Ernährung</span></li>
-                    <li><span class="date-list__when">Di, 08.09. · 08:00 · Foyer</span><span class="date-list__what">Fachkraft für Gastronomie</span></li>
-                    <li><span class="date-list__when">Do, 10.09. · 08:30 · SLZ</span><span class="date-list__what">Fachleute für Restaurants und Veranstaltungsgastronomie</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-              <h3 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#d2" aria-expanded="false" aria-controls="d2">
-                  Gesundheitstechnik
-                  <span class="accordion-icon" aria-hidden="true"></span>
-                </button>
-              </h3>
-              <div id="d2" class="accordion-collapse collapse" data-bs-parent="#dateAccordion">
-                <div class="accordion-body">
-                  <ul class="date-list">
-                    <li><span class="date-list__when">Fr, 04.09.2026</span><span class="date-list__what">Zahntechnik</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-              <h3 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#d3" aria-expanded="false" aria-controls="d3">
-                  Gestaltungstechnik
-                  <span class="accordion-icon" aria-hidden="true"></span>
-                </button>
-              </h3>
-              <div id="d3" class="accordion-collapse collapse" data-bs-parent="#dateAccordion">
-                <div class="accordion-body">
-                  <ul class="date-list">
-                    <li><span class="date-list__when">Do, 03.09. · 08:00 · Innenhof</span><span class="date-list__what">Gestalter*innen für visuelles Marketing</span></li>
-                    <li><span class="date-list__when">Do, 03.09. · 08:00 · E208</span><span class="date-list__what">Raumausstatter*innen, Polster- und Dekorationsnäher*innen</span></li>
-                    <li><span class="date-list__when">Mo, 07.09. · 08:00 · Foyer</span><span class="date-list__what">Fahrzeuglackierer*innen</span></li>
-                    <li><span class="date-list__when">Di, 08.09. · 08:00 · Foyer</span><span class="date-list__what">Steinmetze, Maler*innen</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-              <h3 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#d4" aria-expanded="false" aria-controls="d4">
-                  Druck- und Medientechnik
-                  <span class="accordion-icon" aria-hidden="true"></span>
-                </button>
-              </h3>
-              <div id="d4" class="accordion-collapse collapse" data-bs-parent="#dateAccordion">
-                <div class="accordion-body">
-                  <ul class="date-list">
-                    <li><span class="date-list__when">Di, 08.09.2026</span><span class="date-list__what">alle Berufe des Fachbereichs</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-              <h3 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#d5" aria-expanded="false" aria-controls="d5">
-                  Bau- und Holztechnik
-                  <span class="accordion-icon" aria-hidden="true"></span>
-                </button>
-              </h3>
-              <div id="d5" class="accordion-collapse collapse" data-bs-parent="#dateAccordion">
-                <div class="accordion-body">
-                  <ul class="date-list">
-                    <li><span class="date-list__when">Mi, 02.09.2026</span><span class="date-list__what">Bautechnische Konstrukteur*innen</span></li>
-                    <li><span class="date-list__when">Fr, 04.09.2026</span><span class="date-list__what">Schornsteinfeger*innen</span></li>
-                    <li><span class="date-list__when">Mo, 07.09.2026</span><span class="date-list__what">Vermessungstechniker*innen und Geomatiker*innen</span></li>
-                    <li><span class="date-list__when">Di, 08.09.2026 · B018</span><span class="date-list__what">Glaser*innen</span></li>
-                    <li><span class="date-list__when">Mo, 05.10.2026</span><span class="date-list__what">Tischler*innen</span></li>
-                    <li><span class="date-list__when">Mo, 02.11.2026</span><span class="date-list__what">Hochbau-, Ausbaufacharbeiter*innen und Stuckateur*innen</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!--  Partner — Logowand => grid                                          -->
-    <!-- =================================================================== -->
-    <section class="section section--tight surface-alt" id="partner">
-      <div class="container">
-        <div class="section-head section-head--center">
-          <p class="eyebrow" data-reveal>Netzwerk</p>
-          <h2 data-reveal style="--reveal-delay:60ms">Unsere Partner</h2>
-          <p data-reveal style="--reveal-delay:120ms">
-            Kammern, Innungen, Verbände und Institutionen, mit denen wir die berufliche
-            Bildung in Düsseldorf gestalten.
+          <p>
+            <b>Sie möchten sich fit machen für den Berufseinstieg?</b><br>
+            In der <a href="#">Ausbildungs- und Berufsvorbereitung</a> begleiten wir Sie
+            durch berufsvorbereitende Bildungsmaßnahmen in verschiedenen Berufsfeldern
+            und beim Erwerb allgemeinbildender Schulabschlüsse. Dabei arbeiten wir mit
+            zahlreichen außerschulischen Partnern zusammen.
           </p>
-        </div>
 
-        <div class="partner-grid" data-reveal="zoom">
-          <a class="partner" href="#" aria-label="Partner: JBH"><img src="assets/images/partner/jbh.gif" alt="Logo JBH" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: BTZ Maler Düsseldorf"><img src="assets/images/partner/m.gif" alt="Logo BTZ Maler Düsseldorf" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: Handwerk NRW"><img src="assets/images/partner/points.gif" alt="Logo Handwerk NRW" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: IHK Düsseldorf"><img src="assets/images/partner/ihk.gif" alt="Logo IHK Düsseldorf" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: Verband Druck und Medien"><img src="assets/images/partner/druckmedien.gif" alt="Logo Verband Druck und Medien" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: AIM"><img src="assets/images/partner/aim.gif" alt="Logo AIM" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: BIBB"><img src="assets/images/partner/bibb.gif" alt="Logo BIBB" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: IT-Berufe"><img src="assets/images/partner/it.gif" alt="Logo IT-Berufe" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: Jobware Ratgeber"><img src="assets/images/partner/lauf.gif" alt="Logo Jobware Ratgeber" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: Finde meinen Job"><img src="assets/images/partner/finde_meinen_job.gif" alt="Logo Finde meinen Job" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: planet-beruf"><img src="assets/images/partner/arbeitsamt.gif" alt="Logo planet-beruf" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: AusbildungPlus"><img src="assets/images/partner/plus.gif" alt="Logo AusbildungPlus" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: Schulministerium NRW"><img src="assets/images/partner/nrw.gif" alt="Logo Schulministerium NRW" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: Verkehrsinfo NRW"><img src="assets/images/partner/lab.gif" alt="Logo Verkehrsinfo NRW" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: AUBI-plus"><img src="assets/images/partner/aubi.gif" alt="Logo AUBI-plus" loading="lazy"></a>
-          <a class="partner" href="#" aria-label="Partner: Landesprogramm Bildung und Gesundheit"><img src="assets/images/partner/landesprogramm.gif" alt="Logo Bildung und Gesundheit NRW" loading="lazy"></a>
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!--  Kontakt — zwei Blöcke nebeneinander => flex                         -->
-    <!-- =================================================================== -->
-    <section class="section contact" id="kontakt">
-      <div class="container">
-
-        <div class="section-head section-head--split">
-          <div>
-            <p class="eyebrow" data-reveal>Kontakt und Anreise</p>
-            <h2 data-reveal style="--reveal-delay:60ms">So erreichen Sie uns</h2>
-          </div>
-          <p data-reveal style="--reveal-delay:120ms">
-            Das Schulgebäude liegt in Düsseldorf-Benrath, wenige Minuten von den
-            Haltestellen D-Benrath und D-Benrath S entfernt.
+          <p>
+            <b>Sie bilden aus und suchen einen leistungsstarken dualen Partner? Oder Sie
+            möchten sich über Ihre neue Berufsschule informieren?</b><br>
+            In vielen Ausbildungsberufen der
+            <a href="#">Berufsqualifizierung und Zusatzqualifikation</a> aus Industrie,
+            Handwerk und Dienstleistungssektor begleiten wir den Erwerb beruflicher
+            Qualifikationen professionell und kompetent.
           </p>
+
+          <p>
+            <b>Sie möchten sich in der Fachschule weiterbilden?</b><br>
+            Die <a href="#">Studienqualifizierung und Weiterbildung</a> bereitet Sie in
+            voll- oder teilzeitschulischen Bildungsgängen auf die Selbstständigkeit oder
+            auf die mittlere Führungsebene in Hotellerie und Gastronomie beziehungsweise
+            im Mediendesign vor. Zudem finden Sie hier weitere Angebote für
+            Zusatzqualifikationen.
+          </p>
+
+          <p>Kontaktpersonen für Ihre Anliegen finden Sie <a href="#">hier</a>.</p>
         </div>
 
-        <div class="contact__layout">
+        <h1>News</h1>
 
-          <div class="contact__card" data-reveal="left">
-            <h3 class="h4 mb-0">Albrecht-Dürer-Berufskolleg</h3>
-            <dl class="contact__rows mb-0">
-              <div class="contact__row">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                <div>
-                  <dt>Adresse</dt>
-                  <dd>Paulsmühlenstraße 1<br>40597 Düsseldorf</dd>
-                </div>
-              </div>
-              <div class="contact__row">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
-                <div>
-                  <dt>Telefon und Fax</dt>
-                  <dd>Tel. 0211 89 973 00<br>Fax 0211 89 973 09</dd>
-                </div>
-              </div>
-              <div class="contact__row">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
-                <div>
-                  <dt>E-Mail</dt>
-                  <dd><a href="mailto:info@adbk.nrw.schule">info@adbk.nrw.schule</a></dd>
-                </div>
-              </div>
-            </dl>
+        <!-- Newsspalte 1 -->
+        <article class="post">
+          <h2 class="post__title"><a href="#">Einschulungstermine 2026</a></h2>
 
-            <a class="btn btn-primary align-self-start" href="mailto:info@adbk.nrw.schule">
-              Nachricht schreiben
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
+          <div class="post__summary">
+            <h2>Einschulungstermine 2026</h2>
+
+            <p>
+              <strong>Gastgewerbe</strong><br>
+              <em>Wichtig! Bitte die Klassenzuweisung auf
+              <a href="#" target="_blank" rel="noreferrer noopener">Schulbewerbung.de</a>
+              beachten!</em><br>
+              Donnerstag, 03.09. 9:00 Uhr, Aula (Hotelfachleute HO26A)<br>
+              Donnerstag, 03.09. 12:00 Uhr, Aula (Hotelfachleute HO26B)<br>
+              Freitag, 04.09. 08:00 Uhr, SLZ (Kaufleute für Hotelmanagement)<br>
+              Donnerstag, 03.09. 09:50 Uhr, B209 (Fachpraktiker im Gastgewerbe)<br>
+              Donnerstag, 03.09. 09:50 Uhr, B209 (Fachpraktiker Küche)<br>
+              Freitag, 04.09. 8:00 Uhr, Foyer (Köche KO26A / Fachkraft Küche FK26K)<br>
+              Freitag, 04.09. 8:00 Uhr, Foyer (Köche KO26C)<br>
+              Montag, 07.09. 08:00 Uhr, Foyer (Köche KO26B)<br>
+              Montag, 07.09. 08:00 Uhr, Foyer (Köche KO26D)<br>
+              Freitag, 04.09. 10:00 Uhr, SLZ (Fachmann/Fachfrau für Systemgastronomie)<br>
+              Dienstag, 08.09. 8:00 Uhr, Foyer (Fachkraft für Gastronomie)<br>
+              Donnerstag, 10.09. 08:30 Uhr, SLZ (Fachmann/Fachfrau für Restaurants &amp;
+              Veranstaltungsgastronomie)<br>
+              Montag, 07.09. 11:00 Uhr, B219 (Fachschule für Ernährung)
+            </p>
+
+            <p>
+              <strong>Gesundheitstechnik</strong><br>
+              Freitag, 4. September (Zahntechnik)
+            </p>
+
+            <p>
+              <strong>Gestaltungstechnik</strong><br>
+              Donnerstag, 03. September, 08:00 Uhr, Innenhof (Gestalter*innen für
+              visuelles Marketing)<br>
+              Donnerstag, 03. September, 08:00 Uhr, E208 (Raumausstatter*innen, Polster-
+              und Dekorationsnäher*innen)<br>
+              Montag, 07. September, 08:00 Uhr, Foyer (Fahrzeuglackierer*innen)<br>
+              Dienstag, 08. September, 08:00 Uhr, Foyer (Steinmetze, Maler*innen)
+            </p>
+
+            <p>
+              <strong>Druck- und Medientechnik</strong><br>
+              Dienstag 8. September (alle Berufe)
+            </p>
+
+            <p>
+              <strong>Bau- und Holztechnik</strong><br>
+              Mittwoch, 02.09.2026 (Bautechnischer Konstrukteur/-in)<br>
+              Freitag, 04.09.2026 (Schornsteinfeger/-in)<br>
+              Montag, 07.09.2026 (Vermessungstechniker/-in &amp; Geomatiker/-in)<br>
+              Dienstag, 08.09.2026, B018 (Glaser/-in)<br>
+              Montag, 05.10.2026 (Tischler/-in)<br>
+              Montag, 02.11.2026 (Hochbaufacharbeiter/-in &amp; Beton- u.
+              Stahlbetonbauer/-in; Ausbaufacharbeiter/-in &amp; Stuckateur/-in)
+            </p>
+
+            <p><em>Weitere Termine folgen</em></p>
           </div>
 
-          <div class="contact__card contact__card--dark" data-reveal="right">
-            <h3 class="h4 mb-0">Anreise mit Bus und Bahn</h3>
-            <dl class="contact__rows mb-0">
-              <div class="contact__row">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M4 11h16"/><path d="m7 20 2-3M17 20l-2-3"/><circle cx="8.5" cy="13.5" r=".6" fill="currentColor"/><circle cx="15.5" cy="13.5" r=".6" fill="currentColor"/></svg>
-                <div>
-                  <dt>Haltestellen</dt>
-                  <dd>D-Benrath · D-Benrath S</dd>
-                </div>
-              </div>
-              <div class="contact__row">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
-                <div>
-                  <dt>Stadtbahn</dt>
-                  <dd>
-                    <ul class="contact__lines mt-2">
-                      <li style="--line-color:#3357a1">U71</li>
-                      <li style="--line-color:#3357a1">U74</li>
-                      <li style="--line-color:#3357a1">U83</li>
-                    </ul>
-                  </dd>
-                </div>
-              </div>
-              <div class="contact__row">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M7 21h10"/><path d="M3 11h18"/></svg>
-                <div>
-                  <dt>Buslinien</dt>
-                  <dd>
-                    <ul class="contact__lines mt-2">
-                      <li style="--line-color:#928767">730</li>
-                      <li style="--line-color:#928767">784</li>
-                      <li style="--line-color:#928767">788</li>
-                      <li style="--line-color:#928767">815</li>
-                      <li style="--line-color:#928767">817</li>
-                    </ul>
-                  </dd>
-                </div>
-              </div>
-            </dl>
+          <div class="post__meta">
+            <span>Posted in <a href="#">news_start</a></span>
+            <span>|</span>
+            <span>Kommentare deaktiviert</span>
+          </div>
+        </article>
 
-            <dl class="contact__hours mt-auto pt-3 border-top border-light border-opacity-10">
-              <dt>Sekretariat</dt><dd>Mo – Do 07:30 – 15:30</dd>
-              <dt>&nbsp;</dt><dd>Fr 07:30 – 13:00</dd>
-            </dl>
+        <!-- Newsspalte 2 -->
+        <article class="post">
+          <h2 class="post__title"><a href="#">Leer</a></h2>
+
+          <div class="post__summary">
+            <p>&nbsp;</p>
           </div>
 
-        </div>
+          <div class="post__meta">
+            <span>Posted in <a href="#">news_start</a></span>
+            <span>|</span>
+            <span>Kommentare deaktiviert</span>
+          </div>
+        </article>
+
       </div>
-    </section>
+    </main>
 
-  </main>
+  </div>
 
   <!-- ===================================================================== -->
   <!--  Fußbereich                                                            -->
   <!-- ===================================================================== -->
   <footer class="site-footer">
-    <div class="container">
+    <div class="site-footer__inner">
 
-      <div class="site-footer__grid">
-
-        <div class="site-footer__brand">
-          <img class="site-footer__mark" src="assets/images/adbk-logo.png" width="92" height="92"
-               alt="Signet des Albrecht-Dürer-Berufskollegs" loading="lazy">
-          <p class="mb-0">
-            <strong class="text-white">Albrecht-Dürer-Berufskolleg</strong><br>
-            Städtische Schule der Sekundarstufe II<br>
-            Paulsmühlenstraße 1, 40597 Düsseldorf
-          </p>
-          <div class="brand-rule rounded-pill overflow-hidden" style="max-width:180px" aria-hidden="true">
-            <span style="background:#a3dec7"></span>
-            <span style="background:#b80d48"></span>
-            <span style="background:#3357a1"></span>
-            <span style="background:#d47217"></span>
-            <span style="background:#928767"></span>
-            <span style="background:#c3d62f"></span>
-          </div>
-        </div>
-
-        <nav aria-labelledby="f-nav">
-          <h2 class="site-footer__title" id="f-nav">Navigation</h2>
-          <ul class="site-footer__list">
-            <li><a href="#willkommen">Startseite</a></li>
-            <li><a href="#bildungswege">Bildungswege</a></li>
-            <li><a href="#fachbereiche">Fachbereiche</a></li>
-            <li><a href="#aktuelles">Aktuelles</a></li>
-            <li><a href="#termine">Termine</a></li>
-            <li><a href="#kontakt">Kontakt</a></li>
+      <div class="site-footer__col">
+        <h2 class="site-footer__title">Navigation</h2>
+        <nav aria-label="Fußnavigation">
+          <ul class="footer-nav">
+            <li class="footer-nav__item"><a class="footer-nav__link" href="index.html" aria-current="page">Home</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Schule</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Leitung</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Impressum/Datenschutzerklärung</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Download Zeugnisanlagen</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">ADBK-Moodle aktuell</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">DWO</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Evaluation Lehrer*innen</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Evaluation Schüler*innen</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Interner Bereich</a></li>
+            <li class="footer-nav__item"><a class="footer-nav__link" href="#">Webuntis</a></li>
           </ul>
         </nav>
-
-        <nav aria-labelledby="f-service">
-          <h2 class="site-footer__title" id="f-service">Service</h2>
-          <ul class="site-footer__list">
-            <li><a href="#">Schulleitung</a></li>
-            <li><a href="#">Beratungsteam</a></li>
-            <li><a href="#">Download Zeugnisanlagen</a></li>
-            <li><a href="#">Moodle</a></li>
-            <li><a href="#">WebUntis</a></li>
-            <li><a href="#">Interner Bereich</a></li>
-          </ul>
-        </nav>
-
-        <div>
-          <h2 class="site-footer__title">Kontakt</h2>
-          <div class="contact-lines">
-            <div class="contact-lines__row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
-              <div><strong>0211 89 973 00</strong>Fax 0211 89 973 09</div>
-            </div>
-            <div class="contact-lines__row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
-              <div><a href="mailto:info@adbk.nrw.schule">info@adbk.nrw.schule</a></div>
-            </div>
-            <div class="contact-lines__row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M4 11h16"/><path d="m7 20 2-3M17 20l-2-3"/></svg>
-              <div><strong>U71 · U74 · U83</strong>Bus 730, 784, 788, 815, 817</div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
-      <div class="site-footer__bottom">
-        <p class="mb-0">© 2026 Albrecht-Dürer-Berufskolleg Düsseldorf</p>
-        <ul class="site-footer__legal">
-          <li><a href="#">Impressum</a></li>
-          <li><a href="#">Datenschutzerklärung</a></li>
-          <li><a href="#">Barrierefreiheit</a></li>
-        </ul>
+      <div class="site-footer__col">
+        <h2 class="site-footer__title">Unsere Partner</h2>
+        <div class="footer-partner">
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/jbh.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/m.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/points.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/ihk.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/druckmedien.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/aim.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/bibb.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/it.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/lauf.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/finde_meinen_job.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/arbeitsamt.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/plus.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/nrw.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/lab.gif" alt="Unser Partner" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/aubi.gif" alt="Unser Partner Aubi" loading="lazy"></a>
+          <a class="footer-partner__link" href="#"><img src="assets/images/partner/landesprogramm.gif" alt="Unser Partner Landesprogramm" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="site-footer__col footer-kontakt">
+        <h2 class="site-footer__title">Kontakt/Anreise</h2>
+
+        <p>
+          <strong>
+            Albrecht-Dürer-Berufskolleg<br>
+            Städtische Schule der Sekundar&shy;stufe II
+          </strong>
+        </p>
+
+        <p>
+          Paulsmühlenstraße 1<br>
+          40597 Düsseldorf
+        </p>
+
+        <p>info[at]adbk.nrw.schule</p>
+
+        <p>
+          Tel. 0211 89 973 00<br>
+          Fax. 0211 89 973 09
+        </p>
+
+        <p><strong>Haltestellen</strong></p>
+
+        <p>
+          D-Benrath, D-Benrath S<br>
+          U71, U 74, U83<br>
+          Bus 730, 784, 788, 815, 817
+        </p>
       </div>
 
     </div>
   </footer>
 
   <script src="assets/js/vendor/bootstrap.bundle.min.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
 </body>
 </html>

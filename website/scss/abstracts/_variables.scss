@@ -1,116 +1,105 @@
 // =============================================================================
 //  abstracts/variables
-//  Brand tokens. Sass variables for compile-time logic (maps, loops, colour
-//  maths); these are re-exported as CSS custom properties in base/_tokens.
+//  Design tokens taken 1:1 from the original ADBK theme, so the rebuild matches
+//  the live site pixel for pixel. Sass variables for compile-time logic; the
+//  runtime mirror lives in base/_tokens.scss.
 // =============================================================================
 
 @use "sass:map";
 @use "functions" as fn;
 
 // -----------------------------------------------------------------------------
-//  Brand palette
-//  Taken from the ADBK signet: the six-square mosaic plus the institutional blue.
+//  Farbzuordnung - the colour key documented in the original stylesheet.
 // -----------------------------------------------------------------------------
 
-$blue:        #3357a1; // institutional blue - primary
-$blue-deep:   #16295a; // darker blue for large surfaces
-$blue-night:  #0c1730; // hero / footer ground
-$lime:        #c3d62f; // Ausbildungs- + Berufsvorbereitung
-$yellow:      #fad200; // Berufsqualifizierung
-$magenta:     #b80d48; // Studienqualifizierung
-$mint:        #a3dec7; // signet accent
-$orange:      #d47217; // signet accent
-$sand:        #928767; // signet accent
-$stone:       #756d6b; // legacy footer grey
+$schulfarbe:   #3357a1; // Schulfarbe (institutional blue)
+$verwaltung:   #979797; // Verwaltung
+$bau-holz:     #928767; // Bau-/Holztechnik
+$beq:          #c3d62f; // Berufseinstiegsqualifizierung
+$druck-medien: #c20073; // Druck-/Medientechnik
+$gastronomie:  #8c2e2a; // Gastronomie
+$gestaltung:   #d47217; // Gestaltungstechnik
+$gesundheit:   #a3dec7; // Gesundheitstechnik
+$ausbildung:   #fad200; // Berufliche Ausbildung
+$fachschule:   #b80d48; // Fachschulen / Zusatzqualifikation
 
-$ink:         #14161a;
-$ink-soft:    #3d434e;
-$muted:       #6d7482;
-$line:        #e3e6ec;
-$surface:     #ffffff;
-$surface-alt: #f5f7fa;
-$surface-sunk:#eef1f6;
+// The four main-navigation tiles are painted at 80% opacity over the photo.
+$tile-alpha: 0.8;
 
-// Named brand map - drives utilities, the pillar cards and the mosaic motif.
-$brand-colors: (
-  "blue":    $blue,
-  "lime":    $lime,
-  "yellow":  $yellow,
-  "magenta": $magenta,
-  "mint":    $mint,
-  "orange":  $orange,
-  "sand":    $sand,
-  "stone":   $stone,
-);
+$nav-vorbereitung: rgba($beq, $tile-alpha);
+$nav-ausbildung:   rgba($ausbildung, $tile-alpha);
+$nav-fachschule:   rgba($fachschule, $tile-alpha);
+$nav-verwaltung:   rgba($verwaltung, $tile-alpha);
+$nav-hover:        rgba($schulfarbe, 1);
 
-// Foreground colour to pair with each brand colour (contrast-checked).
-$brand-contrast: (
-  "blue":    #ffffff,
-  "lime":    #23290a,
-  "yellow":  #3a2f00,
-  "magenta": #ffffff,
-  "mint":    #123528,
-  "orange":  #ffffff,
-  "sand":    #ffffff,
-  "stone":   #ffffff,
-);
+// Neutrals
+$text:          #333;
+$logo-text:     #989898; // grey of the address block next to the signet
+$footer-bg:     rgb(117, 109, 107);
+$hauptnavi-bg:  darkgrey;
+$search-bg:     lightgrey;
+$rule-blue:     rgb(0, 64, 126); // divider between the top-nav items
+$hover-grey:    lightgray;
 
 // -----------------------------------------------------------------------------
-//  Typography
+//  Typografie
+//  The original ships Myriad Web Pro as a webfont and falls back to Arial,
+//  which is what most visitors actually see. The rebuild keeps the same stack
+//  without redistributing the commercial font file.
 // -----------------------------------------------------------------------------
 
-$font-sans: "Inter", "Myriad Web Pro", -apple-system, BlinkMacSystemFont,
-            "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-$font-display: "Space Grotesk", $font-sans;
+$font-base: "Myriad Web Pro", Arial, Helvetica, sans-serif;
 
-// Fluid type scale - no breakpoints needed, scales 360px -> 1440px.
-$fs-display: fn.fluid(38, 78);
-$fs-h1:      fn.fluid(32, 60);
-$fs-h2:      fn.fluid(26, 42);
-$fs-h3:      fn.fluid(20, 28);
-$fs-h4:      fn.fluid(18, 22);
-$fs-lead:    fn.fluid(17, 21);
-$fs-body:    fn.fluid(16, 17);
-$fs-small:   fn.rem(14);
-$fs-micro:   fn.rem(12.5);
+$fs-root:       16px;   // html font-size
+$fs-body:       1rem;
+$fs-entry:      0.8rem; // main .entry copy
+$fs-h1:         1.5rem;
+$fs-entry-h2:   1.3rem;
+$fs-entry-h3:   1rem;
+$fs-topnav:     1.2rem;
+$fs-logo:       1.2rem;
+$fs-hauptnavi:  1.2rem;
+$fs-breadcrumb: 0.8rem;
+$fs-teaser-head: 1.5rem;
+$fs-teaser-sub:  1.2rem;
+$fs-teaser-text: 0.8rem;
+$fs-footer:      0.75rem;
+$fs-footer-h2:   1.2rem;
+$fs-icon-bar:    20px;
 
-$lh-tight: 1.06;
-$lh-snug:  1.25;
-$lh-base:  1.7;
-
-$tracking-tight: -0.03em;
-$tracking-wide:   0.14em;
-
-// -----------------------------------------------------------------------------
-//  Space / radius / motion
-// -----------------------------------------------------------------------------
-
-// Vertical rhythm for full-width sections.
-$section-y:      fn.fluid(64, 128);
-$section-y-lg:   fn.fluid(88, 168);
-$gutter:         fn.fluid(20, 40);
-
-$radius-sm: 6px;
-$radius:    12px;
-$radius-lg: 20px;
-$radius-xl: 32px;
-$radius-pill: 999px;
-
-$shadow-xs: 0 1px 2px rgba(20, 22, 26, 0.06);
-$shadow-sm: 0 2px 8px rgba(20, 22, 26, 0.06);
-$shadow-md: 0 12px 28px -12px rgba(20, 22, 26, 0.18);
-$shadow-lg: 0 32px 64px -28px rgba(12, 23, 48, 0.32);
-
-$ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
-$ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-$dur-fast: 160ms;
-$dur:      280ms;
-$dur-slow: 620ms;
+$lh-logo: 1.9rem;
 
 // -----------------------------------------------------------------------------
-//  Layout
+//  Maße
 // -----------------------------------------------------------------------------
 
-$measure: 68ch;            // readable line length
-$header-h: 78px;           // sticky header height (desktop)
-$header-h-sm: 66px;
+$container:      1048px;   // max-width of header, navigation, content and footer
+$footer-inner:   65.5rem;  // = 1048px
+
+$header-h:       10rem;    // 160px
+$logo-img-h:     120px;
+$hauptnavi-h:    33.25rem; // 532px
+$hauptnavi-ul:   60rem;    // 960px
+
+$tile:           12.5rem;  // 200px - nav tiles and teaser boxes are both square
+$tile-pad-top:   3rem;     // padding above the nav tile label
+$tile-gap:       3.375rem; // 54px between tiles
+$tile-top:       2.75rem;  // 44px above the tile row
+
+$grid-gap:       2rem;     // 32px - content/teaser gap and news column gap
+$teaser-col:     $tile;    // the teaser column is exactly one tile wide
+
+$footer-col:     17.5rem;  // 280px
+$footer-col-gap: $tile-gap;
+
+$radius-input:   0.3rem;
+
+// -----------------------------------------------------------------------------
+//  Breakpoints
+//  The original collapses at 960px with two extra tweaks for very small phones.
+//  Bootstrap's own grid tiers are used alongside these for the fluid rebuild.
+// -----------------------------------------------------------------------------
+
+$bp-collapse: 960px;
+$bp-small:    454px;
+$bp-tiny:     340px;

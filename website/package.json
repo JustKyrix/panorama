@@ -1,23 +1,23 @@
 {
   "name": "adbk-panorama",
   "version": "1.0.0",
-  "description": "Modernisierter Nachbau der Startseite des Albrecht-Dürer-Berufskollegs Düsseldorf - Bootstrap 5.3 + Sass",
+  "description": "Originalgetreuer Nachbau der Startseite des Albrecht-Dürer-Berufskollegs Düsseldorf - Bootstrap 5.3 + Sass",
   "private": true,
   "scripts": {
     "start": "npm run watch",
-    "watch": "sass --watch scss/main.scss:assets/css/main.css --style=expanded --load-path=node_modules",
-    "build:css": "sass scss/main.scss:assets/css/main.css --style=expanded --load-path=node_modules --no-source-map",
-    "build:min": "sass scss/main.scss:assets/css/main.min.css --style=compressed --load-path=node_modules --no-source-map",
-    "prefix": "postcss assets/css/main.css --use autoprefixer --replace",
-    "build": "npm run build:css && npm run prefix && npm run build:min",
-    "serve": "npx --yes serve ."
+    "watch": "sass --watch scss/main.scss:assets/css/main.css --load-path=node_modules --style=expanded --quiet-deps",
+    "build:css": "sass scss/main.scss:assets/css/main.css --load-path=node_modules --style=expanded --no-source-map --quiet-deps",
+    "build:min": "sass scss/main.scss:assets/css/main.min.css --load-path=node_modules --style=compressed --no-source-map --quiet-deps",
+    "build": "npm run build:css && npm run build:min",
+    "serve": "npx --yes http-server . -p 4173 -c-1"
   },
-  "browserslist": ["> 0.5%", "last 2 versions", "not dead"],
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ],
   "devDependencies": {
-    "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
-    "postcss": "^8.4.49",
-    "postcss-cli": "^11.0.0",
     "sass": "^1.83.0"
   }
 }

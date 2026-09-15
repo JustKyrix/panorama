@@ -1,27 +1,29 @@
 // =============================================================================
 //  abstracts/mixins
-//  Reusable blocks. Mixins are preferred over @extend so the cascade stays
-//  predictable and selectors never get silently grouped.
+//  Reusable blocks. Mixins rather than @extend, so the cascade stays readable
+//  and selectors are never silently grouped.
 // =============================================================================
 
 @use "sass:map";
-@use "sass:math";
 @use "variables" as v;
-@use "functions" as fn;
 
 // -----------------------------------------------------------------------------
-//  Breakpoints - mirrors Bootstrap's grid so custom CSS and utilities agree.
+//  Breakpoints
+//  Bootstrap's tiers plus the two the original theme uses (960 / 454 / 340).
 // -----------------------------------------------------------------------------
 
 $breakpoints: (
-  "sm":  576px,
-  "md":  768px,
-  "lg":  992px,
-  "xl":  1200px,
-  "xxl": 1400px,
+  "sm":       576px,
+  "md":       768px,
+  "lg":       992px,
+  "xl":       1200px,
+  "xxl":      1400px,
+  "collapse": v.$bp-collapse,
+  "small":    v.$bp-small,
+  "tiny":     v.$bp-tiny,
 );
 
-/// Mobile-first media query. @include up("lg") { ... }
+/// Mobile-first query.
 @mixin up($key) {
   @if map.has-key($breakpoints, $key) == false {
     @error "up(): unknown breakpoint `#{$key}`.";
@@ -31,144 +33,66 @@ $breakpoints: (
   }
 }
 
-/// Max-width query for the rare case where mobile-first reads worse.
+/// Max-width query - the original theme is written desktop-first, so the
+/// collapse rules read more naturally this way.
 @mixin down($key) {
   @if map.has-key($breakpoints, $key) == false {
     @error "down(): unknown breakpoint `#{$key}`.";
   }
-  @media (max-width: map.get($breakpoints, $key) - 0.02px) {
-    @content;
-  }
-}
-
-/// Container-query helper for components that should react to their own box.
-@mixin container-up($width) {
-  @container (min-width: #{$width}) {
+  @media (max-width: map.get($breakpoints, $key)) {
     @content;
   }
 }
 
 // -----------------------------------------------------------------------------
-//  Layout primitives
+//  Layout
 // -----------------------------------------------------------------------------
 
-/// Auto-fitting card grid. The killer-app for "4 / 4" style sections:
-/// wraps and resizes with no media queries at all.
-@mixin auto-grid($min: 260px, $gap: fn.fluid(20, 32)) {
+/// The 1048px measure shared by header, navigation, content and footer.
+@mixin container($max: v.$container) {
+  width: 100%;
+  max-width: $max;
+  margin-inline: auto;
+}
+
+/// A square ADBK tile - used by the four navigation blocks and the teasers.
+@mixin tile($bg) {
+  width: v.$tile;
+  height: v.$tile;
+  background-color: $bg;
+  text-align: center;
+}
+
+/// Row of items on one axis => flex.
+@mixin row($gap: 0, $align: center, $justify: flex-start) {
+  display: flex;
+  flex-direction: row;
+  align-items: $align;
+  justify-content: $justify;
+
+  @if $gap != 0 {
+    gap: $gap;
+  }
+}
+
+/// Equal-width card columns => grid.
+@mixin grid-cols($cols, $gap: v.$grid-gap) {
+  display: grid;
+  grid-template-columns: repeat($cols, minmax(0, 1fr));
+  gap: $gap;
+}
+
+/// Card grid that reflows on its own, no media queries needed.
+@mixin auto-grid($min, $gap: v.$grid-gap) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(#{$min}, 100%), 1fr));
   gap: $gap;
 }
 
-/// Explicit column grid that collapses to one column on small screens.
-@mixin grid-cols($cols, $gap: fn.fluid(20, 32), $from: "md") {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: $gap;
-
-  @include up($from) {
-    grid-template-columns: repeat($cols, minmax(0, 1fr));
-  }
-}
-
-/// Two-up "image + text" row. Flex, per the house rule: one axis, content-driven.
-@mixin split($gap: fn.fluid(28, 72), $from: "lg", $reverse: false) {
-  display: flex;
-  flex-direction: column;
-  gap: $gap;
-
-  @include up($from) {
-    flex-direction: if($reverse, row-reverse, row);
-    align-items: center;
-
-    > * {
-      flex: 1 1 0;
-      min-width: 0;
-    }
-  }
-}
-
-/// Full-bleed background inside a constrained container.
-@mixin full-bleed {
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
-}
-
 // -----------------------------------------------------------------------------
-//  Type & surfaces
+//  Accessibility
 // -----------------------------------------------------------------------------
 
-@mixin display-type($size: v.$fs-h1) {
-  font-family: v.$font-display;
-  font-size: $size;
-  font-weight: 700;
-  line-height: v.$lh-tight;
-  letter-spacing: v.$tracking-tight;
-  text-wrap: balance;
-}
-
-/// Small all-caps label that sits above a heading.
-@mixin eyebrow($color: currentColor) {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: v.$fs-micro;
-  font-weight: 700;
-  letter-spacing: v.$tracking-wide;
-  text-transform: uppercase;
-  color: $color;
-}
-
-@mixin card-surface($bg: v.$surface, $border: v.$line) {
-  background-color: $bg;
-  border: 1px solid $border;
-  border-radius: v.$radius-lg;
-}
-
-/// Frosted panel used on dark grounds.
-@mixin glass($alpha: 0.08) {
-  background-color: rgba(#fff, $alpha);
-  border: 1px solid rgba(#fff, 0.14);
-  backdrop-filter: blur(14px);
-}
-
-/// Clamp text to n lines.
-@mixin line-clamp($lines: 3) {
-  display: -webkit-box;
-  -webkit-line-clamp: $lines;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-// -----------------------------------------------------------------------------
-//  Interaction & accessibility
-// -----------------------------------------------------------------------------
-
-@mixin focus-ring($color: v.$blue, $offset: 3px) {
-  &:focus-visible {
-    outline: 3px solid $color;
-    outline-offset: $offset;
-    border-radius: v.$radius-sm;
-  }
-}
-
-/// Make a whole card clickable from a single inner link, without nesting <a>.
-@mixin stretch-link {
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-  }
-}
-
-@mixin reduced-motion {
-  @media (prefers-reduced-motion: reduce) {
-    @content;
-  }
-}
-
-/// Visually hide but keep available to assistive technology.
 @mixin visually-hidden {
   position: absolute;
   width: 1px;
@@ -179,4 +103,17 @@ $breakpoints: (
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+@mixin focus-ring($color: v.$schulfarbe, $offset: 2px) {
+  &:focus-visible {
+    outline: 3px solid $color;
+    outline-offset: $offset;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
 }

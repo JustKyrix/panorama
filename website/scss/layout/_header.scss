@@ -1,306 +1,196 @@
 // =============================================================================
 //  layout/header
-//  Sticky, condensing header. The contact strip scrolls away, the nav bar stays.
-//  Mobile navigation uses a Bootstrap offcanvas (focus trap + ARIA for free).
+//  10rem tall, capped at the 1048px measure. Signet + address on the left,
+//  search above the top navigation on the right.
+//  Two groups on one axis => flex.
 // =============================================================================
 
 @use "../abstracts/variables" as v;
 @use "../abstracts/mixins" as mx;
-@use "../abstracts/functions" as fn;
 
-.topbar {
-  background-color: v.$blue-night;
-  color: rgba(#fff, 0.74);
-  font-size: v.$fs-micro;
+.site-header {
+  @include mx.container;
+  position: relative;
+  height: v.$header-h;
 
   &__inner {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 0.5rem 1.5rem;
-    padding-block: 0.6rem;
+    height: 100%;
   }
 
-  &__list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem 1.4rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  @include mx.down("collapse") {
+    height: auto;
+
+    &__inner {
+      align-items: center;
+      padding-block: 1rem;
+    }
+  }
+}
+
+// Signet + address block
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-block-start: 1rem;
+  margin-inline-start: 1.8125rem;
+
+  &__img {
+    max-height: v.$logo-img-h;
+    width: auto;
+    margin-inline-start: 1em;
   }
 
-  a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    color: inherit;
-    transition: color v.$dur-fast v.$ease-out;
+  &__text {
+    margin-inline-start: 1rem;
+    font-size: v.$fs-logo;
+    line-height: v.$lh-logo;
+    color: v.$logo-text;
+  }
 
-    &:hover {
-      color: #fff;
-      text-decoration: none;
+  @include mx.down("collapse") {
+    margin-block-start: 0;
+    margin-inline-start: 0;
+
+    &__img {
+      max-height: 72px;
+      margin-inline-start: 0;
+    }
+
+    &__text {
+      font-size: 0.95rem;
+      line-height: 1.4;
     }
   }
 
-  svg {
-    inline-size: 1em;
-    block-size: 1em;
-    flex: none;
-    opacity: 0.75;
+  @include mx.down("small") {
+    &__text {
+      font-size: 0.8rem;
+    }
   }
 }
 
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
-  background-color: rgba(#fff, 0.86);
-  backdrop-filter: blur(16px) saturate(1.6);
-  border-block-end: 1px solid transparent;
-  transition: border-color v.$dur v.$ease-out,
-              box-shadow v.$dur v.$ease-out,
-              background-color v.$dur v.$ease-out;
+// Search + top navigation, stacked and right-aligned
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: v.$header-h;
+  margin-inline-end: 2.75rem;
 
-  &.is-stuck {
-    background-color: rgba(#fff, 0.95);
-    border-block-end-color: v.$line;
-    box-shadow: 0 6px 24px -18px rgba(v.$ink, 0.5);
-  }
-
-  &__inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-block-size: var(--adbk-header-h);
+  @include mx.down("collapse") {
+    height: auto;
+    margin-inline-end: 0;
+    justify-content: center;
   }
 }
 
-// Logo lockup: signet + wordmark. Flex - one axis, content-driven sizes.
-.brand {
+.suche {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  flex: none;
-  color: v.$ink;
+  margin-block-start: 1.625rem;
 
-  &:hover { text-decoration: none; }
-
-  &__mark {
-    inline-size: 46px;
-    block-size: auto;
-    flex: none;
-    transition: transform v.$dur v.$ease-out;
+  &__label {
+    @include mx.visually-hidden;
   }
 
-  &:hover &__mark { transform: rotate(-4deg) scale(1.05); }
+  &__input {
+    width: 15rem;
+    padding: 0.4rem;
+    background-color: v.$search-bg;
+    color: v.$text;
+  }
 
-  &__text {
+  &__submit {
+    width: 4rem;
+    height: 30px;
+    background-color: transparent;
+    background-image: url("../images/search-form.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    text-indent: -9999px;
+    overflow: hidden;
+  }
+
+  @include mx.down("collapse") {
     display: none;
-    line-height: 1.2;
-
-    @include mx.up("sm") { display: block; }
-  }
-
-  &__name {
-    display: block;
-    font-family: v.$font-display;
-    font-size: fn.rem(16);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: v.$ink;
-  }
-
-  &__sub {
-    display: block;
-    font-size: fn.rem(11.5);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: v.$muted;
   }
 }
 
-.mainnav {
-  display: none;
-
-  @include mx.up("lg") { display: block; }
+// Top navigation: items separated by a thin blue rule.
+.navi-oben {
+  margin-block-end: 2rem;
 
   &__list {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 0.25rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  }
+
+  &__item {
+    display: inline-block;
+    border-inline-end: 1px solid v.$rule-blue;
+
+    &:last-child {
+      border-inline-end: none;
+    }
+
+    &:hover {
+      border-block-end: 3px solid v.$rule-blue;
+      padding-block-end: 0.5rem;
+    }
+
+    // The last entry is greyed out in the original.
+    &:last-child .navi-oben__link {
+      color: grey;
+    }
   }
 
   &__link {
-    position: relative;
-    display: block;
-    padding: 0.55rem 0.85rem;
-    font-size: fn.rem(15);
-    font-weight: 600;
-    color: v.$ink;
-    border-radius: v.$radius-sm;
-    transition: color v.$dur-fast v.$ease-out;
+    padding-inline: 0.3rem;
+    font-size: v.$fs-topnav;
+    font-weight: bold;
+    color: v.$schulfarbe;
+  }
 
-    // Wipe-in underline rather than a colour-only hover state.
-    &::after {
-      content: "";
-      position: absolute;
-      inset-inline: 0.85rem;
-      bottom: 0.25rem;
-      block-size: 2px;
-      background-color: v.$blue;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform v.$dur v.$ease-out;
-    }
-
-    &:hover,
-    &[aria-current="page"] {
-      color: v.$blue;
-      text-decoration: none;
-
-      &::after { transform: scaleX(1); }
-    }
+  @include mx.down("collapse") {
+    display: none;
   }
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: none;
-}
-
-// Compact search field that widens on focus.
-.header-search {
+// Burger button - hidden on desktop, opens the Bootstrap offcanvas.
+.open-menu {
   display: none;
-  position: relative;
+  background: none;
+  font-size: 2rem;
+  line-height: 1;
+  color: v.$schulfarbe;
+  cursor: pointer;
 
-  @include mx.up("xl") { display: block; }
-
-  input {
-    inline-size: 9.5rem;
-    padding-block: 0.5rem;
-    padding-inline: 2.4rem 1rem;
-    font-size: fn.rem(14);
-    background-color: v.$surface-alt;
-    border: 1px solid v.$line;
-    border-radius: v.$radius-pill;
-    transition: inline-size v.$dur v.$ease-out,
-                background-color v.$dur v.$ease-out,
-                border-color v.$dur v.$ease-out;
-
-    &:focus {
-      inline-size: 14rem;
-      background-color: #fff;
-      border-color: v.$blue;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(v.$blue, 0.16);
-    }
-  }
-
-  svg {
-    position: absolute;
-    inset-inline-start: 0.85rem;
-    top: 50%;
-    translate: 0 -50%;
-    inline-size: 1rem;
-    block-size: 1rem;
-    color: v.$muted;
-    pointer-events: none;
+  @include mx.down("collapse") {
+    display: block;
   }
 }
 
-.nav-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 0.9rem;
-  font-size: fn.rem(14);
-  font-weight: 600;
-  color: v.$ink;
-  background-color: v.$surface-alt;
-  border: 1px solid v.$line;
-  border-radius: v.$radius-pill;
-
-  @include mx.up("lg") { display: none; }
-
-  svg {
-    inline-size: 1.1rem;
-    block-size: 1.1rem;
-  }
-}
-
-.navdrawer {
+// Offcanvas contents
+.menu-drawer {
   &__list {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
   }
 
   &__link {
-    display: flex;
-    align-items: center;
-    padding: 0.9rem 1rem;
-    font-family: v.$font-display;
-    font-size: fn.rem(17);
-    font-weight: 600;
-    color: v.$ink;
-    border-radius: v.$radius;
-    transition: background-color v.$dur-fast v.$ease-out;
-
-    &:hover {
-      background-color: v.$surface-alt;
-      text-decoration: none;
-    }
-
-    // Colour chip mirrors the pillar colours.
-    &::before {
-      content: "";
-      inline-size: 6px;
-      block-size: 1.5rem;
-      margin-inline-end: 0.85rem;
-      flex: none;
-      background-color: var(--chip, #{v.$blue});
-      border-radius: v.$radius-pill;
-    }
-  }
-}
-
-// Floating advice-team tab, carried over from the original side rail.
-.advice-tab {
-  position: fixed;
-  inset-inline-end: 0;
-  top: 55%;
-  z-index: 1020;
-  display: none;
-  padding: 1.1rem 0.7rem;
-  font-size: fn.rem(13);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fff;
-  background-color: v.$blue;
-  border-radius: v.$radius 0 0 v.$radius;
-  box-shadow: v.$shadow-md;
-  writing-mode: vertical-rl;
-  transition: background-color v.$dur v.$ease-out, translate v.$dur v.$ease-out;
-
-  @include mx.up("lg") { display: block; }
-
-  &:hover {
-    color: #fff;
-    background-color: v.$blue-deep;
-    translate: -4px 0;
-    text-decoration: none;
+    display: block;
+    padding: 0.75rem 0.5rem;
+    font-size: v.$fs-topnav;
+    font-weight: bold;
+    color: v.$schulfarbe;
+    border-block-end: 1px solid v.$search-bg;
   }
 }
