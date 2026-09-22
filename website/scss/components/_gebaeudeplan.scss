@@ -193,9 +193,14 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 // -----------------------------------------------------------------------------
 
 .gplan__stage {
-  // The two numbers that shape the stack.
-  --gap-near: 10px;   // between floors that are not the open one
-  --gap-open: 20px;   // between the open floor and each neighbour
+  // The two numbers that shape the stack, in a 1:2 ratio.
+  //
+  // Scale matters as much as the ratio: a plate is --plate-h tall, so a gap
+  // much below half of that leaves the floors overlapping into a single
+  // unreadable shape. Keep --gap-near at roughly half a plate and the layers
+  // stay legible.
+  --gap-near: 60px;    // between floors that are not the open one
+  --gap-open: 120px;   // between the open floor and each neighbour
   --plate-h: 113px;
 
   position: relative;
@@ -207,7 +212,11 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // widest, plus one plate.
   block-size: calc(var(--plate-h) + (2 * var(--gap-open)));
 
+  // Scaled down on phones, keeping the same 1:2 ratio, so the panel still
+  // fits without the stage pushing the room list off screen.
   @include mx.down("small") {
+    --gap-near: 44px;
+    --gap-open: 88px;
     --plate-h: 100px;
   }
 }

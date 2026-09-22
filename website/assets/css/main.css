@@ -14859,8 +14859,8 @@ p {
 }
 
 .gplan__stage {
-  --gap-near: 10px;
-  --gap-open: 20px;
+  --gap-near: 60px;
+  --gap-open: 120px;
   --plate-h: 113px;
   position: relative;
   flex: none;
@@ -14870,6 +14870,8 @@ p {
 }
 @media (max-width: 454px) {
   .gplan__stage {
+    --gap-near: 44px;
+    --gap-open: 88px;
     --plate-h: 100px;
   }
 }
