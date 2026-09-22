@@ -12,14 +12,20 @@
 @use "../abstracts/mixins" as mx;
 
 .gtour {
-  // <dialog> comes with a border, padding and auto margins; clear all of it.
-  inline-size: min(76rem, calc(100vw - 3rem));
-  block-size: min(46rem, calc(100dvh - 3rem));
-  max-inline-size: none;
-  max-block-size: none;
+  // Full-bleed: the tour takes the whole viewport, the page disappears behind
+  // it. A <dialog> ships with a border, padding, a max-width/height of
+  // roughly the viewport minus margins, and auto margins that centre it -
+  // every one of those has to be cleared or it stays a window.
+  position: fixed;
+  inset: 0;
+  inline-size: 100vw;
+  block-size: 100dvh;
+  max-inline-size: 100vw;
+  max-block-size: 100dvh;
+  margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 0.75rem;
+  border-radius: 0;
   overflow: hidden;
   background-color: #111;
   color: #fff;
@@ -34,12 +40,6 @@
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.72);
     backdrop-filter: blur(2px);
-  }
-
-  @include mx.down("small") {
-    inline-size: 100vw;
-    block-size: 100dvh;
-    border-radius: 0;
   }
 
   &__bar {

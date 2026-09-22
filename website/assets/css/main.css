@@ -15096,13 +15096,16 @@ p {
 }
 
 .gtour {
-  inline-size: min(76rem, 100vw - 3rem);
-  block-size: min(46rem, 100dvh - 3rem);
-  max-inline-size: none;
-  max-block-size: none;
+  position: fixed;
+  inset: 0;
+  inline-size: 100vw;
+  block-size: 100dvh;
+  max-inline-size: 100vw;
+  max-block-size: 100dvh;
+  margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 0.75rem;
+  border-radius: 0;
   overflow: hidden;
   background-color: #111;
   color: #fff;
@@ -15114,13 +15117,6 @@ p {
 .gtour::backdrop {
   background-color: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(2px);
-}
-@media (max-width: 454px) {
-  .gtour {
-    inline-size: 100vw;
-    block-size: 100dvh;
-    border-radius: 0;
-  }
 }
 .gtour__bar {
   display: flex;
