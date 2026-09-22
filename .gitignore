@@ -17,3 +17,9 @@ yarn-error.log*
 
 # Deployment package
 adbk-site.zip
+
+# Rohmaterial der Kamera (165 MB) - bleibt lokal.
+# Binaerdateien lassen sich nicht deltakomprimieren, jede Fassung landet in
+# voller Groesse dauerhaft in der History. Was auf die Seite soll, wird
+# vorher fuer das Web optimiert und gezielt unter assets/images/ abgelegt.
+bilder/
