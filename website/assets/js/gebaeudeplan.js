@@ -7,8 +7,9 @@
  *    hover a floor    -> highlight only. NOTHING MOVES.
  *    click a floor    -> the stack fans open around it: that floor holds its
  *                        position, the other two are pushed away. Clicking it
- *                        again collapses the stack back to the flat slab.
+ *                        again collapses the stack.
  *    click a room     -> its zone lights up in the plan, the rest recede
+ *    click a zone     -> a zone with a 360° tour opens it in a new tab
  *
  *  Hover deliberately has no effect on layout: with the plates anchored to the
  *  selected floor, letting hover drive the fan meant the whole stack jumped to
@@ -42,6 +43,22 @@
   const INFO_PICK = "Raum auswählen, um ihn im Plan zu markieren.";
 
   let selected = null; // the one and only piece of state
+
+  // ---------------------------------------------------------------------------
+  //  360-Grad-Rundgang
+  //
+  //  Opens in its own tab rather than an overlay. The tour is a self-contained
+  //  full-viewport app with its own controls, so a tab hands it the entire
+  //  screen and keeps the plan untouched behind it.
+  // ---------------------------------------------------------------------------
+
+  const openTour = (src) => {
+    if (!src) return;
+    // Called straight out of a click handler, so this is a user gesture and
+    // will not be caught by popup blocking. `noopener` keeps the new tab from
+    // getting a handle on this page.
+    window.open(src, "_blank", "noopener");
+  };
 
   // ---------------------------------------------------------------------------
   //  Raumauswahl
@@ -124,80 +141,12 @@
     });
   });
 
-  // ---------------------------------------------------------------------------
-  //  360-Grad-Rundgang
-  //
-  //  The tour is a self-contained Marzipano app, so it lives in an iframe
-  //  rather than being inlined - it expects to own the whole viewport, and its
-  //  stylesheet carries a global reset that would leak into the page.
-  // ---------------------------------------------------------------------------
-
-  const tour = document.querySelector("[data-gtour]");
-  const tourFrame = tour?.querySelector("[data-gtour-frame]");
-  const tourTitle = tour?.querySelector("[data-gtour-title]");
-  const tourClose = tour?.querySelector("[data-gtour-close]");
-
-  const openTour = (src, name) => {
-    if (!tour || !tourFrame || !src) return;
-
-    if (tourTitle) {
-      tourTitle.textContent = name ? `${name} – 360°-Rundgang` : "360°-Rundgang";
-    }
-
-    // The src is attached only now. The tour is tens of megabytes of tiles, so
-    // it must not start downloading until someone actually asks for it.
-    if (tourFrame.getAttribute("src") !== src) tourFrame.setAttribute("src", src);
-
-    if (typeof tour.showModal === "function") tour.showModal();
-    else tour.setAttribute("open", "");
-  };
-
-  // Dropping the src stops tile loading and the autorotate timer; otherwise
-  // the tour keeps running unseen behind the page.
-  const unloadTour = () => tourFrame?.removeAttribute("src");
-
-  let tourTimer = 0;
-
-  const closeTour = () => {
-    if (!tour?.open) return;
-
-    const finish = () => {
-      tour.classList.remove("is-closing");
-      tour.close();
-      unloadTour();
-    };
-
-    if (reduceMotion) {
-      finish();
-      return;
-    }
-
-    tour.classList.add("is-closing");
-    window.clearTimeout(tourTimer);
-    tourTimer = window.setTimeout(finish, 200);
-  };
-
-  // Escape closes a <dialog> natively, bypassing closeTour(), so the events
-  // are covered as well. Both are wired because the `close` event proved
-  // unreliable in some engines - unloading twice is harmless, never
-  // unloading leaves the tour streaming in the background.
-  tour?.addEventListener("close", unloadTour);
-  tour?.addEventListener("cancel", unloadTour);
-  tourClose?.addEventListener("click", closeTour);
-  tour?.addEventListener("click", (event) => {
-    if (event.target === tour) closeTour(); // click on the backdrop
-  });
-
-  // ---------------------------------------------------------------------------
-  //  Räume und begehbare Zonen
-  // ---------------------------------------------------------------------------
-
   rooms.forEach((room) => {
     room.addEventListener("click", () => {
       selectRoom(room);
       // Only on selecting, not on clicking the same entry again to clear it.
       if (room.dataset.tour && room.getAttribute("aria-pressed") === "true") {
-        openTour(room.dataset.tour, room.dataset.tourName);
+        openTour(room.dataset.tour);
       }
     });
   });
@@ -209,7 +158,7 @@
       const index = floors.indexOf(zone.closest("[data-gplan-floor]"));
       if (index === -1 || selected !== index) return;
       event.stopPropagation(); // do not collapse the floor we are standing on
-      openTour(zone.dataset.tour, zone.dataset.tourName);
+      openTour(zone.dataset.tour);
     });
   });
 
@@ -263,18 +212,8 @@
     fab.focus({ preventScroll: true });
   });
 
-  // Escape dismisses the topmost layer only: the tour first, then the panel.
-  // Handled explicitly rather than leaning on the dialog's own events, which
-  // are not reliably delivered everywhere.
   document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-
-    if (tour?.open) {
-      closeTour();
-      return;
-    }
-
-    if (isOpen()) {
+    if (event.key === "Escape" && isOpen()) {
       close();
       fab.focus({ preventScroll: true });
     }
