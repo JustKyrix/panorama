@@ -3,34 +3,31 @@
 //  Floating building-plan navigator for the map view.
 //
 //  Closed        -> a button in the bottom-right corner.
-//  Click button  -> the panel opens; the three floors sit in one thick slab.
-//  Hover a floor -> highlight only. NOTHING MOVES. Letting hover drive the fan
-//                   made the whole stack jump to a new arrangement every time
-//                   the pointer crossed a plate, which was unusable.
-//  Click a floor -> the stack fans open around it: that floor holds its
-//                   position, the other two are pushed away, further the more
-//                   floors apart they are. Its rooms become selectable, and
-//                   each room lights up its zone in the plan.
+//  Click button  -> the panel opens.
+//  Hover a floor -> highlight only. NOTHING MOVES. Letting hover drive the
+//                   layout made the stack lurch every time the pointer
+//                   crossed a plate, which was unusable.
+//  Click a floor -> it opens: the gap to its neighbours widens.
+//  Click a zone  -> a zone with a 360° tour opens it (see components/tour).
 //
-//  IMPORTANT - the panel must keep a CONSTANT height. It is anchored to the
-//  bottom of the viewport, so any change in content height makes it grow
-//  upwards and drags the whole stack with it, which completely masks the fan
-//  (the hovered floor appears to move even though its offset is correct).
-//  That is why the room area and the info line below have reserved heights
-//  instead of sizing to their content.
+//  GEOMETRY
+//  The ground floor is the anchor: it sits on the floor of the stage and
+//  never moves, the others stack upwards from it. Adjacent floors sit
+//  --gap-near apart; whichever floor is open gets --gap-open to each of its
+//  neighbours. Turn those two values up for a more dramatic stack.
+//
+//  The panel must keep a CONSTANT height. It is anchored to the bottom of the
+//  viewport, so content that changes height makes it grow upwards and drags
+//  the plan with it - which reads as the plates moving on their own. Hence the
+//  reserved heights on the room area and the info line.
 // =============================================================================
 
 @use "sass:map";
 @use "../abstracts/variables" as v;
 @use "../abstracts/mixins" as mx;
 
-// How far a floor is pushed, by its distance from the hovered one.
-// Distance 2 is deliberately far more than 2 x distance 1.
-$gplan-fan: (
-  0: 0,
-  1: 1,
-  2: 2.55,
-);
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
 .gplan {
   position: fixed;
@@ -40,8 +37,6 @@ $gplan-fan: (
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  // The gap belongs to the flex container, so moving from the button up to the
-  // panel never leaves the hover region.
   gap: 0.75rem;
   font-family: v.$font-base;
 
@@ -59,68 +54,99 @@ $gplan-fan: (
   order: 2;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.85rem 1.3rem;
-  font-size: 0.95rem;
+  gap: 0.55rem;
+  padding: 0.8rem 1.25rem;
+  font-size: 0.9rem;
   font-weight: bold;
+  letter-spacing: -0.01em;
   color: #fff;
   background-color: v.$schulfarbe;
   border-radius: 999px;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 6px 16px -6px rgba(v.$schulfarbe, 0.7),
+              0 2px 6px rgba(0, 0, 0, 0.16);
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: transform 260ms $ease-out, box-shadow 260ms $ease-out,
+              background-color 200ms $ease-soft;
 
-  &:hover,
-  &[aria-expanded="true"] {
-    background-color: #24417c;
-    transform: translateY(-2px);
+  &:hover {
+    background-color: #2a4784;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px -10px rgba(v.$schulfarbe, 0.75),
+                0 3px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.98);
   }
 
   svg {
-    inline-size: 1.15rem;
-    block-size: 1.15rem;
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
     flex: none;
+    transition: transform 420ms $ease-out;
+  }
+
+  // The icon flips over while the panel is open.
+  &[aria-expanded="true"] {
+    background-color: #2a4784;
+
+    svg { transform: rotateX(180deg); }
   }
 
   @include mx.down("small") {
     padding: 0.9rem;
 
-    .gplan__fab-text {
-      @include mx.visually-hidden;
-    }
+    .gplan__fab-text { @include mx.visually-hidden; }
   }
 }
 
 // -----------------------------------------------------------------------------
-//  Panel - feste Höhe, siehe Kommentar oben
+//  Panel
 // -----------------------------------------------------------------------------
 
 .gplan__panel {
   order: 1;
   display: flex;
   flex-direction: column;
-  width: min(30rem, calc(100vw - 2rem));
-  max-height: calc(100dvh - 5.5rem);
+  inline-size: min(25rem, calc(100vw - 2rem));
+  max-block-size: calc(100dvh - 6rem);
   background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45);
+  border-radius: 1.25rem;
+  box-shadow: 0 32px 64px -24px rgba(12, 23, 48, 0.4),
+              0 2px 8px rgba(12, 23, 48, 0.08);
   transform-origin: bottom right;
+  overflow: hidden;
 
-  &[hidden] {
-    display: none;
+  &[hidden] { display: none; }
+
+  animation: gplan-in 380ms $ease-out both;
+
+  // Played by JS before the panel is actually hidden, so closing is not an
+  // abrupt disappearance.
+  &.is-closing {
+    animation: gplan-out 200ms $ease-soft both;
   }
-
-  animation: gplan-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes gplan-in {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.97);
+    transform: translateY(20px) scale(0.94);
   }
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes gplan-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
   }
 }
 
@@ -130,12 +156,12 @@ $gplan-fan: (
   justify-content: space-between;
   gap: 1rem;
   flex: none;
-  padding: 0.9rem 1.25rem;
-  border-block-end: 1px solid #ececec;
+  padding: 1rem 1rem 0.85rem 1.25rem;
 
   h2 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
     color: v.$text;
   }
 }
@@ -143,96 +169,80 @@ $gplan-fan: (
 .gplan__close {
   display: grid;
   place-items: center;
-  inline-size: 2rem;
-  block-size: 2rem;
-  background-color: #f3f3f3;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  color: #6b7280;
+  background-color: #f2f4f7;
   border-radius: 50%;
-  color: v.$text;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 200ms $ease-soft, color 200ms $ease-soft,
+              transform 200ms $ease-out;
 
   &:hover {
-    background-color: #e4e4e4;
+    background-color: #e4e7ec;
+    color: v.$text;
+    transform: rotate(90deg);
   }
 
-  svg {
-    inline-size: 1rem;
-    block-size: 1rem;
-  }
+  svg { inline-size: 0.95rem; block-size: 0.95rem; }
 }
 
 // -----------------------------------------------------------------------------
-//  Bühne - hier passiert das Auffächern
+//  Bühne
+//  Ground floor anchored at the bottom; the others stack upwards from it.
 // -----------------------------------------------------------------------------
 
 .gplan__stage {
-  // --compact : gap between floors in the resting stack
-  // --spread  : one step of separation while a floor is active
-  // --plate-h : rendered height of one floor plate
-  --compact: 24px;
-  --spread: 118px;
+  // The two numbers that shape the stack.
+  --gap-near: 10px;   // between floors that are not the open one
+  --gap-open: 20px;   // between the open floor and each neighbour
   --plate-h: 113px;
 
   position: relative;
   flex: none;
+  margin-inline: 1.25rem;
+  padding-block: 0.5rem;
 
-  // Exactly tall enough for the widest arrangement, derived from the fan map so
-  // retuning --spread resizes the stage automatically.
-  block-size: calc(
-    2 * ((#{map.get($gplan-fan, 2)} * var(--spread)) - var(--compact)) + var(--plate-h)
-  );
-
-  @include mx.down("collapse") {
-    --compact: 18px;
-    --spread: 74px;
-    --plate-h: 105px;
-  }
+  // Tall enough for the highest the stack ever reaches: both gaps at their
+  // widest, plus one plate.
+  block-size: calc(var(--plate-h) + (2 * var(--gap-open)));
 
   @include mx.down("small") {
-    --spread: 62px;
-    --plate-h: 107px;
+    --plate-h: 100px;
   }
 }
 
 .gplan__floors {
   position: absolute;
   inset: 0;
-  // Floors run top-to-bottom in the DOM, so the ground floor paints last and
-  // sits in front - which is what the viewing angle calls for.
+  // Listed top-to-bottom in the DOM, so the ground floor paints last and sits
+  // in front - which is what the viewing angle calls for.
 }
 
 .gplan__floor {
-  --i: 0;
-
   position: absolute;
   inset-inline: 0;
-  inset-block-start: 50%;
+  inset-block-end: 0; // the ground floor's resting line
   display: block;
-  inline-size: min(20rem, calc(100% - 2.5rem));
-  margin-inline: auto;
   padding: 0;
   background: none;
   cursor: pointer;
-
-  // Resting stack. The fan states below override this.
-  translate: 0 calc(-50% + ((var(--i) - 1) * var(--compact)));
-  transition: translate 560ms cubic-bezier(0.22, 1, 0.36, 1),
-              filter 260ms ease;
+  transition: translate 520ms $ease-out, filter 240ms $ease-soft;
 
   svg {
+    display: block;
     inline-size: 100%;
     block-size: auto;
     overflow: visible;
-    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.16));
-    transition: filter 200ms ease, opacity 200ms ease;
+    filter: drop-shadow(0 6px 10px rgba(12, 23, 48, 0.18));
+    transition: filter 240ms $ease-soft, opacity 240ms $ease-soft;
   }
 
-  // Hover is a highlight and NOTHING ELSE - no offset, no scale. Only a click
-  // may rearrange the stack, so sweeping the pointer across the plan is calm.
+  // Hover is a highlight and nothing else - no offset, no scale. Only a click
+  // may rearrange the stack.
   &:hover svg,
   &:focus-visible svg {
-    filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.3)) brightness(1.06);
-    opacity: 1;
+    filter: drop-shadow(0 12px 20px rgba(12, 23, 48, 0.3)) brightness(1.05);
   }
 
   &:focus-visible {
@@ -240,85 +250,138 @@ $gplan-fan: (
 
     svg {
       outline: 3px solid v.$schulfarbe;
-      outline-offset: 6px;
-      border-radius: 4px;
+      outline-offset: 4px;
     }
   }
 }
 
-// -----------------------------------------------------------------------------
-//  Die neun Fächer-Stellungen
-//
-//    offset(i) = (h - 1) * compact  +  fan(|i - h|) * spread
-//
-//  The first term parks the active floor on the spot it occupies in the resting
-//  stack; the second pushes the others away from it.
-// -----------------------------------------------------------------------------
+// --- Die vier Anordnungen ----------------------------------------------------
+// Ground floor (index 2) is never translated: it is the anchor.
 
-.gplan__stage {
-  @each $h in (0, 1, 2) {
-    &[data-active="#{$h}"] {
-      @each $i in (0, 1, 2) {
-        $distance: $i - $h;
-        $magnitude: $distance;
+// Rest, and ground floor open: 20 to EG, 10 between the upper two.
+.gplan__floor[data-floor-index="2"] { translate: 0 0; }
+.gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-open)); }
+.gplan__floor[data-floor-index="0"] {
+  translate: 0 calc(-1 * (var(--gap-open) + var(--gap-near)));
+}
 
-        @if $distance < 0 {
-          $magnitude: -$distance;
-        }
+// 1. OG open: it gets the wide gap on both sides.
+.gplan__stage[data-active="1"] {
+  .gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-open)); }
+  .gplan__floor[data-floor-index="0"] { translate: 0 calc(-2 * var(--gap-open)); }
+}
 
-        $step: map.get($gplan-fan, $magnitude);
-
-        @if $distance < 0 {
-          $step: -$step;
-        }
-
-        $anchor: $h - 1;
-
-        .gplan__floor[data-floor-index="#{$i}"] {
-          translate: 0 calc(
-            -50% + (#{$anchor} * var(--compact)) + (#{$step} * var(--spread))
-          );
-        }
-      }
-    }
+// 2. OG open: the two below it close up to 10, it takes 20 above them.
+.gplan__stage[data-active="0"] {
+  .gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-near)); }
+  .gplan__floor[data-floor-index="0"] {
+    translate: 0 calc(-1 * (var(--gap-near) + var(--gap-open)));
   }
 }
 
-// Floors that are not the active one step back while the stack is fanned.
+// Floors that are not the open one step back.
 .gplan__stage[data-active] .gplan__floor:not([data-active]) svg {
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
-// A selected (clicked) floor keeps a ring so it is clear which one is pinned.
 .gplan__floor[data-selected] svg {
-  outline: 3px solid v.$schulfarbe;
-  outline-offset: 6px;
-  border-radius: 4px;
+  filter: drop-shadow(0 12px 22px rgba(v.$schulfarbe, 0.45));
 }
 
 // -----------------------------------------------------------------------------
-//  Etagenbeschriftung im Plan
+//  Etagennummer
 // -----------------------------------------------------------------------------
 
-// The plates are the original Illustrator exports: filled polygons, one per
-// coloured zone. Their fills come from the artwork, so nothing here sets a
-// colour - only how a zone reacts when a room is picked.
+.gplan__floor-label {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #cbd0d8;
+  pointer-events: none;
+  user-select: none;
+  transition: color 240ms $ease-soft;
+
+  small { font-size: 0.7rem; font-weight: bold; }
+}
+
+.gplan__floor[data-selected] .gplan__floor-label {
+  color: v.$schulfarbe;
+}
+
+// -----------------------------------------------------------------------------
+//  Hotspot - markiert eine Zone mit 360°-Rundgang
+//  Purely visual: pointer-events are off so the click lands on the zone
+//  underneath, which is a much bigger target.
+// -----------------------------------------------------------------------------
+
+.gplan__hotspot {
+  position: absolute;
+  inset-inline-start: var(--x, 50%);
+  inset-block-start: var(--y, 50%);
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  inline-size: 2.15rem;
+  block-size: 2.15rem;
+  font-size: 0.55rem;
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  color: #fff;
+  background-color: v.$schulfarbe;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(12, 23, 48, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.5;
+  transition: opacity 280ms $ease-out, scale 380ms $ease-out;
+  z-index: 2;
+
+  // The pulsing halo.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid v.$schulfarbe;
+    animation: gplan-hotspot-pulse 2s ease-out infinite;
+  }
+}
+
+// Only shown once its floor is open - otherwise it clutters the closed stack.
+.gplan__floor[data-selected] .gplan__hotspot {
+  opacity: 1;
+  scale: 1;
+}
+
+.gplan__floor[data-selected]:hover .gplan__hotspot {
+  scale: 1.12;
+}
+
+@keyframes gplan-hotspot-pulse {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  70%  { transform: scale(2.1); opacity: 0; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+
+// -----------------------------------------------------------------------------
+//  Zonen
+// -----------------------------------------------------------------------------
+
 .gplan-plate {
   &__band {
-    transition: opacity 220ms ease, filter 220ms ease;
+    transition: opacity 220ms $ease-soft, filter 220ms $ease-soft;
   }
 
-  // While a room is selected its zone stays lit and the rest recede.
-  &__band.is-dim {
-    opacity: 0.15;
-  }
+  &__band.is-dim { opacity: 0.15; }
+  &__band.is-highlight { filter: brightness(1.08); }
 
-  &__band.is-highlight {
-    filter: brightness(1.08);
-  }
-
-  // A zone with a 360° tour behind it. It only becomes clickable once its
-  // floor is open, so the first click on a closed floor still just opens it.
+  // A zone with a tour behind it becomes clickable once its floor is open.
   .gplan__floor[data-selected] &__band[data-tour] {
     cursor: pointer;
     stroke: #fff;
@@ -328,34 +391,8 @@ $gplan-fan: (
 }
 
 @keyframes gplan-zone-pulse {
-  0%,
-  100% { stroke-opacity: 0.35; }
-  50%  { stroke-opacity: 1; }
-}
-
-// Floor number, laid over the empty middle of the plate. Kept out of the SVG
-// so the supplied artwork stays untouched.
-.gplan__floor-label {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  translate: -50% -50%;
-  font-family: v.$font-base;
-  font-size: 2rem;
-  font-weight: bold;
-  line-height: 1;
-  color: #c4c4c4;
-  pointer-events: none;
-  user-select: none;
-
-  small {
-    font-size: 0.85rem;
-    font-weight: bold;
-  }
-
-  @include mx.down("small") {
-    font-size: 1.6rem;
-  }
+  0%, 100% { stroke-opacity: 0.4; }
+  50%      { stroke-opacity: 1; }
 }
 
 // -----------------------------------------------------------------------------
@@ -364,30 +401,28 @@ $gplan-fan: (
 
 .gplan__rooms {
   flex: none;
-  block-size: 8.25rem;
+  block-size: 9rem;
   overflow-y: auto;
   overscroll-behavior: contain;
+  margin-block-start: 0.75rem;
   padding: 0 1.25rem;
 
-  @include mx.down("small") {
-    block-size: 8.5rem;
-  }
+  @include mx.down("small") { block-size: 8rem; }
 }
 
 .gplan__rooms-title {
-  margin: 0 0 0.6rem;
-  font-size: 0.78rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.7rem;
   font-weight: bold;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #8a8a8a;
+  color: #98a1ae;
 }
 
-// Equal, tightly packed entries => grid.
 .gplan__room-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.15rem 0.75rem;
+  gap: 0.2rem 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -398,30 +433,32 @@ $gplan-fan: (
   align-items: center;
   gap: 0.5rem;
   inline-size: 100%;
-  padding: 0.2rem 0.35rem;
-  font-size: 0.78rem;
+  padding: 0.3rem 0.45rem;
+  font-size: 0.76rem;
   line-height: 1.3;
   text-align: start;
-  color: v.$text;
+  color: #4b5563;
   background: none;
-  border-radius: 0.25rem;
+  border-radius: 0.4rem;
   cursor: pointer;
-  transition: background-color 160ms ease;
+  transition: background-color 160ms $ease-soft, color 160ms $ease-soft;
 
   &:hover {
-    background-color: #f1f3f7;
+    background-color: #f2f4f7;
+    color: v.$text;
   }
 
   &[aria-pressed="true"] {
-    background-color: rgba(v.$schulfarbe, 0.12);
+    color: v.$text;
     font-weight: bold;
+    background-color: rgba(v.$schulfarbe, 0.1);
   }
 
   i {
-    inline-size: 0.7rem;
-    block-size: 0.7rem;
+    inline-size: 0.65rem;
+    block-size: 0.65rem;
     flex: none;
-    border-radius: 2px;
+    border-radius: 0.15rem;
     background-color: var(--swatch);
   }
 
@@ -431,15 +468,18 @@ $gplan-fan: (
 // Marks a room that has a 360° tour behind it.
 .gplan__room-badge {
   margin-inline-start: auto;
-  padding: 0.05rem 0.3rem;
-  font-size: 0.6rem;
+  padding: 0.05rem 0.32rem;
+  font-size: 0.58rem;
   font-style: normal;
   font-weight: bold;
-  letter-spacing: 0.02em;
   color: #fff;
   background-color: v.$schulfarbe;
-  border-radius: 0.2rem;
+  border-radius: 0.25rem;
   flex: none;
+}
+
+.gplan__room--tour:hover .gplan__room-badge {
+  background-color: #2a4784;
 }
 
 .gplan__room-group {
@@ -447,19 +487,22 @@ $gplan-fan: (
 
   &.is-active {
     display: block;
+    animation: gplan-fade-up 260ms $ease-out both;
   }
+}
+
+@keyframes gplan-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
 }
 
 .gplan__hint {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   line-height: 1.5;
-  color: #8a8a8a;
+  color: #98a1ae;
 
-  // Hidden as soon as a floor is active - the room list takes the same space.
-  .gplan__stage[data-active] ~ .gplan__rooms & {
-    display: none;
-  }
+  .gplan__stage[data-active] ~ .gplan__rooms & { display: none; }
 }
 
 // -----------------------------------------------------------------------------
@@ -470,24 +513,23 @@ $gplan-fan: (
   flex: none;
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
   block-size: 3rem;
   margin: 0;
   padding: 0 1.25rem;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   line-height: 1.35;
-  color: #8a8a8a;
-  border-block-start: 1px solid #ececec;
+  color: #98a1ae;
+  background-color: #fafbfc;
+  border-block-start: 1px solid #eef0f3;
 
-  b {
-    color: v.$text;
-  }
+  b { color: v.$text; }
 
   i {
-    inline-size: 0.7rem;
-    block-size: 0.7rem;
+    inline-size: 0.65rem;
+    block-size: 0.65rem;
     flex: none;
-    border-radius: 2px;
+    border-radius: 0.15rem;
     background-color: var(--swatch, transparent);
   }
 }

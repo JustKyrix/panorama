@@ -14731,25 +14731,37 @@ p {
   order: 2;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.85rem 1.3rem;
-  font-size: 0.95rem;
+  gap: 0.55rem;
+  padding: 0.8rem 1.25rem;
+  font-size: 0.9rem;
   font-weight: bold;
+  letter-spacing: -0.01em;
   color: #fff;
   background-color: #3357a1;
   border-radius: 999px;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 6px 16px -6px rgba(51, 87, 161, 0.7), 0 2px 6px rgba(0, 0, 0, 0.16);
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.gplan__fab:hover, .gplan__fab[aria-expanded=true] {
-  background-color: #24417c;
-  transform: translateY(-2px);
+.gplan__fab:hover {
+  background-color: #2a4784;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -10px rgba(51, 87, 161, 0.75), 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+.gplan__fab:active {
+  transform: translateY(-1px) scale(0.98);
 }
 .gplan__fab svg {
-  inline-size: 1.15rem;
-  block-size: 1.15rem;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
   flex: none;
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gplan__fab[aria-expanded=true] {
+  background-color: #2a4784;
+}
+.gplan__fab[aria-expanded=true] svg {
+  transform: rotateX(180deg);
 }
 @media (max-width: 454px) {
   .gplan__fab {
@@ -14772,28 +14784,42 @@ p {
   order: 1;
   display: flex;
   flex-direction: column;
-  width: min(30rem, 100vw - 2rem);
-  max-height: calc(100dvh - 5.5rem);
+  inline-size: min(25rem, 100vw - 2rem);
+  max-block-size: calc(100dvh - 6rem);
   background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.45);
+  border-radius: 1.25rem;
+  box-shadow: 0 32px 64px -24px rgba(12, 23, 48, 0.4), 0 2px 8px rgba(12, 23, 48, 0.08);
   transform-origin: bottom right;
+  overflow: hidden;
 }
 .gplan__panel[hidden] {
   display: none;
 }
 .gplan__panel {
-  animation: gplan-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: gplan-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.gplan__panel.is-closing {
+  animation: gplan-out 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 @keyframes gplan-in {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.97);
+    transform: translateY(20px) scale(0.94);
   }
   to {
     opacity: 1;
     transform: none;
+  }
+}
+@keyframes gplan-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
   }
 }
 .gplan__head {
@@ -14802,53 +14828,49 @@ p {
   justify-content: space-between;
   gap: 1rem;
   flex: none;
-  padding: 0.9rem 1.25rem;
-  border-block-end: 1px solid #ececec;
+  padding: 1rem 1rem 0.85rem 1.25rem;
 }
 .gplan__head h2 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
   color: #333;
 }
 
 .gplan__close {
   display: grid;
   place-items: center;
-  inline-size: 2rem;
-  block-size: 2rem;
-  background-color: #f3f3f3;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  color: #6b7280;
+  background-color: #f2f4f7;
   border-radius: 50%;
-  color: #333;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1), color 200ms cubic-bezier(0.4, 0, 0.2, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .gplan__close:hover {
-  background-color: #e4e4e4;
+  background-color: #e4e7ec;
+  color: #333;
+  transform: rotate(90deg);
 }
 .gplan__close svg {
-  inline-size: 1rem;
-  block-size: 1rem;
+  inline-size: 0.95rem;
+  block-size: 0.95rem;
 }
 
 .gplan__stage {
-  --compact: 24px;
-  --spread: 118px;
+  --gap-near: 10px;
+  --gap-open: 20px;
   --plate-h: 113px;
   position: relative;
   flex: none;
-  block-size: calc(2 * (2.55 * var(--spread) - var(--compact)) + var(--plate-h));
-}
-@media (max-width: 960px) {
-  .gplan__stage {
-    --compact: 18px;
-    --spread: 74px;
-    --plate-h: 105px;
-  }
+  margin-inline: 1.25rem;
+  padding-block: 0.5rem;
+  block-size: calc(var(--plate-h) + 2 * var(--gap-open));
 }
 @media (max-width: 454px) {
   .gplan__stage {
-    --spread: 62px;
-    --plate-h: 107px;
+    --plate-h: 100px;
   }
 }
 
@@ -14858,79 +14880,148 @@ p {
 }
 
 .gplan__floor {
-  --i: 0;
   position: absolute;
   inset-inline: 0;
-  inset-block-start: 50%;
+  inset-block-end: 0;
   display: block;
-  inline-size: min(20rem, 100% - 2.5rem);
-  margin-inline: auto;
   padding: 0;
   background: none;
   cursor: pointer;
-  translate: 0 calc(-50% + (var(--i) - 1) * var(--compact));
-  transition: translate 560ms cubic-bezier(0.22, 1, 0.36, 1), filter 260ms ease;
+  transition: translate 520ms cubic-bezier(0.16, 1, 0.3, 1), filter 240ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .gplan__floor svg {
+  display: block;
   inline-size: 100%;
   block-size: auto;
   overflow: visible;
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.16));
-  transition: filter 200ms ease, opacity 200ms ease;
+  filter: drop-shadow(0 6px 10px rgba(12, 23, 48, 0.18));
+  transition: filter 240ms cubic-bezier(0.4, 0, 0.2, 1), opacity 240ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .gplan__floor:hover svg, .gplan__floor:focus-visible svg {
-  filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.3)) brightness(1.06);
-  opacity: 1;
+  filter: drop-shadow(0 12px 20px rgba(12, 23, 48, 0.3)) brightness(1.05);
 }
 .gplan__floor:focus-visible {
   outline: none;
 }
 .gplan__floor:focus-visible svg {
   outline: 3px solid #3357a1;
-  outline-offset: 6px;
-  border-radius: 4px;
+  outline-offset: 4px;
 }
 
-.gplan__stage[data-active="0"] .gplan__floor[data-floor-index="0"] {
-  translate: 0 calc(-50% + -1 * var(--compact) + 0 * var(--spread));
+.gplan__floor[data-floor-index="2"] {
+  translate: 0 0;
 }
-.gplan__stage[data-active="0"] .gplan__floor[data-floor-index="1"] {
-  translate: 0 calc(-50% + -1 * var(--compact) + 1 * var(--spread));
+
+.gplan__floor[data-floor-index="1"] {
+  translate: 0 calc(-1 * var(--gap-open));
 }
-.gplan__stage[data-active="0"] .gplan__floor[data-floor-index="2"] {
-  translate: 0 calc(-50% + -1 * var(--compact) + 2.55 * var(--spread));
+
+.gplan__floor[data-floor-index="0"] {
+  translate: 0 calc(-1 * (var(--gap-open) + var(--gap-near)));
+}
+
+.gplan__stage[data-active="1"] .gplan__floor[data-floor-index="1"] {
+  translate: 0 calc(-1 * var(--gap-open));
 }
 .gplan__stage[data-active="1"] .gplan__floor[data-floor-index="0"] {
-  translate: 0 calc(-50% + 0 * var(--compact) + -1 * var(--spread));
+  translate: 0 calc(-2 * var(--gap-open));
 }
-.gplan__stage[data-active="1"] .gplan__floor[data-floor-index="1"] {
-  translate: 0 calc(-50% + 0 * var(--compact) + 0 * var(--spread));
+
+.gplan__stage[data-active="0"] .gplan__floor[data-floor-index="1"] {
+  translate: 0 calc(-1 * var(--gap-near));
 }
-.gplan__stage[data-active="1"] .gplan__floor[data-floor-index="2"] {
-  translate: 0 calc(-50% + 0 * var(--compact) + 1 * var(--spread));
-}
-.gplan__stage[data-active="2"] .gplan__floor[data-floor-index="0"] {
-  translate: 0 calc(-50% + 1 * var(--compact) + -2.55 * var(--spread));
-}
-.gplan__stage[data-active="2"] .gplan__floor[data-floor-index="1"] {
-  translate: 0 calc(-50% + 1 * var(--compact) + -1 * var(--spread));
-}
-.gplan__stage[data-active="2"] .gplan__floor[data-floor-index="2"] {
-  translate: 0 calc(-50% + 1 * var(--compact) + 0 * var(--spread));
+.gplan__stage[data-active="0"] .gplan__floor[data-floor-index="0"] {
+  translate: 0 calc(-1 * (var(--gap-near) + var(--gap-open)));
 }
 
 .gplan__stage[data-active] .gplan__floor:not([data-active]) svg {
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
 .gplan__floor[data-selected] svg {
-  outline: 3px solid #3357a1;
-  outline-offset: 6px;
-  border-radius: 4px;
+  filter: drop-shadow(0 12px 22px rgba(51, 87, 161, 0.45));
 }
 
+.gplan__floor-label {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #cbd0d8;
+  pointer-events: none;
+  user-select: none;
+  transition: color 240ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gplan__floor-label small {
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.gplan__floor[data-selected] .gplan__floor-label {
+  color: #3357a1;
+}
+
+.gplan__hotspot {
+  position: absolute;
+  inset-inline-start: var(--x, 50%);
+  inset-block-start: var(--y, 50%);
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  inline-size: 2.15rem;
+  block-size: 2.15rem;
+  font-size: 0.55rem;
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  color: #fff;
+  background-color: #3357a1;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(12, 23, 48, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.5;
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), scale 380ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+.gplan__hotspot::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid #3357a1;
+  animation: gplan-hotspot-pulse 2s ease-out infinite;
+}
+
+.gplan__floor[data-selected] .gplan__hotspot {
+  opacity: 1;
+  scale: 1;
+}
+
+.gplan__floor[data-selected]:hover .gplan__hotspot {
+  scale: 1.12;
+}
+
+@keyframes gplan-hotspot-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
 .gplan-plate__band {
-  transition: opacity 220ms ease, filter 220ms ease;
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), filter 220ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .gplan-plate__band.is-dim {
   opacity: 0.15;
@@ -14947,61 +15038,39 @@ p {
 
 @keyframes gplan-zone-pulse {
   0%, 100% {
-    stroke-opacity: 0.35;
+    stroke-opacity: 0.4;
   }
   50% {
     stroke-opacity: 1;
   }
 }
-.gplan__floor-label {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  translate: -50% -50%;
-  font-family: "Myriad Web Pro", Arial, Helvetica, sans-serif;
-  font-size: 2rem;
-  font-weight: bold;
-  line-height: 1;
-  color: #c4c4c4;
-  pointer-events: none;
-  user-select: none;
-}
-.gplan__floor-label small {
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-@media (max-width: 454px) {
-  .gplan__floor-label {
-    font-size: 1.6rem;
-  }
-}
-
 .gplan__rooms {
   flex: none;
-  block-size: 8.25rem;
+  block-size: 9rem;
   overflow-y: auto;
   overscroll-behavior: contain;
+  margin-block-start: 0.75rem;
   padding: 0 1.25rem;
 }
 @media (max-width: 454px) {
   .gplan__rooms {
-    block-size: 8.5rem;
+    block-size: 8rem;
   }
 }
 
 .gplan__rooms-title {
-  margin: 0 0 0.6rem;
-  font-size: 0.78rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.7rem;
   font-weight: bold;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #8a8a8a;
+  color: #98a1ae;
 }
 
 .gplan__room-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.15rem 0.75rem;
+  gap: 0.2rem 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -15012,28 +15081,30 @@ p {
   align-items: center;
   gap: 0.5rem;
   inline-size: 100%;
-  padding: 0.2rem 0.35rem;
-  font-size: 0.78rem;
+  padding: 0.3rem 0.45rem;
+  font-size: 0.76rem;
   line-height: 1.3;
   text-align: start;
-  color: #333;
+  color: #4b5563;
   background: none;
-  border-radius: 0.25rem;
+  border-radius: 0.4rem;
   cursor: pointer;
-  transition: background-color 160ms ease;
+  transition: background-color 160ms cubic-bezier(0.4, 0, 0.2, 1), color 160ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .gplan__room:hover {
-  background-color: #f1f3f7;
+  background-color: #f2f4f7;
+  color: #333;
 }
 .gplan__room[aria-pressed=true] {
-  background-color: rgba(51, 87, 161, 0.12);
+  color: #333;
   font-weight: bold;
+  background-color: rgba(51, 87, 161, 0.1);
 }
 .gplan__room i {
-  inline-size: 0.7rem;
-  block-size: 0.7rem;
+  inline-size: 0.65rem;
+  block-size: 0.65rem;
   flex: none;
-  border-radius: 2px;
+  border-radius: 0.15rem;
   background-color: var(--swatch);
 }
 .gplan__room:focus-visible {
@@ -15043,15 +15114,18 @@ p {
 
 .gplan__room-badge {
   margin-inline-start: auto;
-  padding: 0.05rem 0.3rem;
-  font-size: 0.6rem;
+  padding: 0.05rem 0.32rem;
+  font-size: 0.58rem;
   font-style: normal;
   font-weight: bold;
-  letter-spacing: 0.02em;
   color: #fff;
   background-color: #3357a1;
-  border-radius: 0.2rem;
+  border-radius: 0.25rem;
   flex: none;
+}
+
+.gplan__room--tour:hover .gplan__room-badge {
+  background-color: #2a4784;
 }
 
 .gplan__room-group {
@@ -15059,13 +15133,24 @@ p {
 }
 .gplan__room-group.is-active {
   display: block;
+  animation: gplan-fade-up 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+@keyframes gplan-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 .gplan__hint {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   line-height: 1.5;
-  color: #8a8a8a;
+  color: #98a1ae;
 }
 .gplan__stage[data-active] ~ .gplan__rooms .gplan__hint {
   display: none;
@@ -15075,23 +15160,24 @@ p {
   flex: none;
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
   block-size: 3rem;
   margin: 0;
   padding: 0 1.25rem;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   line-height: 1.35;
-  color: #8a8a8a;
-  border-block-start: 1px solid #ececec;
+  color: #98a1ae;
+  background-color: #fafbfc;
+  border-block-start: 1px solid #eef0f3;
 }
 .gplan__info b {
   color: #333;
 }
 .gplan__info i {
-  inline-size: 0.7rem;
-  block-size: 0.7rem;
+  inline-size: 0.65rem;
+  block-size: 0.65rem;
   flex: none;
-  border-radius: 2px;
+  border-radius: 0.15rem;
   background-color: var(--swatch, transparent);
 }
 
@@ -15113,10 +15199,44 @@ p {
 .gtour[open] {
   display: flex;
   flex-direction: column;
+  animation: gtour-in 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.gtour.is-closing {
+  animation: gtour-out 190ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 .gtour::backdrop {
-  background-color: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(2px);
+  background-color: rgba(8, 12, 22, 0.82);
+  backdrop-filter: blur(3px);
+  animation: gtour-backdrop 340ms ease both;
+}
+
+@keyframes gtour-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gtour-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+@keyframes gtour-backdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 .gtour__bar {
   display: flex;

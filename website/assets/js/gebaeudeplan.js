@@ -35,6 +35,8 @@
 
   if (!fab || !panel || !stage || !floors.length) return;
 
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   const FLOOR_NAMES = ["2. Obergeschoss", "1. Obergeschoss", "Erdgeschoss"];
   const INFO_CLOSED = "Etage anklicken, um sie zu öffnen.";
   const INFO_PICK = "Raum auswählen, um ihn im Plan zu markieren.";
@@ -154,9 +156,25 @@
   // the tour keeps running unseen behind the page.
   const unloadTour = () => tourFrame?.removeAttribute("src");
 
+  let tourTimer = 0;
+
   const closeTour = () => {
-    if (tour?.open) tour.close();
-    unloadTour();
+    if (!tour?.open) return;
+
+    const finish = () => {
+      tour.classList.remove("is-closing");
+      tour.close();
+      unloadTour();
+    };
+
+    if (reduceMotion) {
+      finish();
+      return;
+    }
+
+    tour.classList.add("is-closing");
+    window.clearTimeout(tourTimer);
+    tourTimer = window.setTimeout(finish, 200);
   };
 
   // Escape closes a <dialog> natively, bypassing closeTour(), so the events
@@ -201,7 +219,13 @@
 
   const isOpen = () => !panel.hidden;
 
+  let closingTimer = 0;
+
   const open = () => {
+    // Re-opening mid-close aborts the close rather than queueing behind it.
+    window.clearTimeout(closingTimer);
+    panel.classList.remove("is-closing");
+
     if (isOpen()) return;
     panel.hidden = false;
     fab.setAttribute("aria-expanded", "true");
@@ -209,9 +233,25 @@
 
   const close = () => {
     if (!isOpen()) return;
-    panel.hidden = true;
     fab.setAttribute("aria-expanded", "false");
-    selectFloor(null);
+
+    const finish = () => {
+      panel.classList.remove("is-closing");
+      panel.hidden = true;
+      selectFloor(null);
+    };
+
+    if (reduceMotion) {
+      finish();
+      return;
+    }
+
+    // Let the closing animation play, then hide. Driven by a timer rather
+    // than `animationend`: that event never arrives when the tab is hidden,
+    // which would leave the panel stuck open.
+    panel.classList.add("is-closing");
+    window.clearTimeout(closingTimer);
+    closingTimer = window.setTimeout(finish, 210);
   };
 
   // Click only - never hover. Enter and Space fire click on a <button>, so the
