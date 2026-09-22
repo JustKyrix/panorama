@@ -201,7 +201,7 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // stay legible.
   --gap-near: 60px;    // between floors that are not the open one
   --gap-open: 120px;   // between the open floor and each neighbour
-  --plate-h: 113px;
+  --plate-h: 150px;    // matches the plan's 410 x 170 aspect at panel width
 
   position: relative;
   flex: none;
@@ -212,12 +212,18 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // widest, plus one plate.
   block-size: calc(var(--plate-h) + (2 * var(--gap-open)));
 
+  // With a single floor there is no stack, so the stage only needs one plate.
+  // Reverts on its own as soon as another floor is added back to the markup.
+  &:not(:has(.gplan__floor + .gplan__floor)) {
+    block-size: var(--plate-h);
+  }
+
   // Scaled down on phones, keeping the same 1:2 ratio, so the panel still
   // fits without the stage pushing the room list off screen.
   @include mx.down("small") {
     --gap-near: 44px;
     --gap-open: 88px;
-    --plate-h: 100px;
+    --plate-h: 126px;
   }
 }
 
@@ -390,18 +396,28 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   &__band.is-dim { opacity: 0.15; }
   &__band.is-highlight { filter: brightness(1.08); }
 
-  // A zone with a tour behind it becomes clickable once its floor is open.
+  // A zone with a tour behind it becomes interactive once its floor is open.
+  // Each zone is its own <g> in the plan, so it can be lifted out of the
+  // drawing on its own - a far clearer "this is a thing you can open" than a
+  // colour change, and it reads as the block physically rising.
   .gplan__floor[data-selected] &__band[data-tour] {
     cursor: pointer;
-    stroke: #fff;
-    stroke-width: 2;
-    animation: gplan-zone-pulse 2.4s ease-in-out infinite;
+    transition: transform 320ms $ease-out, filter 320ms $ease-soft;
+
+    // A slow idle bob so the piece is noticeable without hovering it.
+    animation: gplan-zone-float 3s ease-in-out infinite;
+  }
+
+  .gplan__floor[data-selected] &__band[data-tour]:hover {
+    animation: none; // hand over to the hover lift
+    transform: translateY(-14px);
+    filter: drop-shadow(0 12px 14px rgba(12, 23, 48, 0.5));
   }
 }
 
-@keyframes gplan-zone-pulse {
-  0%, 100% { stroke-opacity: 0.4; }
-  50%      { stroke-opacity: 1; }
+@keyframes gplan-zone-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
 }
 
 // -----------------------------------------------------------------------------

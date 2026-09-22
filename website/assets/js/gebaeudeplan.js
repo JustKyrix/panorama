@@ -44,6 +44,13 @@
 
   let selected = null; // the one and only piece of state
 
+  // Floors are identified by their data-floor-index (0 = 2.OG, 1 = 1.OG,
+  // 2 = EG), never by their position in the array. Only some floors may be
+  // present - right now just the ground floor - and the indices still have to
+  // line up with the room lists and FLOOR_NAMES.
+  const indexOfFloor = (el) => Number(el.dataset.floorIndex);
+  const floorByIndex = (i) => floors.find((el) => indexOfFloor(el) === i);
+
   // ---------------------------------------------------------------------------
   //  360-Grad-Rundgang
   //
@@ -87,7 +94,7 @@
     room.setAttribute("aria-pressed", "true");
 
     // Light up this room's zone on the open floor, let the others recede.
-    const floor = floors[selected];
+    const floor = floorByIndex(selected);
     if (floor) {
       floor.querySelectorAll(".gplan-plate__band").forEach((band) => {
         const match = band.dataset.band === room.dataset.band;
@@ -117,8 +124,8 @@
       stage.setAttribute("data-active", String(index));
     }
 
-    floors.forEach((floor, i) => {
-      const on = i === index;
+    floors.forEach((floor) => {
+      const on = indexOfFloor(floor) === index;
       floor.toggleAttribute("data-active", on);
       floor.toggleAttribute("data-selected", on);
       floor.setAttribute("aria-pressed", String(on));
@@ -135,7 +142,8 @@
     setInfo(index === null ? INFO_CLOSED : INFO_PICK);
   };
 
-  floors.forEach((floor, i) => {
+  floors.forEach((floor) => {
+    const i = indexOfFloor(floor);
     floor.addEventListener("click", () => {
       selectFloor(selected === i ? null : i);
     });
@@ -155,8 +163,8 @@
   // is already open, so the first click on a closed floor still just opens it.
   root.querySelectorAll(".gplan-plate__band[data-tour]").forEach((zone) => {
     zone.addEventListener("click", (event) => {
-      const index = floors.indexOf(zone.closest("[data-gplan-floor]"));
-      if (index === -1 || selected !== index) return;
+      const floor = zone.closest("[data-gplan-floor]");
+      if (!floor || selected !== indexOfFloor(floor)) return;
       event.stopPropagation(); // do not collapse the floor we are standing on
       openTour(zone.dataset.tour);
     });
@@ -178,6 +186,13 @@
     if (isOpen()) return;
     panel.hidden = false;
     fab.setAttribute("aria-expanded", "true");
+
+    // With a single floor there is nothing to choose between, so open it
+    // straight away - otherwise the zones stay inert behind a click that has
+    // no alternative. Stops applying by itself once more floors are added.
+    if (floors.length === 1 && selected === null) {
+      selectFloor(indexOfFloor(floors[0]));
+    }
   };
 
   const close = () => {

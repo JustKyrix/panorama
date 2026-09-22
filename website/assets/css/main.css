@@ -14861,18 +14861,21 @@ p {
 .gplan__stage {
   --gap-near: 60px;
   --gap-open: 120px;
-  --plate-h: 113px;
+  --plate-h: 150px;
   position: relative;
   flex: none;
   margin-inline: 1.25rem;
   padding-block: 0.5rem;
   block-size: calc(var(--plate-h) + 2 * var(--gap-open));
 }
+.gplan__stage:not(:has(.gplan__floor + .gplan__floor)) {
+  block-size: var(--plate-h);
+}
 @media (max-width: 454px) {
   .gplan__stage {
     --gap-near: 44px;
     --gap-open: 88px;
-    --plate-h: 100px;
+    --plate-h: 126px;
   }
 }
 
@@ -15033,17 +15036,21 @@ p {
 }
 .gplan__floor[data-selected] .gplan-plate__band[data-tour] {
   cursor: pointer;
-  stroke: #fff;
-  stroke-width: 2;
-  animation: gplan-zone-pulse 2.4s ease-in-out infinite;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), filter 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation: gplan-zone-float 3s ease-in-out infinite;
+}
+.gplan__floor[data-selected] .gplan-plate__band[data-tour]:hover {
+  animation: none;
+  transform: translateY(-14px);
+  filter: drop-shadow(0 12px 14px rgba(12, 23, 48, 0.5));
 }
 
-@keyframes gplan-zone-pulse {
+@keyframes gplan-zone-float {
   0%, 100% {
-    stroke-opacity: 0.4;
+    transform: translateY(0);
   }
   50% {
-    stroke-opacity: 1;
+    transform: translateY(-4px);
   }
 }
 .gplan__rooms {
