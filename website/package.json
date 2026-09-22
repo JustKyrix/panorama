@@ -10,8 +10,9 @@
     "build:min": "sass scss/main.scss:assets/css/main.min.css --load-path=node_modules --style=compressed --no-source-map --quiet-deps",
     "build": "npm run build:css && npm run build:min",
     "serve": "npx --yes http-server . -p 4173 -c-1",
-    "package": "npm run build && node tools/package.mjs",
-    "package:tour": "node tools/package.mjs tour"
+    "package": "npm run build && npm run stamp && node tools/package.mjs",
+    "package:tour": "node tools/package.mjs tour",
+    "stamp": "node tools/stamp.mjs"
   },
   "browserslist": [
     "> 0.5%",
