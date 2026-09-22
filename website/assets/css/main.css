@@ -14876,10 +14876,11 @@ p {
   block-size: auto;
   overflow: visible;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.16));
-  transition: filter 260ms ease, opacity 260ms ease;
+  transition: filter 200ms ease, opacity 200ms ease;
 }
 .gplan__floor:hover svg, .gplan__floor:focus-visible svg {
-  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.28));
+  filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.3)) brightness(1.06);
+  opacity: 1;
 }
 .gplan__floor:focus-visible {
   outline: none;

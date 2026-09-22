@@ -3,11 +3,14 @@
 //  Floating building-plan navigator for the map view.
 //
 //  Closed        -> a button in the bottom-right corner.
-//  Hover         -> the panel opens; the three floors sit in one thick slab.
-//  Hover a floor -> that floor holds its position and the other two are pushed
-//                   away from it, further the more floors apart they are.
-//  Click a floor -> it is selected: the panel locks open so its rooms can be
-//                   picked, and each room highlights its band in the plan.
+//  Click button  -> the panel opens; the three floors sit in one thick slab.
+//  Hover a floor -> highlight only. NOTHING MOVES. Letting hover drive the fan
+//                   made the whole stack jump to a new arrangement every time
+//                   the pointer crossed a plate, which was unusable.
+//  Click a floor -> the stack fans open around it: that floor holds its
+//                   position, the other two are pushed away, further the more
+//                   floors apart they are. Its rooms become selectable, and
+//                   each room lights up its zone in the plan.
 //
 //  IMPORTANT - the panel must keep a CONSTANT height. It is anchored to the
 //  bottom of the viewport, so any change in content height makes it grow
@@ -221,12 +224,15 @@ $gplan-fan: (
     block-size: auto;
     overflow: visible;
     filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.16));
-    transition: filter 260ms ease, opacity 260ms ease;
+    transition: filter 200ms ease, opacity 200ms ease;
   }
 
+  // Hover is a highlight and NOTHING ELSE - no offset, no scale. Only a click
+  // may rearrange the stack, so sweeping the pointer across the plan is calm.
   &:hover svg,
   &:focus-visible svg {
-    filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.28));
+    filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.3)) brightness(1.06);
+    opacity: 1;
   }
 
   &:focus-visible {
