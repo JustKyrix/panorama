@@ -1,0 +1,302 @@
+/* =============================================================================
+ *  tour-skin.css
+ *  Modern skin for the Marzipano tour controls.
+ *
+ *  Loaded AFTER the generated style.css and overriding it, rather than editing
+ *  that file: style.css is Marzipano Tool output, so keeping the changes
+ *  separate means the tour can be regenerated without losing this work. If the
+ *  tour IS regenerated, re-add the one <link> to this file in index.html.
+ *
+ *  The default UI is flat grey panels with bitmap icons. This replaces them
+ *  with floating glass controls and vector icons drawn as CSS masks, so they
+ *  stay sharp at any density and can be recoloured from one place.
+ * ========================================================================== */
+
+:root {
+  --ui-bg: rgba(18, 22, 30, 0.58);
+  --ui-bg-hover: rgba(18, 22, 30, 0.82);
+  --ui-border: rgba(255, 255, 255, 0.16);
+  --ui-fg: #fff;
+  --ui-accent: #3357a1;
+  --ui-blur: blur(14px) saturate(1.4);
+  --ui-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --ui-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* -----------------------------------------------------------------------------
+ *  Icons
+ *  The markup's <img class="icon"> bitmaps are hidden and replaced by a mask on
+ *  the button itself, so every icon is a crisp vector in one colour.
+ * -------------------------------------------------------------------------- */
+
+#autorotateToggle .icon,
+#sceneListToggle .icon,
+#fullscreenToggle .icon,
+.viewControlButton .icon {
+  display: none !important;
+}
+
+#autorotateToggle::after,
+#sceneListToggle::after,
+#fullscreenToggle::after,
+.viewControlButton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 20px;
+  height: 20px;
+  background-color: var(--ui-fg);
+  -webkit-mask: var(--ico) center / contain no-repeat;
+  mask: var(--ico) center / contain no-repeat;
+  transition: background-color 180ms var(--ui-ease);
+}
+
+/* -----------------------------------------------------------------------------
+ *  Shared button look
+ * -------------------------------------------------------------------------- */
+
+/* `display` is deliberately NOT set for all of them at once: Marzipano keeps
+   #fullscreenToggle hidden unless the tour enables the fullscreen button, and
+   forcing it visible here made it overlap the autorotate button. */
+#autorotateToggle,
+#sceneListToggle,
+.viewControlButton,
+body.fullscreen-enabled #fullscreenToggle {
+  display: grid !important;
+}
+
+#autorotateToggle,
+#sceneListToggle,
+#fullscreenToggle,
+.viewControlButton {
+  place-items: center;
+  width: 42px !important;
+  height: 42px !important;
+  padding: 0 !important;
+  background-color: var(--ui-bg) !important;
+  border: 1px solid var(--ui-border);
+  border-radius: 50%;
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: var(--ui-blur);
+  backdrop-filter: var(--ui-blur);
+  cursor: pointer;
+  transition: background-color 200ms var(--ui-ease),
+              transform 260ms var(--ui-ease),
+              border-color 200ms var(--ui-ease);
+}
+
+#autorotateToggle:hover,
+#sceneListToggle:hover,
+#fullscreenToggle:hover,
+.viewControlButton:hover {
+  background-color: var(--ui-bg-hover) !important;
+  border-color: rgba(255, 255, 255, 0.34);
+  transform: translateY(-2px);
+}
+
+#autorotateToggle:active,
+#sceneListToggle:active,
+#fullscreenToggle:active,
+.viewControlButton:active {
+  transform: translateY(0) scale(0.94);
+}
+
+/* -----------------------------------------------------------------------------
+ *  Corner buttons
+ * -------------------------------------------------------------------------- */
+
+#sceneListToggle {
+  top: 14px !important;
+  left: 14px !important;
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M4 7h16M4 12h16M4 17h16'/%3E%3C/svg%3E");
+}
+
+/* Turns into a cross while the list is open. */
+#sceneListToggle.enabled {
+  background-color: var(--ui-accent) !important;
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
+}
+
+#sceneListToggle .text {
+  display: none !important;
+}
+
+#autorotateToggle {
+  top: 14px !important;
+  right: 14px !important;
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M8 5.2v13.6L19 12z'/%3E%3C/svg%3E");
+}
+
+/* `enabled` means autorotate is running, so the button offers pause. */
+#autorotateToggle.enabled {
+  background-color: var(--ui-accent) !important;
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Crect x='7' y='5' width='3.4' height='14' rx='1.2'/%3E%3Crect x='13.6' y='5' width='3.4' height='14' rx='1.2'/%3E%3C/svg%3E");
+}
+
+body.fullscreen-enabled #autorotateToggle {
+  right: 66px !important;
+}
+
+#fullscreenToggle {
+  top: 14px !important;
+  right: 14px !important;
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'/%3E%3C/svg%3E");
+}
+
+/* -----------------------------------------------------------------------------
+ *  Titelleiste - floating pill instead of a full-width bar
+ * -------------------------------------------------------------------------- */
+
+#titleBar {
+  top: 14px !important;
+  left: 50% !important;
+  right: auto !important;
+  height: 42px !important;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  max-width: min(60%, 26rem);
+  padding: 0 1.1rem;
+  background-color: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: var(--ui-blur);
+  backdrop-filter: var(--ui-blur);
+  pointer-events: none;
+}
+
+#titleBar .sceneName {
+  width: 100%;
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--ui-fg);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* -----------------------------------------------------------------------------
+ *  Szenenliste
+ * -------------------------------------------------------------------------- */
+
+#sceneList {
+  top: 68px !important;
+  left: 14px !important;
+  width: 232px !important;
+  max-height: calc(100% - 96px) !important;
+  padding-top: 0 !important;
+  margin-left: -260px !important;
+  border-radius: 14px;
+  overflow: hidden auto;
+  scrollbar-width: thin;
+  transition: margin-left 420ms var(--ui-ease), opacity 260ms var(--ui-ease);
+  opacity: 0;
+}
+
+#sceneList.enabled {
+  margin-left: 0 !important;
+  opacity: 1;
+}
+
+#sceneList .scenes {
+  padding: 0.4rem;
+  background-color: var(--ui-bg) !important;
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: var(--ui-blur);
+  backdrop-filter: var(--ui-blur);
+}
+
+#sceneList .scene {
+  height: auto !important;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+#sceneList .scene .text {
+  padding: 0.6rem 0.75rem !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.2 !important;
+  color: rgba(255, 255, 255, 0.72);
+  transition: color 160ms var(--ui-ease);
+}
+
+.no-touch #sceneList .scene:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.no-touch #sceneList .scene:hover .text {
+  color: var(--ui-fg);
+}
+
+#sceneList .scene.current {
+  background-color: var(--ui-accent) !important;
+}
+
+#sceneList .scene.current .text {
+  color: var(--ui-fg);
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------------
+ *  Blicksteuerung - evenly spaced round buttons along the bottom
+ *  Marzipano positions each one with its own margin-left from the centre, so
+ *  the spacing is set the same way rather than with a flex container.
+ * -------------------------------------------------------------------------- */
+
+.viewControlButton {
+  bottom: 22px !important;
+}
+
+.viewControlButton-1 { margin-left: -152px !important; }  /* up    */
+.viewControlButton-2 { margin-left: -100px !important; }  /* down  */
+.viewControlButton-3 { margin-left: -48px !important; }   /* left  */
+.viewControlButton-4 { margin-left: 4px !important; }     /* right */
+.viewControlButton-5 { margin-left: 64px !important; }    /* in    */
+.viewControlButton-6 { margin-left: 116px !important; }   /* out   */
+
+#viewUp {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 15l6-6 6 6'/%3E%3C/svg%3E");
+}
+#viewDown {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+#viewLeft {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E");
+}
+#viewRight {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+#viewIn {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+}
+#viewOut {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+}
+
+/* The arrow cluster and the zoom pair are one row; a wider gap before the
+   zoom buttons groups them without needing extra markup. */
+
+@media (max-width: 760px) {
+  #titleBar { max-width: calc(100% - 140px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #autorotateToggle,
+  #sceneListToggle,
+  #fullscreenToggle,
+  .viewControlButton,
+  #sceneList {
+    transition: none !important;
+  }
+}
