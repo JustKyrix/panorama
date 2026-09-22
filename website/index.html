@@ -6,7 +6,7 @@
   <title>ADBK</title>
   <meta name="description" content="Albrecht-Dürer-Berufskolleg, Städtische Schule der Sekundarstufe II, Düsseldorf.">
   <link rel="icon" href="assets/images/adbk-logo.png" type="image/png">
-  <link rel="stylesheet" href="assets/css/main.css?v=5be49b1c">
+  <link rel="stylesheet" href="assets/css/main.css?v=1b52fac2">
 </head>
 
 <body>
@@ -405,51 +405,113 @@
       <div class="gplan__stage" data-gplan-stage>
         <div class="gplan__floors">
 
+          <!-- 2. OG und 1. OG sind vorerst Platzhalter: dieselbe Erdgeschoss-
+               Grafik, nur zum Ansehen des Stapels. Sie tragen keine data-band-
+               Zonen, weil es noch keine echten Pläne dafür gibt. -->
+          <button class="gplan__floor gplan__floor--placeholder" type="button"
+                  data-floor-index="0" data-gplan-floor aria-pressed="false"
+                  aria-label="2. Obergeschoss – Plan folgt">
+            <svg viewBox="0 0 410.29 170.16" role="img" aria-hidden="true">
+              <polygon fill="#1a1a1a" points="301.41 18.24 280.11 .65 323.51 0 355.42 26.41 319.8 24.37 319.8 40.54 312.54 34.75 301.94 34.9 301.41 18.24"/>
+              <polygon fill="#1a1a1a" points="355.42 40.54 319.8 40.54 319.8 24.37 355.42 26.41 355.42 40.54"/>
+              <polygon fill="#1a1a1a" points="301.94 34.9 280.29 12.39 280.11 .65 301.41 18.24 301.94 34.9"/>
+              <polygon fill="#94c121" points="374.91 85.15 319.8 40.54 319.8 24.37 355.42 26.41 410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 358.74 109.98 374.91 85.15"/>
+              <polygon fill="#83a329" points="319.8 24.37 319.8 40.54 374.91 85.15 380.9 75.99 319.8 24.37"/>
+              <polygon fill="#83a329" points="358.74 109.98 359.71 137.78 386.83 140.89 385.85 113.09 358.74 109.98"/>
+              <polygon fill="#83a329" points="410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 410.29 72.22"/>
+              <polygon fill="#c80a79" points="143.12 2.72 143.12 18.64 166.38 36.77 166.38 20.85 143.12 2.72"/>
+              <polygon fill="#e3007d" points="301.94 34.9 301.41 18.24 280.11 .65 143.12 2.72 166.38 20.85 166.38 36.77 301.94 34.9"/>
+              <polygon fill="#c80a79" points="301.41 18.24 301.94 34.9 166.38 36.77 166.38 20.85 301.41 18.24"/>
+              <polygon fill="#a4897a" points="166.38 20.85 143.12 2.72 .94 5.7 0 32.82 60.64 114.79 60.64 86.78 97.1 81.96 59.84 38.01 166.38 36.77 166.38 20.85"/>
+              <polygon fill="#897367" points="60.64 86.78 60.64 114.79 0 32.82 .94 5.7 60.64 86.78"/>
+              <polygon fill="#897367" points="60.64 86.78 60.64 114.79 96.95 109.95 96.95 81.94 60.64 86.78"/>
+              <polygon fill="#897367" points="166.38 20.86 45.29 20.86 59.84 38.02 166.38 36.77 166.38 20.86"/>
+              <polyline fill="#616160" points="385.85 113.06 358.74 109.95 352.96 118.68 99.18 83.74 96.74 81.94 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
+              <polygon fill="#4f4f4e" points="385.85 113.06 368.68 141.77 69.74 98.16 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
+            </svg>
+          </button>
+
+          <button class="gplan__floor gplan__floor--placeholder" type="button"
+                  data-floor-index="1" data-gplan-floor aria-pressed="false"
+                  aria-label="1. Obergeschoss – Plan folgt">
+            <svg viewBox="0 0 410.29 170.16" role="img" aria-hidden="true">
+              <polygon fill="#1a1a1a" points="301.41 18.24 280.11 .65 323.51 0 355.42 26.41 319.8 24.37 319.8 40.54 312.54 34.75 301.94 34.9 301.41 18.24"/>
+              <polygon fill="#1a1a1a" points="355.42 40.54 319.8 40.54 319.8 24.37 355.42 26.41 355.42 40.54"/>
+              <polygon fill="#1a1a1a" points="301.94 34.9 280.29 12.39 280.11 .65 301.41 18.24 301.94 34.9"/>
+              <polygon fill="#94c121" points="374.91 85.15 319.8 40.54 319.8 24.37 355.42 26.41 410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 358.74 109.98 374.91 85.15"/>
+              <polygon fill="#83a329" points="319.8 24.37 319.8 40.54 374.91 85.15 380.9 75.99 319.8 24.37"/>
+              <polygon fill="#83a329" points="358.74 109.98 359.71 137.78 386.83 140.89 385.85 113.09 358.74 109.98"/>
+              <polygon fill="#83a329" points="410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 410.29 72.22"/>
+              <polygon fill="#c80a79" points="143.12 2.72 143.12 18.64 166.38 36.77 166.38 20.85 143.12 2.72"/>
+              <polygon fill="#e3007d" points="301.94 34.9 301.41 18.24 280.11 .65 143.12 2.72 166.38 20.85 166.38 36.77 301.94 34.9"/>
+              <polygon fill="#c80a79" points="301.41 18.24 301.94 34.9 166.38 36.77 166.38 20.85 301.41 18.24"/>
+              <polygon fill="#a4897a" points="166.38 20.85 143.12 2.72 .94 5.7 0 32.82 60.64 114.79 60.64 86.78 97.1 81.96 59.84 38.01 166.38 36.77 166.38 20.85"/>
+              <polygon fill="#897367" points="60.64 86.78 60.64 114.79 0 32.82 .94 5.7 60.64 86.78"/>
+              <polygon fill="#897367" points="60.64 86.78 60.64 114.79 96.95 109.95 96.95 81.94 60.64 86.78"/>
+              <polygon fill="#897367" points="166.38 20.86 45.29 20.86 59.84 38.02 166.38 36.77 166.38 20.86"/>
+              <polyline fill="#616160" points="385.85 113.06 358.74 109.95 352.96 118.68 99.18 83.74 96.74 81.94 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
+              <polygon fill="#4f4f4e" points="385.85 113.06 368.68 141.77 69.74 98.16 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
+            </svg>
+          </button>
+
           <!-- ============================= EG ============================== -->
-          <!-- Originalexport Erdgeschoss_Plan.svg. Die .cls-Klassen des
-               Exports sind durch fill-Attribute ersetzt, damit die generischen
-               Namen nicht global in die Seite lecken; Formen und Farben sind
-               unverändert. Jede benannte Gruppe trägt ein data-band, damit die
-               Raumliste die passende Zone hervorheben kann. -->
+          <!-- Originalexport Erdgeschoss_Plan.svg. Die .cls-Klassen sind durch
+               fill-Attribute ersetzt, damit die generischen Namen nicht global
+               in die Seite lecken. Jede Zone ist eine eigene Gruppe und lässt
+               sich dadurch einzeln anheben. -->
           <button class="gplan__floor" type="button" data-floor-index="2"
                   data-gplan-floor aria-pressed="false"
                   aria-label="Erdgeschoss – Werkstätten, Druck, Foyer, Sporthalle">
             <svg viewBox="0 0 410.29 170.16" role="img" aria-hidden="true">
-
               <g class="gplan-plate__band" data-band="sport">
-                <polygon fill="#1a1a1a" points="301.41 18.24 280.11 .65 323.51 0 355.42 26.41 319.8 24.37 319.8 40.54 312.54 34.75 301.94 34.9 301.41 18.24"/>
-                <polygon fill="#1a1a1a" points="355.42 40.54 319.8 40.54 319.8 24.37 355.42 26.41 355.42 40.54"/>
-                <polygon fill="#1a1a1a" points="301.94 34.9 280.29 12.39 280.11 .65 301.41 18.24 301.94 34.9"/>
+                <g class="gplan-plate__lift">
+                  <polygon fill="#1a1a1a" points="301.41 18.24 280.11 .65 323.51 0 355.42 26.41 319.8 24.37 319.8 40.54 312.54 34.75 301.94 34.9 301.41 18.24"/>
+                  <polygon fill="#1a1a1a" points="355.42 40.54 319.8 40.54 319.8 24.37 355.42 26.41 355.42 40.54"/>
+                  <polygon fill="#1a1a1a" points="301.94 34.9 280.29 12.39 280.11 .65 301.41 18.24 301.94 34.9"/>
+                </g>
               </g>
 
-              <g class="gplan-plate__band" data-band="beq"
-                 data-tour="assets/tour/index.html?v=13da7c7d" data-tour-name="BEQ">
-                <polygon fill="#94c121" points="374.91 85.15 319.8 40.54 319.8 24.37 355.42 26.41 410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 358.74 109.98 374.91 85.15"/>
-                <polygon fill="#83a329" points="319.8 24.37 319.8 40.54 374.91 85.15 380.9 75.99 319.8 24.37"/>
-                <polygon fill="#83a329" points="358.74 109.98 359.71 137.78 386.83 140.89 385.85 113.09 358.74 109.98"/>
-                <polygon fill="#83a329" points="410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 410.29 72.22"/>
+              <g class="gplan-plate__band" data-band="beq" data-tour-zone="1">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#94c121" points="374.91 85.15 319.8 40.54 319.8 24.37 355.42 26.41 410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 358.74 109.98 374.91 85.15"/>
+                  <polygon fill="#83a329" points="319.8 24.37 319.8 40.54 374.91 85.15 380.9 75.99 319.8 24.37"/>
+                  <polygon fill="#83a329" points="358.74 109.98 359.71 137.78 386.83 140.89 385.85 113.09 358.74 109.98"/>
+                  <polygon fill="#83a329" points="410.29 72.22 410.29 98.19 386.83 140.89 385.85 113.09 410.29 72.22"/>
+
+                  <!-- Sits inside the BEQ group, so it lifts and bobs with the
+                       block rather than floating over it. -->
+                  <g class="gplan-plate__tour" data-tour="assets/tour/index.html?v=13da7c7d">
+                    <circle class="gplan-plate__tour-pulse" cx="375" cy="82" r="15"/>
+                    <circle class="gplan-plate__tour-dot" cx="375" cy="82" r="15"/>
+                    <text class="gplan-plate__tour-label" x="375" y="85.4">360°</text>
+                  </g>
+                </g>
               </g>
 
               <g class="gplan-plate__band" data-band="druck">
-                <polygon fill="#c80a79" points="143.12 2.72 143.12 18.64 166.38 36.77 166.38 20.85 143.12 2.72"/>
-                <polygon fill="#e3007d" points="301.94 34.9 301.41 18.24 280.11 .65 143.12 2.72 166.38 20.85 166.38 36.77 301.94 34.9"/>
-                <polygon fill="#c80a79" points="301.41 18.24 301.94 34.9 166.38 36.77 166.38 20.85 301.41 18.24"/>
+                <g class="gplan-plate__lift">
+                  <polygon fill="#c80a79" points="143.12 2.72 143.12 18.64 166.38 36.77 166.38 20.85 143.12 2.72"/>
+                  <polygon fill="#e3007d" points="301.94 34.9 301.41 18.24 280.11 .65 143.12 2.72 166.38 20.85 166.38 36.77 301.94 34.9"/>
+                  <polygon fill="#c80a79" points="301.41 18.24 301.94 34.9 166.38 36.77 166.38 20.85 301.41 18.24"/>
+                </g>
               </g>
 
               <g class="gplan-plate__band" data-band="holz">
-                <polygon fill="#a4897a" points="166.38 20.85 143.12 2.72 .94 5.7 0 32.82 60.64 114.79 60.64 86.78 97.1 81.96 59.84 38.01 166.38 36.77 166.38 20.85"/>
-                <polygon fill="#897367" points="60.64 86.78 60.64 114.79 0 32.82 .94 5.7 60.64 86.78"/>
-                <polygon fill="#897367" points="60.64 86.78 60.64 114.79 96.95 109.95 96.95 81.94 60.64 86.78"/>
-                <polygon fill="#897367" points="166.38 20.86 45.29 20.86 59.84 38.02 166.38 36.77 166.38 20.86"/>
+                <g class="gplan-plate__lift">
+                  <polygon fill="#a4897a" points="166.38 20.85 143.12 2.72 .94 5.7 0 32.82 60.64 114.79 60.64 86.78 97.1 81.96 59.84 38.01 166.38 36.77 166.38 20.85"/>
+                  <polygon fill="#897367" points="60.64 86.78 60.64 114.79 0 32.82 .94 5.7 60.64 86.78"/>
+                  <polygon fill="#897367" points="60.64 86.78 60.64 114.79 96.95 109.95 96.95 81.94 60.64 86.78"/>
+                  <polygon fill="#897367" points="166.38 20.86 45.29 20.86 59.84 38.02 166.38 36.77 166.38 20.86"/>
+                </g>
               </g>
 
               <g class="gplan-plate__band" data-band="allgemein">
-                <polyline fill="#616160" points="385.85 113.06 358.74 109.95 352.96 118.68 99.18 83.74 96.74 81.94 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
-                <polygon fill="#4f4f4e" points="385.85 113.06 368.68 141.77 69.74 98.16 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
+                <g class="gplan-plate__lift">
+                  <polyline fill="#616160" points="385.85 113.06 358.74 109.95 352.96 118.68 99.18 83.74 96.74 81.94 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
+                  <polygon fill="#4f4f4e" points="385.85 113.06 368.68 141.77 69.74 98.16 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 386.83 140.86 385.85 113.06"/>
+                </g>
               </g>
-
             </svg>
-            <span class="gplan__hotspot" style="--x:91%; --y:50%" aria-hidden="true">360°</span>
           </button>
 
         </div>
@@ -462,23 +524,75 @@
           Etage anklicken, um sie zu öffnen.
         </p>
 
+        <div class="gplan__room-group" data-gplan-rooms="0">
+          <p class="gplan__placeholder">Für das 2. Obergeschoss liegt noch kein Plan vor.</p>
+        </div>
 
+        <div class="gplan__room-group" data-gplan-rooms="1">
+          <p class="gplan__placeholder">Für das 1. Obergeschoss liegt noch kein Plan vor.</p>
+        </div>
 
         <div class="gplan__room-group" data-gplan-rooms="2">
-          <p class="gplan__rooms-title">Erdgeschoss</p>
-          <ul class="gplan__room-list">
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Glaserei</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Betonlabor</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Brennraum</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Tischlerei</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik"><i style="--swatch:#e3007d"></i><span>Buchbinderei</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik"><i style="--swatch:#e3007d"></i><span>Druckerei</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="sport" data-fach="Sport"><i style="--swatch:#1a1a1a"></i><span>Sporthalle</span></button></li>
-            <li><button class="gplan__room gplan__room--tour" type="button" aria-pressed="false" data-gplan-room data-band="beq" data-fach="Berufseinstiegsqualifizierung" data-tour="assets/tour/index.html?v=13da7c7d" data-tour-name="BEQ"><i style="--swatch:#94c121"></i><span>BEQ</span><em class="gplan__room-badge">360°</em></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#616160"></i><span>Selbstlernzentrum</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#616160"></i><span>Foyer</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#616160"></i><span>Bistro</span></button></li>
-          </ul>
+            <details class="gplan__cat" data-gplan-cat="holz">
+              <summary class="gplan__cat-head">
+                <i style="--swatch:#a4897a"></i>
+                <span class="gplan__cat-name">Bau- und Holztechnik</span>
+                <span class="gplan__cat-count">4</span>
+              </summary>
+              <ul class="gplan__room-list">
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Glaserei</button></li>
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Betonlabor</button></li>
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Brennraum</button></li>
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Tischlerei</button></li>
+              </ul>
+            </details>
+
+            <details class="gplan__cat" data-gplan-cat="druck">
+              <summary class="gplan__cat-head">
+                <i style="--swatch:#e3007d"></i>
+                <span class="gplan__cat-name">Druck- und Medientechnik</span>
+                <span class="gplan__cat-count">2</span>
+              </summary>
+              <ul class="gplan__room-list">
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik">Buchbinderei</button></li>
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik">Druckerei</button></li>
+              </ul>
+            </details>
+
+            <details class="gplan__cat" data-gplan-cat="sport">
+              <summary class="gplan__cat-head">
+                <i style="--swatch:#1a1a1a"></i>
+                <span class="gplan__cat-name">Sport</span>
+                <span class="gplan__cat-count">1</span>
+              </summary>
+              <ul class="gplan__room-list">
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="sport" data-fach="Sport">Sporthalle</button></li>
+              </ul>
+            </details>
+
+            <details class="gplan__cat" data-gplan-cat="beq">
+              <summary class="gplan__cat-head">
+                <i style="--swatch:#94c121"></i>
+                <span class="gplan__cat-name">Berufseinstiegsqualifizierung</span>
+                <span class="gplan__cat-count">1</span>
+              </summary>
+              <ul class="gplan__room-list">
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="beq" data-fach="Berufseinstiegsqualifizierung">BEQ</button></li>
+              </ul>
+            </details>
+
+            <details class="gplan__cat" data-gplan-cat="allgemein">
+              <summary class="gplan__cat-head">
+                <i style="--swatch:#616160"></i>
+                <span class="gplan__cat-name">Allgemeine Bereiche</span>
+                <span class="gplan__cat-count">3</span>
+              </summary>
+              <ul class="gplan__room-list">
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche">Selbstlernzentrum</button></li>
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche">Foyer</button></li>
+                <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche">Bistro</button></li>
+              </ul>
+            </details>
         </div>
       </div>
 
@@ -494,6 +608,6 @@
 
 
   <script src="assets/js/vendor/bootstrap.bundle.min.js" defer></script>
-  <script src="assets/js/gebaeudeplan.js?v=ede528ce" defer></script>
+  <script src="assets/js/gebaeudeplan.js?v=8c02a772" defer></script>
 </body>
 </html>

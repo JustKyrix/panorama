@@ -103,8 +103,14 @@
       });
     }
 
-    const swatch = room.querySelector("i")?.style.getPropertyValue("--swatch") || "";
-    const name = room.querySelector("span")?.textContent || "";
+    // The room's label is the button's own text, and the colour now lives on
+    // the category header it sits under.
+    const name = room.textContent.trim();
+    const swatch =
+      room
+        .closest("[data-gplan-cat]")
+        ?.querySelector("i")
+        ?.style.getPropertyValue("--swatch") ?? "";
     setInfo(
       `<i style="--swatch:${swatch}"></i>` +
         `<span><b>${name}</b> · ${room.dataset.fach} · ${FLOOR_NAMES[selected]}</span>`
@@ -138,6 +144,12 @@
       );
     });
 
+    // Changing floors starts the list from scratch, so a category left open
+    // on one floor does not carry over to the next.
+    root.querySelectorAll("[data-gplan-cat]").forEach((cat) => {
+      cat.open = false;
+    });
+
     clearRoom();
     setInfo(index === null ? INFO_CLOSED : INFO_PICK);
   };
@@ -150,23 +162,63 @@
   });
 
   rooms.forEach((room) => {
-    room.addEventListener("click", () => {
-      selectRoom(room);
-      // Only on selecting, not on clicking the same entry again to clear it.
-      if (room.dataset.tour && room.getAttribute("aria-pressed") === "true") {
-        openTour(room.dataset.tour);
-      }
-    });
+    room.addEventListener("click", () => selectRoom(room));
   });
 
-  // A zone drawn in the plan opens its tour directly - but only once its floor
-  // is already open, so the first click on a closed floor still just opens it.
-  root.querySelectorAll(".gplan-plate__band[data-tour]").forEach((zone) => {
+  // The category belonging to a band, within the open floor's list.
+  const categoryOf = (band) =>
+    groups
+      .find((g) => Number(g.dataset.gplanRooms) === selected)
+      ?.querySelector(`[data-gplan-cat="${band}"]`);
+
+  // Clicking a block in the plan picks that category: its zone lights up, the
+  // others recede, and its section opens in the list. The blocks are the
+  // bigger, more obvious target, so this is the main way in - the list is the
+  // way to drill down to a single room.
+  const selectZone = (zone) => {
+    const band = zone.dataset.band;
+    const floor = zone.closest("[data-gplan-floor]");
+
+    clearRoom();
+
+    floor.querySelectorAll(".gplan-plate__band").forEach((other) => {
+      const match = other.dataset.band === band;
+      other.classList.toggle("is-highlight", match);
+      other.classList.toggle("is-dim", !match);
+    });
+
+    const group = groups.find((g) => Number(g.dataset.gplanRooms) === selected);
+    group?.querySelectorAll("[data-gplan-cat]").forEach((cat) => {
+      cat.open = cat.dataset.gplanCat === band;
+    });
+
+    const cat = categoryOf(band);
+    const label = cat?.querySelector(".gplan__cat-name")?.textContent ?? band;
+    const swatch =
+      cat?.querySelector("i")?.style.getPropertyValue("--swatch") ?? "";
+
+    setInfo(
+      `<i style="--swatch:${swatch}"></i>` +
+        `<span><b>${label}</b> · ${FLOOR_NAMES[selected]}</span>`
+    );
+  };
+
+  root.querySelectorAll(".gplan-plate__band").forEach((zone) => {
     zone.addEventListener("click", (event) => {
       const floor = zone.closest("[data-gplan-floor]");
       if (!floor || selected !== indexOfFloor(floor)) return;
       event.stopPropagation(); // do not collapse the floor we are standing on
-      openTour(zone.dataset.tour);
+      selectZone(zone);
+    });
+  });
+
+  // The 360° marker rides inside its block, so its click has to be stopped
+  // from reaching the block underneath - otherwise opening the tour would also
+  // re-select the zone.
+  root.querySelectorAll(".gplan-plate__tour[data-tour]").forEach((badge) => {
+    badge.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openTour(badge.dataset.tour);
     });
   });
 

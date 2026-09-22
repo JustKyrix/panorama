@@ -304,87 +304,6 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // -----------------------------------------------------------------------------
-//  Etagennummer
-// -----------------------------------------------------------------------------
-
-.gplan__floor-label {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  translate: -50% -50%;
-  font-size: 1.6rem;
-  font-weight: bold;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: #cbd0d8;
-  pointer-events: none;
-  user-select: none;
-  transition: color 240ms $ease-soft;
-
-  small { font-size: 0.7rem; font-weight: bold; }
-}
-
-.gplan__floor[data-selected] .gplan__floor-label {
-  color: v.$schulfarbe;
-}
-
-// -----------------------------------------------------------------------------
-//  Hotspot - markiert eine Zone mit 360°-Rundgang
-//  Purely visual: pointer-events are off so the click lands on the zone
-//  underneath, which is a much bigger target.
-// -----------------------------------------------------------------------------
-
-.gplan__hotspot {
-  position: absolute;
-  inset-inline-start: var(--x, 50%);
-  inset-block-start: var(--y, 50%);
-  translate: -50% -50%;
-  display: grid;
-  place-items: center;
-  inline-size: 2.15rem;
-  block-size: 2.15rem;
-  font-size: 0.55rem;
-  font-weight: bold;
-  letter-spacing: -0.02em;
-  color: #fff;
-  background-color: v.$schulfarbe;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 3px 10px rgba(12, 23, 48, 0.45);
-  pointer-events: none;
-  opacity: 0;
-  scale: 0.5;
-  transition: opacity 280ms $ease-out, scale 380ms $ease-out;
-  z-index: 2;
-
-  // The pulsing halo.
-  &::before {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    border: 2px solid v.$schulfarbe;
-    animation: gplan-hotspot-pulse 2s ease-out infinite;
-  }
-}
-
-// Only shown once its floor is open - otherwise it clutters the closed stack.
-.gplan__floor[data-selected] .gplan__hotspot {
-  opacity: 1;
-  scale: 1;
-}
-
-.gplan__floor[data-selected]:hover .gplan__hotspot {
-  scale: 1.12;
-}
-
-@keyframes gplan-hotspot-pulse {
-  0%   { transform: scale(1);   opacity: 0.8; }
-  70%  { transform: scale(2.1); opacity: 0; }
-  100% { transform: scale(2.1); opacity: 0; }
-}
-
-// -----------------------------------------------------------------------------
 //  Zonen
 // -----------------------------------------------------------------------------
 
@@ -396,77 +315,189 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   &__band.is-dim { opacity: 0.15; }
   &__band.is-highlight { filter: brightness(1.08); }
 
-  // A zone with a tour behind it becomes interactive once its floor is open.
-  // Each zone is its own <g> in the plan, so it can be lifted out of the
-  // drawing on its own - a far clearer "this is a thing you can open" than a
-  // colour change, and it reads as the block physically rising.
-  .gplan__floor[data-selected] &__band[data-tour] {
+  // Every zone is its own <g>, so it can be picked up out of the drawing on
+  // its own. Once the floor is open they all respond to a click.
+  .gplan__floor[data-selected] &__band {
     cursor: pointer;
-    transition: transform 320ms $ease-out, filter 320ms $ease-soft;
-
-    // A slow idle bob so the piece is noticeable without hovering it.
-    animation: gplan-zone-float 3s ease-in-out infinite;
   }
 
-  .gplan__floor[data-selected] &__band[data-tour]:hover {
-    animation: none; // hand over to the hover lift
-    transform: translateY(-14px);
-    filter: drop-shadow(0 12px 14px rgba(12, 23, 48, 0.5));
+  // The lift is split across two nested groups on purpose: `transform` can be
+  // either transitioned or animated, never both. The outer group eases up to
+  // the hovered height, the inner one bobs there. One element could not do
+  // both - the animation would simply win and the entry would snap.
+  .gplan__floor[data-selected] &__band[data-tour-zone] {
+    transition: transform 420ms $ease-out, filter 420ms $ease-soft;
+  }
+
+  .gplan__floor[data-selected] &__band[data-tour-zone]:hover {
+    transform: translateY(-10px);
+    filter: drop-shadow(0 14px 16px rgba(12, 23, 48, 0.5));
+  }
+
+  &__lift {
+    transform: translateY(0);
+  }
+
+  // Slow, shallow bob - only while the block is actually being hovered.
+  .gplan__floor[data-selected] &__band[data-tour-zone]:hover &__lift {
+    animation: gplan-zone-bob 2.6s ease-in-out infinite;
+  }
+
+  // --- 360° marker, riding along inside the block --------------------------
+  &__tour {
+    cursor: pointer;
+  }
+
+  &__tour-dot {
+    fill: #fff;
+    stroke: v.$schulfarbe;
+    stroke-width: 2.4;
+  }
+
+  &__tour-label {
+    fill: v.$schulfarbe;
+    font-family: v.$font-base;
+    font-size: 8.6px;
+    font-weight: bold;
+    letter-spacing: -0.3px;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &__tour-pulse {
+    fill: none;
+    stroke: v.$schulfarbe;
+    stroke-width: 2;
+    transform-origin: 375px 82px;
+    animation: gplan-tour-pulse 2.4s ease-out infinite;
+    pointer-events: none;
   }
 }
 
-@keyframes gplan-zone-float {
+@keyframes gplan-zone-bob {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
+  50%      { transform: translateY(-5px); }
+}
+
+@keyframes gplan-tour-pulse {
+  0%        { transform: scale(1);   opacity: 0.65; }
+  70%, 100% { transform: scale(1.9); opacity: 0; }
 }
 
 // -----------------------------------------------------------------------------
 //  Raumliste - RESERVIERTE Höhe, damit das Panel nicht wächst
+//  Rooms are grouped by Oberbegriff in <details> elements, so opening and
+//  closing a category needs no JavaScript at all.
 // -----------------------------------------------------------------------------
 
 .gplan__rooms {
   flex: none;
-  block-size: 9rem;
+  block-size: 10.5rem;
   overflow-y: auto;
   overscroll-behavior: contain;
-  margin-block-start: 0.75rem;
-  padding: 0 1.25rem;
+  margin-block-start: 0.5rem;
+  padding: 0 1rem;
 
-  @include mx.down("small") { block-size: 8rem; }
+  @include mx.down("small") { block-size: 9.5rem; }
 }
 
-.gplan__rooms-title {
-  margin: 0 0 0.5rem;
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+.gplan__placeholder {
+  margin: 0;
+  padding: 0.35rem 0.25rem;
+  font-size: 0.76rem;
+  line-height: 1.5;
   color: #98a1ae;
 }
 
+// --- Oberbegriff -------------------------------------------------------------
+
+.gplan__cat {
+  border-block-end: 1px solid #f0f2f5;
+
+  &:last-child { border-block-end: 0; }
+
+  &[open] > .gplan__cat-head {
+    color: v.$text;
+  }
+}
+
+.gplan__cat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.35rem;
+  font-size: 0.78rem;
+  font-weight: bold;
+  color: #4b5563;
+  cursor: pointer;
+  list-style: none;                       // Firefox
+  transition: color 160ms $ease-soft, background-color 160ms $ease-soft;
+
+  &::-webkit-details-marker { display: none; }   // Safari / Chrome
+
+  &:hover { background-color: #f6f7f9; }
+
+  i {
+    inline-size: 0.7rem;
+    block-size: 0.7rem;
+    flex: none;
+    border-radius: 0.15rem;
+    background-color: var(--swatch);
+  }
+
+  // Caret, rotated when the category is open.
+  &::after {
+    content: "";
+    inline-size: 0.42rem;
+    block-size: 0.42rem;
+    margin-inline-start: 0.1rem;
+    border-inline-end: 1.6px solid currentColor;
+    border-block-end: 1.6px solid currentColor;
+    rotate: 45deg;
+    translate: 0 -1px;
+    opacity: 0.55;
+    transition: rotate 220ms $ease-out;
+  }
+}
+
+.gplan__cat[open] > .gplan__cat-head::after {
+  rotate: -135deg;
+  translate: 0 1px;
+}
+
+.gplan__cat-name { flex: 1; }
+
+.gplan__cat-count {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #98a1ae;
+  font-variant-numeric: tabular-nums;
+}
+
+// --- Räume -------------------------------------------------------------------
+
 .gplan__room-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.2rem 0.5rem;
-  margin: 0;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin: 0 0 0.35rem;
+  padding: 0 0 0 1.25rem;
   list-style: none;
 }
 
 .gplan__room {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   inline-size: 100%;
-  padding: 0.3rem 0.45rem;
+  padding: 0.28rem 0.45rem;
   font-size: 0.76rem;
   line-height: 1.3;
   text-align: start;
-  color: #4b5563;
+  color: #6b7280;
   background: none;
-  border-radius: 0.4rem;
+  border-radius: 0.35rem;
   cursor: pointer;
-  transition: background-color 160ms $ease-soft, color 160ms $ease-soft;
+  transition: background-color 160ms $ease-soft, color 160ms $ease-soft,
+              opacity 200ms $ease-soft;
 
   &:hover {
     background-color: #f2f4f7;
@@ -479,32 +510,18 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
     background-color: rgba(v.$schulfarbe, 0.1);
   }
 
-  i {
-    inline-size: 0.65rem;
-    block-size: 0.65rem;
-    flex: none;
-    border-radius: 0.15rem;
-    background-color: var(--swatch);
-  }
-
   @include mx.focus-ring;
 }
 
-// Marks a room that has a 360° tour behind it.
-.gplan__room-badge {
-  margin-inline-start: auto;
-  padding: 0.05rem 0.32rem;
-  font-size: 0.58rem;
-  font-style: normal;
-  font-weight: bold;
-  color: #fff;
-  background-color: v.$schulfarbe;
-  border-radius: 0.25rem;
-  flex: none;
-}
+// Picking a room pushes everything else back, so the choice stands alone.
+// Done with :has() rather than a JS-managed class - the state already lives
+// in aria-pressed, and duplicating it would be a second source of truth.
+.gplan__room-group:has(.gplan__room[aria-pressed="true"]) {
+  .gplan__room:not([aria-pressed="true"]) { opacity: 0.3; }
 
-.gplan__room--tour:hover .gplan__room-badge {
-  background-color: #2a4784;
+  .gplan__cat:not(:has(.gplan__room[aria-pressed="true"])) > .gplan__cat-head {
+    opacity: 0.35;
+  }
 }
 
 .gplan__room-group {
@@ -523,6 +540,7 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
 .gplan__hint {
   margin: 0;
+  padding: 0.35rem 0.25rem;
   font-size: 0.76rem;
   line-height: 1.5;
   color: #98a1ae;
