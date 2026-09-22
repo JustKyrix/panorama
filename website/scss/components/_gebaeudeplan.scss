@@ -12,9 +12,14 @@
 //
 //  GEOMETRY
 //  The ground floor is the anchor: it sits on the floor of the stage and
-//  never moves, the others stack upwards from it. Adjacent floors sit
-//  --gap-near apart; whichever floor is open gets --gap-open to each of its
-//  neighbours. Turn those two values up for a more dramatic stack.
+//  never moves, the others stack upwards from it. Three distances shape it:
+//
+//    --gap-rest  closed: the floors almost touch and read as one building
+//    --gap-near  open: between the two floors that are not the open one
+//    --gap-open  open: between the open floor and each of its neighbours
+//
+//  With a floor open the other two also drop back to pale ghosts, so the
+//  open storey is unmistakably the subject.
 //
 //  The panel must keep a CONSTANT height. It is anchored to the bottom of the
 //  viewport, so content that changes height makes it grow upwards and drags
@@ -193,14 +198,13 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 // -----------------------------------------------------------------------------
 
 .gplan__stage {
-  // The two numbers that shape the stack, in a 1:2 ratio.
-  //
-  // Scale matters as much as the ratio: a plate is --plate-h tall, so a gap
-  // much below half of that leaves the floors overlapping into a single
-  // unreadable shape. Keep --gap-near at roughly half a plate and the layers
-  // stay legible.
-  --gap-near: 60px;    // between floors that are not the open one
-  --gap-open: 120px;   // between the open floor and each neighbour
+  // Scale matters as much as the ratio: a plate is --plate-h tall, so an open
+  // gap much below half of that leaves the floors overlapping into a single
+  // unreadable shape. --gap-rest is deliberately far smaller - closed, the
+  // floors are meant to overlap.
+  --gap-rest: 26px;    // closed stack - floors almost touching
+  --gap-near: 75px;    // open stack, between floors that are not the open one
+  --gap-open: 150px;   // open stack, between the open floor and each neighbour
   --plate-h: 150px;    // matches the plan's 410 x 170 aspect at panel width
 
   position: relative;
@@ -221,8 +225,9 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // Scaled down on phones, keeping the same 1:2 ratio, so the panel still
   // fits without the stage pushing the room list off screen.
   @include mx.down("small") {
-    --gap-near: 44px;
-    --gap-open: 88px;
+    --gap-rest: 20px;
+    --gap-near: 62px;
+    --gap-open: 124px;
     --plate-h: 126px;
   }
 }
@@ -273,11 +278,19 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 // --- Die vier Anordnungen ----------------------------------------------------
 // Ground floor (index 2) is never translated: it is the anchor.
 
-// Rest, and ground floor open: 20 to EG, 10 between the upper two.
+// Rest: a tight sandwich, per the closed-state reference. The floors nearly
+// touch, so the stack reads as one solid building rather than three
+// separated slabs.
 .gplan__floor[data-floor-index="2"] { translate: 0 0; }
-.gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-open)); }
-.gplan__floor[data-floor-index="0"] {
-  translate: 0 calc(-1 * (var(--gap-open) + var(--gap-near)));
+.gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-rest)); }
+.gplan__floor[data-floor-index="0"] { translate: 0 calc(-2 * var(--gap-rest)); }
+
+// Ground floor open: it keeps its place, the two above pull well clear.
+.gplan__stage[data-active="2"] {
+  .gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-open)); }
+  .gplan__floor[data-floor-index="0"] {
+    translate: 0 calc(-1 * (var(--gap-open) + var(--gap-near)));
+  }
 }
 
 // 1. OG open: it gets the wide gap on both sides.
@@ -294,13 +307,19 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-// Floors that are not the open one step back.
+// With a floor open the others are not merely dimmed - they drop back to pale
+// ghosts so the open one is unmistakably the subject, and the stack still
+// reads as three storeys. A little saturation is left in so the zones stay
+// faintly recognisable rather than turning into grey slabs.
 .gplan__stage[data-active] .gplan__floor:not([data-active]) svg {
-  opacity: 0.5;
+  opacity: 0.18;
+  filter: saturate(0.14) brightness(1.4)
+          drop-shadow(0 3px 6px rgba(12, 23, 48, 0.08));
 }
 
+// The open floor keeps full colour and gains depth.
 .gplan__floor[data-selected] svg {
-  filter: drop-shadow(0 12px 22px rgba(v.$schulfarbe, 0.45));
+  filter: drop-shadow(0 16px 26px rgba(12, 23, 48, 0.3));
 }
 
 // -----------------------------------------------------------------------------

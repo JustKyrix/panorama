@@ -14859,8 +14859,9 @@ p {
 }
 
 .gplan__stage {
-  --gap-near: 60px;
-  --gap-open: 120px;
+  --gap-rest: 26px;
+  --gap-near: 75px;
+  --gap-open: 150px;
   --plate-h: 150px;
   position: relative;
   flex: none;
@@ -14873,8 +14874,9 @@ p {
 }
 @media (max-width: 454px) {
   .gplan__stage {
-    --gap-near: 44px;
-    --gap-open: 88px;
+    --gap-rest: 20px;
+    --gap-near: 62px;
+    --gap-open: 124px;
     --plate-h: 126px;
   }
 }
@@ -14918,10 +14920,17 @@ p {
 }
 
 .gplan__floor[data-floor-index="1"] {
-  translate: 0 calc(-1 * var(--gap-open));
+  translate: 0 calc(-1 * var(--gap-rest));
 }
 
 .gplan__floor[data-floor-index="0"] {
+  translate: 0 calc(-2 * var(--gap-rest));
+}
+
+.gplan__stage[data-active="2"] .gplan__floor[data-floor-index="1"] {
+  translate: 0 calc(-1 * var(--gap-open));
+}
+.gplan__stage[data-active="2"] .gplan__floor[data-floor-index="0"] {
   translate: 0 calc(-1 * (var(--gap-open) + var(--gap-near)));
 }
 
@@ -14940,11 +14949,12 @@ p {
 }
 
 .gplan__stage[data-active] .gplan__floor:not([data-active]) svg {
-  opacity: 0.5;
+  opacity: 0.18;
+  filter: saturate(0.14) brightness(1.4) drop-shadow(0 3px 6px rgba(12, 23, 48, 0.08));
 }
 
 .gplan__floor[data-selected] svg {
-  filter: drop-shadow(0 12px 22px rgba(51, 87, 161, 0.45));
+  filter: drop-shadow(0 16px 26px rgba(12, 23, 48, 0.3));
 }
 
 .gplan-plate__band {
