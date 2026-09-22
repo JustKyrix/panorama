@@ -316,6 +316,21 @@ $gplan-fan: (
   &__band.is-highlight {
     filter: brightness(1.08);
   }
+
+  // A zone with a 360° tour behind it. It only becomes clickable once its
+  // floor is open, so the first click on a closed floor still just opens it.
+  .gplan__floor[data-selected] &__band[data-tour] {
+    cursor: pointer;
+    stroke: #fff;
+    stroke-width: 2;
+    animation: gplan-zone-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes gplan-zone-pulse {
+  0%,
+  100% { stroke-opacity: 0.35; }
+  50%  { stroke-opacity: 1; }
 }
 
 // Floor number, laid over the empty middle of the plate. Kept out of the SVG
@@ -411,6 +426,20 @@ $gplan-fan: (
   }
 
   @include mx.focus-ring;
+}
+
+// Marks a room that has a 360° tour behind it.
+.gplan__room-badge {
+  margin-inline-start: auto;
+  padding: 0.05rem 0.3rem;
+  font-size: 0.6rem;
+  font-style: normal;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background-color: v.$schulfarbe;
+  border-radius: 0.2rem;
+  flex: none;
 }
 
 .gplan__room-group {

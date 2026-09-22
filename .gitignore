@@ -17,6 +17,7 @@ yarn-error.log*
 
 # Deployment package
 adbk-site.zip
+adbk-tour.zip
 
 # Rohmaterial der Kamera (165 MB) - bleibt lokal.
 # Binaerdateien lassen sich nicht deltakomprimieren, jede Fassung landet in

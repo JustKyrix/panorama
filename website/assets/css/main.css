@@ -14938,7 +14938,21 @@ p {
 .gplan-plate__band.is-highlight {
   filter: brightness(1.08);
 }
+.gplan__floor[data-selected] .gplan-plate__band[data-tour] {
+  cursor: pointer;
+  stroke: #fff;
+  stroke-width: 2;
+  animation: gplan-zone-pulse 2.4s ease-in-out infinite;
+}
 
+@keyframes gplan-zone-pulse {
+  0%, 100% {
+    stroke-opacity: 0.35;
+  }
+  50% {
+    stroke-opacity: 1;
+  }
+}
 .gplan__floor-label {
   position: absolute;
   inset-block-start: 50%;
@@ -15027,6 +15041,19 @@ p {
   outline-offset: 2px;
 }
 
+.gplan__room-badge {
+  margin-inline-start: auto;
+  padding: 0.05rem 0.3rem;
+  font-size: 0.6rem;
+  font-style: normal;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background-color: #3357a1;
+  border-radius: 0.2rem;
+  flex: none;
+}
+
 .gplan__room-group {
   display: none;
 }
@@ -15066,4 +15093,78 @@ p {
   flex: none;
   border-radius: 2px;
   background-color: var(--swatch, transparent);
+}
+
+.gtour {
+  inline-size: min(76rem, 100vw - 3rem);
+  block-size: min(46rem, 100dvh - 3rem);
+  max-inline-size: none;
+  max-block-size: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: #111;
+  color: #fff;
+}
+.gtour[open] {
+  display: flex;
+  flex-direction: column;
+}
+.gtour::backdrop {
+  background-color: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(2px);
+}
+@media (max-width: 454px) {
+  .gtour {
+    inline-size: 100vw;
+    block-size: 100dvh;
+    border-radius: 0;
+  }
+}
+.gtour__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex: none;
+  padding: 0.7rem 0.75rem 0.7rem 1.1rem;
+  background-color: #1b1b1b;
+  border-block-end: 1px solid rgba(255, 255, 255, 0.1);
+}
+.gtour__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #fff;
+}
+.gtour__close {
+  display: grid;
+  place-items: center;
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+  flex: none;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.gtour__close:hover {
+  background-color: rgba(255, 255, 255, 0.24);
+}
+.gtour__close svg {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+}
+.gtour__close:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+.gtour__frame {
+  flex: 1;
+  inline-size: 100%;
+  border: 0;
+  display: block;
+  background-color: #111;
 }

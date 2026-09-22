@@ -1,0 +1,94 @@
+// =============================================================================
+//  components/tour
+//  Modal for the 360° Marzipano tour.
+//
+//  The tour runs in an iframe rather than inline: it is a self-contained app
+//  that expects to own the viewport, and it ships its own global CSS reset
+//  which would otherwise leak into the page. A <dialog> carries the modal
+//  behaviour - backdrop, focus trap and Escape - without extra JavaScript.
+// =============================================================================
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as mx;
+
+.gtour {
+  // <dialog> comes with a border, padding and auto margins; clear all of it.
+  inline-size: min(76rem, calc(100vw - 3rem));
+  block-size: min(46rem, calc(100dvh - 3rem));
+  max-inline-size: none;
+  max-block-size: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: #111;
+  color: #fff;
+
+  // Only lay out as a column once open - `display` also drives visibility on
+  // a dialog, so it must stay `none` while closed.
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(2px);
+  }
+
+  @include mx.down("small") {
+    inline-size: 100vw;
+    block-size: 100dvh;
+    border-radius: 0;
+  }
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex: none;
+    padding: 0.7rem 0.75rem 0.7rem 1.1rem;
+    background-color: #1b1b1b;
+    border-block-end: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  &__close {
+    display: grid;
+    place-items: center;
+    inline-size: 2.1rem;
+    block-size: 2.1rem;
+    flex: none;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.24);
+    }
+
+    svg {
+      inline-size: 1.05rem;
+      block-size: 1.05rem;
+    }
+
+    @include mx.focus-ring(#fff, 2px);
+  }
+
+  &__frame {
+    flex: 1;
+    inline-size: 100%;
+    border: 0;
+    display: block;
+    background-color: #111;
+  }
+}

@@ -122,8 +122,77 @@
     });
   });
 
+  // ---------------------------------------------------------------------------
+  //  360-Grad-Rundgang
+  //
+  //  The tour is a self-contained Marzipano app, so it lives in an iframe
+  //  rather than being inlined - it expects to own the whole viewport, and its
+  //  stylesheet carries a global reset that would leak into the page.
+  // ---------------------------------------------------------------------------
+
+  const tour = document.querySelector("[data-gtour]");
+  const tourFrame = tour?.querySelector("[data-gtour-frame]");
+  const tourTitle = tour?.querySelector("[data-gtour-title]");
+  const tourClose = tour?.querySelector("[data-gtour-close]");
+
+  const openTour = (src, name) => {
+    if (!tour || !tourFrame || !src) return;
+
+    if (tourTitle) {
+      tourTitle.textContent = name ? `${name} – 360°-Rundgang` : "360°-Rundgang";
+    }
+
+    // The src is attached only now. The tour is tens of megabytes of tiles, so
+    // it must not start downloading until someone actually asks for it.
+    if (tourFrame.getAttribute("src") !== src) tourFrame.setAttribute("src", src);
+
+    if (typeof tour.showModal === "function") tour.showModal();
+    else tour.setAttribute("open", "");
+  };
+
+  // Dropping the src stops tile loading and the autorotate timer; otherwise
+  // the tour keeps running unseen behind the page.
+  const unloadTour = () => tourFrame?.removeAttribute("src");
+
+  const closeTour = () => {
+    if (tour?.open) tour.close();
+    unloadTour();
+  };
+
+  // Escape closes a <dialog> natively, bypassing closeTour(), so the events
+  // are covered as well. Both are wired because the `close` event proved
+  // unreliable in some engines - unloading twice is harmless, never
+  // unloading leaves the tour streaming in the background.
+  tour?.addEventListener("close", unloadTour);
+  tour?.addEventListener("cancel", unloadTour);
+  tourClose?.addEventListener("click", closeTour);
+  tour?.addEventListener("click", (event) => {
+    if (event.target === tour) closeTour(); // click on the backdrop
+  });
+
+  // ---------------------------------------------------------------------------
+  //  Räume und begehbare Zonen
+  // ---------------------------------------------------------------------------
+
   rooms.forEach((room) => {
-    room.addEventListener("click", () => selectRoom(room));
+    room.addEventListener("click", () => {
+      selectRoom(room);
+      // Only on selecting, not on clicking the same entry again to clear it.
+      if (room.dataset.tour && room.getAttribute("aria-pressed") === "true") {
+        openTour(room.dataset.tour, room.dataset.tourName);
+      }
+    });
+  });
+
+  // A zone drawn in the plan opens its tour directly - but only once its floor
+  // is already open, so the first click on a closed floor still just opens it.
+  root.querySelectorAll(".gplan-plate__band[data-tour]").forEach((zone) => {
+    zone.addEventListener("click", (event) => {
+      const index = floors.indexOf(zone.closest("[data-gplan-floor]"));
+      if (index === -1 || selected !== index) return;
+      event.stopPropagation(); // do not collapse the floor we are standing on
+      openTour(zone.dataset.tour, zone.dataset.tourName);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -154,8 +223,18 @@
     fab.focus({ preventScroll: true });
   });
 
+  // Escape dismisses the topmost layer only: the tour first, then the panel.
+  // Handled explicitly rather than leaning on the dialog's own events, which
+  // are not reliably delivered everywhere.
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && isOpen()) {
+    if (event.key !== "Escape") return;
+
+    if (tour?.open) {
+      closeTour();
+      return;
+    }
+
+    if (isOpen()) {
       close();
       fab.focus({ preventScroll: true });
     }
