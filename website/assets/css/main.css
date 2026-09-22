@@ -14833,7 +14833,7 @@ p {
 .gplan__stage {
   --compact: 24px;
   --spread: 118px;
-  --plate-h: 115px;
+  --plate-h: 113px;
   position: relative;
   flex: none;
   block-size: calc(2 * (2.55 * var(--spread) - var(--compact)) + var(--plate-h));
@@ -14848,7 +14848,7 @@ p {
 @media (max-width: 454px) {
   .gplan__stage {
     --spread: 62px;
-    --plate-h: 100px;
+    --plate-h: 107px;
   }
 }
 
@@ -14928,47 +14928,37 @@ p {
   border-radius: 4px;
 }
 
-.gplan-plate__ring {
-  fill: none;
-  stroke-width: 18;
-  stroke-linejoin: miter;
-  stroke-linecap: butt;
-}
 .gplan-plate__band {
-  fill: none;
-  stroke-width: 18;
-  stroke-linejoin: miter;
-  stroke-linecap: butt;
-  transition: opacity 220ms ease, stroke-width 220ms ease;
+  transition: opacity 220ms ease, filter 220ms ease;
 }
 .gplan-plate__band.is-dim {
-  opacity: 0.2;
+  opacity: 0.15;
 }
 .gplan-plate__band.is-highlight {
-  stroke-width: 24;
+  filter: brightness(1.08);
 }
-.gplan-plate__inner {
-  fill: none;
-  stroke: #e6e6e6;
-  stroke-width: 2;
-}
-.gplan-plate__corridor {
-  fill: #bdbdbd;
-  font-size: 13px;
+
+.gplan__floor-label {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  font-family: "Myriad Web Pro", Arial, Helvetica, sans-serif;
+  font-size: 2rem;
   font-weight: bold;
-  text-anchor: middle;
+  line-height: 1;
+  color: #c4c4c4;
+  pointer-events: none;
+  user-select: none;
 }
-.gplan-plate__level {
-  fill: #c4c4c4;
-  font-size: 46px;
+.gplan__floor-label small {
+  font-size: 0.85rem;
   font-weight: bold;
-  text-anchor: middle;
 }
-.gplan-plate__level-suffix {
-  font-size: 17px;
-}
-.gplan-plate__you {
-  fill: #3357a1;
+@media (max-width: 454px) {
+  .gplan__floor-label {
+    font-size: 1.6rem;
+  }
 }
 
 .gplan__rooms {

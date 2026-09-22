@@ -373,7 +373,9 @@
 
   <!-- ===================================================================== -->
   <!--  Gebäudeplan                                                           -->
-  <!--  Liegt über der Karte. Button unten rechts öffnet das Panel.           -->
+  <!--  Etagengrafiken: Originalexporte (SVGs-Gebäudeplan), unverändert in     -->
+  <!--  Form und Farbe. Ergänzt wurde nur data-band pro Fläche, damit die      -->
+  <!--  Raumliste die passende Zone hervorheben kann.                          -->
   <!-- ===================================================================== -->
   <div class="gplan" data-gplan>
 
@@ -406,104 +408,54 @@
           <!-- ============================ 2. OG ============================ -->
           <button class="gplan__floor" type="button" style="--i: 0" data-floor-index="0"
                   data-gplan-floor aria-pressed="false"
-                  aria-label="2. Obergeschoss – Gastronomie, Gestaltung, Steinmetz">
-            <svg viewBox="0 0 480 172" role="img" aria-hidden="true">
-              <path class="gplan-plate__ring" stroke="#d9d9d9"
-                    d="M72 30 L356 30 L460 86 L356 142 L72 142 L20 86 Z"/>
-
-              <path class="gplan-plate__band" data-band="gastro" stroke="#a51c30"
-                    d="M20 86 L72 30 L412 60"/>
-              <path class="gplan-plate__band" data-band="gestaltung" stroke="#e8781c"
-                    d="M412 60 L460 86 L406 115"/>
-              <path class="gplan-plate__band" data-band="verwaltung" stroke="#b4b4b4"
-                    d="M406 115 L356 142 L72 142 L20 86"/>
-
-              <path class="gplan-plate__inner"
-                    d="M100 52 L330 52 L408 86 L330 120 L100 120 L56 86 Z"/>
-              <text class="gplan-plate__corridor" x="215" y="66">C</text>
-              <text class="gplan-plate__corridor" x="215" y="118">A</text>
-              <text class="gplan-plate__corridor" x="82" y="74">B</text>
-              <text class="gplan-plate__corridor" x="368" y="72">D</text>
-              <text class="gplan-plate__corridor" x="368" y="106">E</text>
-
-              <text class="gplan-plate__level" x="230" y="102">2<tspan
-                    class="gplan-plate__level-suffix">OG</tspan></text>
+                  aria-label="2. Obergeschoss – Gastronomie, Gestaltung, Verwaltung">
+            <svg viewBox="0 0 417.84 147.4" role="img" aria-hidden="true">
+              <polygon class="gplan-plate__band" data-band="gastro" fill="#a52422"
+                       points="0 0 64.47 85.31 106.14 88.69 41.1 15.2 318.9 11.48 381.97 61.15 417.84 61.94 337.43 0 0 0"/>
+              <polygon class="gplan-plate__band" data-band="verwaltung" fill="#b2b2b2"
+                       points="64.47 85.31 78.02 103.71 375.18 147.4 384.22 129.7 106.14 88.69 64.47 85.31"/>
+              <polygon class="gplan-plate__band" data-band="gestaltung" fill="#f39300"
+                       points="342.32 123.52 381.97 61.15 417.84 61.94 384.22 129.7 342.32 123.52"/>
             </svg>
+            <span class="gplan__floor-label">2<small>OG</small></span>
           </button>
 
           <!-- ============================ 1. OG ============================ -->
           <button class="gplan__floor" type="button" style="--i: 1" data-floor-index="1"
                   data-gplan-floor aria-pressed="false"
                   aria-label="1. Obergeschoss – Medien, Gesundheitstechnik, Farbtechnik">
-            <svg viewBox="0 0 480 172" role="img" aria-hidden="true">
-              <path class="gplan-plate__ring" stroke="#d9d9d9"
-                    d="M72 30 L356 30 L460 86 L356 142 L72 142 L20 86 Z"/>
-
-              <path class="gplan-plate__band" data-band="gesundheit" stroke="#17a398"
-                    d="M20 86 L72 30"/>
-              <path class="gplan-plate__band" data-band="dmt" stroke="#e6007e"
-                    d="M72 30 L398 55"/>
-              <path class="gplan-plate__band" data-band="maler" stroke="#8c2e2a"
-                    d="M398 55 L440 78"/>
-              <path class="gplan-plate__band" data-band="gestaltung" stroke="#e8781c"
-                    d="M440 78 L460 86 L438 98"/>
-              <path class="gplan-plate__band" data-band="optik" stroke="#3b2d8f"
-                    d="M438 98 L356 142 L72 142 L20 86"/>
-
-              <path class="gplan-plate__inner"
-                    d="M100 52 L330 52 L408 86 L330 120 L100 120 L56 86 Z"/>
-              <text class="gplan-plate__corridor" x="215" y="66">C</text>
-              <text class="gplan-plate__corridor" x="215" y="118">A</text>
-              <text class="gplan-plate__corridor" x="82" y="74">B</text>
-              <text class="gplan-plate__corridor" x="368" y="72">D</text>
-              <text class="gplan-plate__corridor" x="368" y="106">E</text>
-
-              <text class="gplan-plate__level" x="230" y="102">1<tspan
-                    class="gplan-plate__level-suffix">OG</tspan></text>
-
-              <g class="gplan-plate__band" data-band="ersthilfe">
-                <rect x="298" y="130" width="15" height="15" rx="2" fill="#2e9e3e"/>
-                <path d="M303 133.5h5M305.5 131v10" stroke="#fff" stroke-width="2.6"/>
-              </g>
+            <svg viewBox="0 0 417.75 148.35" role="img" aria-hidden="true">
+              <polygon class="gplan-plate__band" data-band="dmt" fill="#e3007d"
+                       points="0 0 296.87 0 307.11 12.29 11.8 15.54 0 0"/>
+              <polygon class="gplan-plate__band" data-band="gesundheit" fill="#00a09a"
+                       points="54.19 71.85 93.59 73.59 42.1 15.2 11.8 15.54 54.19 71.85"/>
+              <polygon class="gplan-plate__band" data-band="optik" fill="#2e2d7e"
+                       points="107.03 88.76 93.59 73.59 54.19 71.85 77.23 103.08 376.02 148.35 396.83 104.52 359.62 96.93 342.72 122.89 107.03 88.76"/>
+              <polygon class="gplan-plate__band" data-band="gestaltung" fill="#f39300"
+                       points="382.57 61.62 417.75 62.48 396.83 104.52 359.62 96.93 382.57 61.62"/>
+              <polygon class="gplan-plate__band" data-band="maler" fill="#a52422"
+                       points="296.87 0 338.16 0 417.75 62.48 382.57 61.62 320.85 12.25 307.11 12.29 296.87 0"/>
             </svg>
+            <span class="gplan__floor-label">1<small>OG</small></span>
           </button>
 
           <!-- ============================= EG ============================== -->
           <button class="gplan__floor" type="button" style="--i: 2" data-floor-index="2"
                   data-gplan-floor aria-pressed="false"
                   aria-label="Erdgeschoss – Werkstätten, Druck, Foyer, Sporthalle">
-            <svg viewBox="0 0 480 172" role="img" aria-hidden="true">
-              <path class="gplan-plate__ring" stroke="#d9d9d9"
-                    d="M72 30 L356 30 L460 86 L356 142 L72 142 L20 86 Z"/>
-
-              <path class="gplan-plate__band" data-band="holz" stroke="#a8968a"
-                    d="M20 86 L72 30 L168 30"/>
-              <path class="gplan-plate__band" data-band="druck" stroke="#e6007e"
-                    d="M168 30 L356 30 L418 64"/>
-              <path class="gplan-plate__band" data-band="sport" stroke="#1a1a1a"
-                    d="M418 64 L460 86"/>
-              <path class="gplan-plate__band" data-band="beq" stroke="#5cb615"
-                    d="M460 86 L408 114"/>
-              <path class="gplan-plate__band" data-band="allgemein" stroke="#5a5550"
-                    d="M408 114 L356 142 L72 142 L20 86"/>
-
-              <path class="gplan-plate__inner"
-                    d="M100 52 L330 52 L408 86 L330 120 L100 120 L56 86 Z"/>
-              <text class="gplan-plate__corridor" x="215" y="66">C</text>
-              <text class="gplan-plate__corridor" x="215" y="118">A</text>
-              <text class="gplan-plate__corridor" x="82" y="74">B</text>
-              <text class="gplan-plate__corridor" x="368" y="72">D</text>
-              <text class="gplan-plate__corridor" x="368" y="106">E</text>
-
-              <text class="gplan-plate__level" x="230" y="102">E<tspan
-                    class="gplan-plate__level-suffix">G</tspan></text>
-
-              <g class="gplan-plate__band" data-band="standort">
-                <rect class="gplan-plate__you" x="404" y="70" width="17" height="17" rx="2"/>
-                <circle cx="412.5" cy="75.5" r="2.4" fill="#fff"/>
-                <path d="M407.5 83.5a5 5 0 0 1 10 0Z" fill="#fff"/>
-              </g>
+            <svg viewBox="0 0 417.79 147.5" role="img" aria-hidden="true">
+              <polygon class="gplan-plate__band" data-band="holz" fill="#a4897a"
+                       points="173.87 14.08 160.73 0 0 0 68.14 92.1 104.6 87.29 40.79 15.63 173.87 14.08"/>
+              <polygon class="gplan-plate__band" data-band="druck" fill="#e3007d"
+                       points="160.73 0 173.87 14.08 313.48 12.03 302.36 0 160.73 0"/>
+              <polygon class="gplan-plate__band" data-band="sport" fill="#1a1a1a"
+                       points="302.36 0 337.39 0 362.91 19.8 329.86 20.26 320.15 12.06 313.48 12.03 302.36 0"/>
+              <polygon class="gplan-plate__band" data-band="beq" fill="#94c121"
+                       points="329.86 20.26 362.91 19.8 417.79 62.39 387.43 123.3 347.36 115.82 382.57 62.59 329.86 20.26"/>
+              <polygon class="gplan-plate__band" data-band="allgemein" fill="#616160"
+                       points="104.6 87.29 107.37 89.33 342.17 123.3 347.36 115.82 387.43 123.3 375.75 147.5 77.23 103.88 68.14 92.1 104.6 87.29"/>
             </svg>
+            <span class="gplan__floor-label">E<small>G</small></span>
           </button>
 
         </div>
@@ -519,46 +471,44 @@
         <div class="gplan__room-group" data-gplan-rooms="0">
           <p class="gplan__rooms-title">2. Obergeschoss</p>
           <ul class="gplan__room-list">
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a51c30"></i><span>Projekt Gastorientierung</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a51c30"></i><span>Restaurant Hotelfachleute</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a51c30"></i><span>Restaurant/Bar Restaurantfachleute</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a51c30"></i><span>Küchen</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a51c30"></i><span>Projekt Deutsch</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#e8781c"></i><span>Steinmetz-Werkstatt</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#e8781c"></i><span>Visuelles Marketing</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#e8781c"></i><span>Raumausstatter-Werkstatt</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="verwaltung" data-fach="Verwaltung"><i style="--swatch:#b4b4b4"></i><span>Präsentationsküche</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a52422"></i><span>Projekt Gastorientierung</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a52422"></i><span>Restaurant Hotelfachleute</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a52422"></i><span>Restaurant/Bar Restaurantfachleute</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a52422"></i><span>Küchen</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastronomie"><i style="--swatch:#a52422"></i><span>Projekt Deutsch</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#f39300"></i><span>Steinmetz-Werkstatt</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#f39300"></i><span>Visuelles Marketing</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#f39300"></i><span>Raumausstatter-Werkstatt</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="verwaltung" data-fach="Verwaltung"><i style="--swatch:#b2b2b2"></i><span>Präsentationsküche</span></button></li>
           </ul>
         </div>
 
         <div class="gplan__room-group" data-gplan-rooms="1">
           <p class="gplan__rooms-title">1. Obergeschoss</p>
           <ul class="gplan__room-list">
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gesundheit" data-fach="Gesundheitstechnik"><i style="--swatch:#17a398"></i><span>Zahntechniklabore</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="dmt" data-fach="Druck- und Medientechnik"><i style="--swatch:#e6007e"></i><span>EDV Mediengestaltung</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="dmt" data-fach="Druck- und Medientechnik"><i style="--swatch:#e6007e"></i><span>Fotostudios</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="maler" data-fach="Farbtechnik"><i style="--swatch:#8c2e2a"></i><span>Maler-Lackierer-Werkstatt</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#e8781c"></i><span>Airbrush</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="optik" data-fach="Gesundheitstechnik"><i style="--swatch:#3b2d8f"></i><span>Augenoptikwerkstatt</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="ersthilfe" data-fach="Service"><i style="--swatch:#2e9e3e"></i><span>Erste Hilfe</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gesundheit" data-fach="Gesundheitstechnik"><i style="--swatch:#00a09a"></i><span>Zahntechniklabore</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="dmt" data-fach="Druck- und Medientechnik"><i style="--swatch:#e3007d"></i><span>EDV Mediengestaltung</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="dmt" data-fach="Druck- und Medientechnik"><i style="--swatch:#e3007d"></i><span>Fotostudios</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="maler" data-fach="Farbtechnik"><i style="--swatch:#a52422"></i><span>Maler-Lackierer-Werkstatt</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik"><i style="--swatch:#f39300"></i><span>Airbrush</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="optik" data-fach="Gesundheitstechnik"><i style="--swatch:#2e2d7e"></i><span>Augenoptikwerkstatt</span></button></li>
           </ul>
         </div>
 
         <div class="gplan__room-group" data-gplan-rooms="2">
           <p class="gplan__rooms-title">Erdgeschoss</p>
           <ul class="gplan__room-list">
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a8968a"></i><span>Glaserei</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a8968a"></i><span>Betonlabor</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a8968a"></i><span>Brennraum</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a8968a"></i><span>Tischlerei</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik"><i style="--swatch:#e6007e"></i><span>Buchbinderei</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik"><i style="--swatch:#e6007e"></i><span>Druckerei</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Glaserei</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Betonlabor</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Brennraum</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik"><i style="--swatch:#a4897a"></i><span>Tischlerei</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik"><i style="--swatch:#e3007d"></i><span>Buchbinderei</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik"><i style="--swatch:#e3007d"></i><span>Druckerei</span></button></li>
             <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="sport" data-fach="Sport"><i style="--swatch:#1a1a1a"></i><span>Sporthalle</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="beq" data-fach="Berufseinstiegsqualifizierung"><i style="--swatch:#5cb615"></i><span>BEQ</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#5a5550"></i><span>Selbstlernzentrum</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#5a5550"></i><span>Foyer</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#5a5550"></i><span>Bistro</span></button></li>
-            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="standort" data-fach="Orientierung"><i style="--swatch:#3357a1"></i><span>Ihr Standort</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="beq" data-fach="Berufseinstiegsqualifizierung"><i style="--swatch:#94c121"></i><span>BEQ</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#616160"></i><span>Selbstlernzentrum</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#616160"></i><span>Foyer</span></button></li>
+            <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Allgemeine Bereiche"><i style="--swatch:#616160"></i><span>Bistro</span></button></li>
           </ul>
         </div>
       </div>
@@ -570,6 +520,7 @@
 
     </div>
   </div>
+
 
 
   <script src="assets/js/vendor/bootstrap.bundle.min.js" defer></script>

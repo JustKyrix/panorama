@@ -168,7 +168,7 @@ $gplan-fan: (
   // --plate-h : rendered height of one floor plate
   --compact: 24px;
   --spread: 118px;
-  --plate-h: 115px;
+  --plate-h: 113px;
 
   position: relative;
   flex: none;
@@ -187,7 +187,7 @@ $gplan-fan: (
 
   @include mx.down("small") {
     --spread: 62px;
-    --plate-h: 100px;
+    --plate-h: 107px;
   }
 }
 
@@ -294,57 +294,46 @@ $gplan-fan: (
 //  Etagenbeschriftung im Plan
 // -----------------------------------------------------------------------------
 
+// The plates are the original Illustrator exports: filled polygons, one per
+// coloured zone. Their fills come from the artwork, so nothing here sets a
+// colour - only how a zone reacts when a room is picked.
 .gplan-plate {
-  &__ring {
-    fill: none;
-    stroke-width: 18;
-    stroke-linejoin: miter;
-    stroke-linecap: butt;
-  }
-
   &__band {
-    fill: none;
-    stroke-width: 18;
-    stroke-linejoin: miter;
-    stroke-linecap: butt;
-    transition: opacity 220ms ease, stroke-width 220ms ease;
+    transition: opacity 220ms ease, filter 220ms ease;
   }
 
-  // While a room is selected, its band is emphasised and the rest recede.
+  // While a room is selected its zone stays lit and the rest recede.
   &__band.is-dim {
-    opacity: 0.2;
+    opacity: 0.15;
   }
 
   &__band.is-highlight {
-    stroke-width: 24;
+    filter: brightness(1.08);
   }
+}
 
-  &__inner {
-    fill: none;
-    stroke: #e6e6e6;
-    stroke-width: 2;
-  }
+// Floor number, laid over the empty middle of the plate. Kept out of the SVG
+// so the supplied artwork stays untouched.
+.gplan__floor-label {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  font-family: v.$font-base;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1;
+  color: #c4c4c4;
+  pointer-events: none;
+  user-select: none;
 
-  &__corridor {
-    fill: #bdbdbd;
-    font-size: 13px;
+  small {
+    font-size: 0.85rem;
     font-weight: bold;
-    text-anchor: middle;
   }
 
-  &__level {
-    fill: #c4c4c4;
-    font-size: 46px;
-    font-weight: bold;
-    text-anchor: middle;
-  }
-
-  &__level-suffix {
-    font-size: 17px;
-  }
-
-  &__you {
-    fill: v.$schulfarbe;
+  @include mx.down("small") {
+    font-size: 1.6rem;
   }
 }
 
