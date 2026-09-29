@@ -62,8 +62,31 @@
   //  screen and keeps the plan untouched behind it.
   // ---------------------------------------------------------------------------
 
+  // The plan runs as its own page (assets/plan.html) inside the overlay of a
+  // 360° tour as well as on the homepage. A few things differ there, and all
+  // of them hang off this one flag.
+  const standalone = document.body.classList.contains("gplan-standalone");
+  const embedded = standalone && window.parent !== window;
+
   const openTour = (src) => {
     if (!src) return;
+
+    // Opened from inside a tour's overlay: replace that tour rather than
+    // stacking up tabs, since switching tours is the whole point of having
+    // the plan there. Same origin, so the top window is reachable.
+    if (embedded) {
+      try {
+        // Against document.baseURI, NOT location.href: the standalone plan
+        // page sits in assets/ and carries <base href="../">, so the links in
+        // it are written from the site root. Resolving against the page's own
+        // path instead would turn assets/tour/... into assets/assets/tour/...
+        window.top.location.href = new URL(src, document.baseURI).href;
+        return;
+      } catch {
+        /* fall through to a new tab */
+      }
+    }
+
     // Called straight out of a click handler, so this is a user gesture and
     // will not be caught by popup blocking. `noopener` keeps the new tab from
     // getting a handle on this page.
@@ -267,19 +290,34 @@
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
-  closeBtn?.addEventListener("click", () => {
+  // On the standalone page the panel IS the page: it opens by itself, and
+  // closing means dismissing the overlay that holds it, which only the tour
+  // around it can do.
+  const dismiss = () => {
+    if (embedded) {
+      window.parent.postMessage("gplan:close", window.location.origin);
+      return;
+    }
     close();
     fab.focus({ preventScroll: true });
-  });
+  };
+
+  if (standalone) open();
+
+  closeBtn?.addEventListener("click", dismiss);
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && isOpen()) {
-      close();
-      fab.focus({ preventScroll: true });
-    }
+    if (event.key === "Escape" && isOpen()) dismiss();
   });
 
   document.addEventListener("pointerdown", (event) => {
-    if (isOpen() && !root.contains(event.target)) close();
+    // Clicking beside the panel closes it. On the standalone page `root`
+    // fills the whole viewport, so the panel itself is what counts as
+    // "inside" - otherwise the surrounding backdrop would never dismiss.
+    const inside = standalone
+      ? panel.contains(event.target)
+      : root.contains(event.target);
+
+    if (isOpen() && !inside) dismiss();
   });
 })();

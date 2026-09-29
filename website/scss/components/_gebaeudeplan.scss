@@ -40,6 +40,33 @@
 $ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
+// -----------------------------------------------------------------------------
+//  Eigenständige Plan-Seite (assets/plan.html)
+//  Loaded in an overlay by the 360° tours, so pressing "Gebäudeplan" in a
+//  panorama opens the same panel as on the homepage. There is no button to
+//  press here - the panel is the whole page - so the FAB goes and the panel
+//  is centred rather than tucked into a corner.
+// -----------------------------------------------------------------------------
+
+body.gplan-standalone {
+  margin: 0;
+  background: transparent;
+
+  .gplan {
+    position: static;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 100dvh;
+    padding: 1rem;
+  }
+
+  .gplan__fab { display: none; }
+
+  // It is the page, so it opens at its natural size instead of being capped
+  // against a viewport it now owns.
+  .gplan__panel { max-block-size: calc(100dvh - 2rem); }
+}
+
 .gplan {
   position: fixed;
   inset-block-end: 1.5rem;

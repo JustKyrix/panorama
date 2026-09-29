@@ -14709,6 +14709,24 @@ p {
   color: #5a5a5a;
 }
 
+body.gplan-standalone {
+  margin: 0;
+  background: transparent;
+}
+body.gplan-standalone .gplan {
+  position: static;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 100dvh;
+  padding: 1rem;
+}
+body.gplan-standalone .gplan__fab {
+  display: none;
+}
+body.gplan-standalone .gplan__panel {
+  max-block-size: calc(100dvh - 2rem);
+}
+
 .gplan {
   position: fixed;
   inset-block-end: 1.5rem;

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gebäudeplan · Albrecht-Dürer-Berufskolleg</title>
+
+<!-- GENERIERT von tools/make-plan-page.mjs - nicht von Hand bearbeiten.
+     Der Block unten stammt unverändert aus index.html; geändert wird dort. -->
+
+<!-- Die Seite liegt in assets/, die Basis schiebt sie zurück auf die
+     Wurzel. Dadurch stimmen alle Pfade aus index.html hier unverändert. -->
+<base href="../">
+
+<link rel="stylesheet" href="assets/css/main.css?v=bfa4a1b9">
+</head>
+<body class="gplan-standalone">
+
+<div class="gplan" data-gplan>
+
+    <button class="gplan__fab" type="button" data-gplan-toggle
+            aria-expanded="false" aria-controls="gplanPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z"/>
+        <path d="m3 12 9 4.5L21 12"/>
+        <path d="m3 16.5 9 4.5 9-4.5"/>
+      </svg>
+      <span class="gplan__fab-text">Gebäudeplan</span>
+    </button>
+
+    <div class="gplan__panel" id="gplanPanel" data-gplan-panel hidden
+         role="dialog" aria-label="Gebäudeplan">
+
+      <div class="gplan__head">
+        <h2>Gebäudeplan</h2>
+        <button class="gplan__close" type="button" data-gplan-close aria-label="Schließen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Bühne: die drei Etagen liegen übereinander und fächern beim Hovern auf -->
+      <div class="gplan__stage" data-gplan-stage>
+
+        <!-- Etagenwahl, wie das Gebäude sortiert: 2. OG oben, EG unten. -->
+        <div class="gplan__rail" role="group" aria-label="Etage wählen">
+          <button class="gplan__pick" type="button" data-gplan-pick="0"
+                  aria-pressed="false">2.OG</button>
+          <button class="gplan__pick" type="button" data-gplan-pick="1"
+                  aria-pressed="false">1.OG</button>
+          <button class="gplan__pick" type="button" data-gplan-pick="2"
+                  aria-pressed="false">EG</button>
+        </div>
+
+        <div class="gplan__floors">
+
+          <!-- Erdgeschoss: Zuschnitt y 113.45..283.65 aus ADBK_plan.svg. -->
+          <button class="gplan__floor" type="button" data-floor-index="2"
+                  data-gplan-floor aria-pressed="false"
+                  aria-label="Erdgeschoss – Werkstätten, Druck, Foyer, Sporthalle">
+            <svg viewBox="0 113.45 410.55 170.2" role="img" aria-hidden="true">
+              <g class="gplan-plate__band" data-band="sport">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#1a1a1a" points="301.6 131.69 280.3 114.1 323.7 113.45 355.61 139.86 319.99 137.82 319.99 153.99 312.73 148.2 302.12 148.35 301.6 131.69"/>
+                  <polygon fill="#1a1a1a" points="355.61 153.99 319.99 153.99 319.99 137.82 355.61 139.86 355.61 153.99"/>
+                  <polygon fill="#1a1a1a" points="302.12 148.35 280.48 125.84 280.3 114.1 301.6 131.69 302.12 148.35"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="beq" data-tour-zone="1">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#94c121" points="375.1 198.59 319.99 153.99 319.99 137.82 355.61 139.86 410.48 185.67 410.48 211.64 387.02 254.34 386.04 226.54 358.93 223.43 375.1 198.59"/>
+                  <polygon fill="#83a329" points="319.99 137.82 319.99 153.98 375.1 198.59 381.09 189.44 319.99 137.82"/>
+                  <polygon fill="#83a329" points="358.93 223.43 359.9 251.23 387.02 254.34 386.04 226.54 358.93 223.43"/>
+                  <polygon fill="#83a329" points="410.48 185.67 410.48 211.64 387.02 254.34 386.04 226.54 410.48 185.67"/>
+                  <g class="gplan-plate__tour" data-tour="assets/tour/index.html"
+                     style="--px:369.9px; --py:193px">
+                    <ellipse class="gplan-plate__tour-pulse" cx="369.9" cy="193" rx="9.36" ry="3.536"/>
+                    <path class="gplan-plate__tour-pin" d="M369.9 193 C364.7 184.45 359.5 181.49 359.5 174 A10.4 10.4 0 0 1 380.3 174 C380.3 181.49 375.1 184.45 369.9 193 Z"/>
+                    <text class="gplan-plate__tour-label" x="369.9" y="176.6">360°</text>
+                  </g>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="druck">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#c80a79" points="143.31 116.17 143.31 132.09 166.57 150.22 166.57 134.3 143.31 116.17"/>
+                  <polygon fill="#e3007d" points="302.12 148.35 301.6 131.69 280.3 114.1 143.31 116.17 166.57 134.3 166.57 150.22 302.12 148.35"/>
+                  <polygon fill="#c80a79" points="301.6 131.69 302.12 148.35 166.57 150.21 166.57 134.3 301.6 131.69"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="holz">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#a4897a" points="166.45 134.3 143.19 116.17 1.01 119.15 .07 146.27 60.71 228.24 60.71 200.22 97.17 195.41 59.91 151.46 166.45 150.22 166.45 134.3"/>
+                  <polygon fill="#897367" points="60.71 200.22 60.71 228.24 .07 146.27 1.01 119.15 60.71 200.22"/>
+                  <polygon fill="#897367" points="60.71 200.22 60.71 228.24 97.02 223.4 97.02 195.38 60.71 200.22"/>
+                  <polygon fill="#897367" points="166.45 134.31 45.36 134.31 59.91 151.47 166.45 150.22 166.45 134.31"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="allgemein">
+                <g class="gplan-plate__lift">
+                  <polyline fill="#616160" points="386.04 226.51 358.93 223.4 353.15 232.13 99.37 197.18 96.93 195.38 60.83 200.19 60.83 228.21 69.92 239.98 368.44 283.61 387.02 254.31 386.04 226.51"/>
+                  <polygon fill="#4f4f4e" points="386.04 226.51 368.87 255.22 69.92 211.61 60.83 200.19 60.83 228.21 69.92 239.98 368.44 283.61 387.02 254.31 386.04 226.51"/>
+                </g>
+              </g>
+            </svg>
+          </button>
+
+          <!-- 1. Obergeschoss: Zuschnitt y 57.6..227.8 aus ADBK_plan.svg. -->
+          <button class="gplan__floor" type="button" data-floor-index="1"
+                  data-gplan-floor aria-pressed="false"
+                  aria-label="1. Obergeschoss – Gesundheitstechnik, Medien, Gestaltung, Verwaltung">
+            <svg viewBox="0 57.6 410.55 170.2" role="img" aria-hidden="true">
+              <g class="gplan-plate__band" data-band="gastro">
+                <g class="gplan-plate__lift">
+                  <polyline fill="#861e18" points="301.59 92.54 312.2 92.39 319.46 98.18 319.46 98.18 374.57 142.79 381.53 152.28 409.95 148.25 409.95 129.8 380.56 133.64 319.46 82.02 319.46 82.02 312.2 75.88 301.06 75.88 301.06 75.88 279.77 58.29 279.95 70.03 301.59 92.54"/>
+                  <polygon fill="#a52422" points="312.2 75.88 319.46 82.02 319.46 82.02 380.56 133.64 409.89 129.81 323.17 57.64 279.77 58.29 301.06 75.88 312.2 75.88"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="druck">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#e3007d" points="301.06 75.88 279.77 58.29 142.78 60.36 .6 63.35 11.76 78.5 44.95 78.5 166.04 78.49 301.06 75.88"/>
+                  <polygon fill="#c80a79" points="301.06 75.88 166.04 78.49 166.04 78.5 59.26 78.5 44.95 78.5 11.76 78.5 .6 63.35 .6 78.9 .6 91.79 11.76 106.82 22.91 95.66 59.5 95.66 166.04 94.42 166.04 94.41 301.59 92.54 301.06 75.88"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="gestaltung">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#f39300" points="380.56 133.64 409.95 129.86 385.51 170.73 358.39 167.62 380.56 133.64"/>
+                  <polygon fill="#ce7e00" points="385.51 170.73 358.4 167.62 359.37 195.42 386.49 198.53 409.95 155.83 409.95 129.86 385.51 170.73"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="gesundheit" data-tour-zone="1">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#00a09a" points="59.5 95.66 44.95 78.5 11.76 78.5 60.3 144.39 96.4 139.58 59.5 95.66"/>
+                  <polygon fill="#008780" points="60.3 144.39 11.76 78.5 11.76 106.82 60.3 172.4 96.4 167.56 96.4 139.58 60.3 144.39"/>
+                  <g class="gplan-plate__tour" data-tour="assets/tour-1og/index.html"
+                     style="--px:56.7px; --py:136.2px">
+                    <ellipse class="gplan-plate__tour-pulse" cx="56.7" cy="136.2" rx="9.36" ry="3.536"/>
+                    <path class="gplan-plate__tour-pin" d="M56.7 136.2 C51.5 127.65 46.3 124.69 46.3 117.2 A10.4 10.4 0 0 1 67.1 117.2 C67.1 124.69 61.9 127.65 56.7 136.2 Z"/>
+                    <text class="gplan-plate__tour-label" x="56.7" y="119.8">360°</text>
+                  </g>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="verwaltung">
+                <g class="gplan-plate__lift">
+                  <polyline fill="#2e2d7e" points="385.36 170.38 358.24 167.27 352.46 176 98.69 141.05 96.24 139.25 60.14 144.06 60.14 172.08 69.24 183.85 367.76 227.48 386.33 198.17 385.36 170.38"/>
+                  <polygon fill="#242160" points="385.36 170.38 368.19 199.09 69.24 155.47 60.14 144.06 60.14 172.08 69.24 183.85 367.76 227.48 386.33 198.17 385.36 170.38"/>
+                </g>
+              </g>
+            </svg>
+          </button>
+
+          <!-- 2. Obergeschoss: Zuschnitt y 0..170.2 aus ADBK_plan.svg. -->
+          <button class="gplan__floor" type="button" data-floor-index="0"
+                  data-gplan-floor aria-pressed="false"
+                  aria-label="2. Obergeschoss – Gastgewerbe, Aula, Gestaltung, Holztechnik">
+            <svg viewBox="0 0 410.55 170.2" role="img" aria-hidden="true">
+              <g class="gplan-plate__band" data-band="holz">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#861e18" points="60.64 86.78 60.64 114.79 0 32.82 .94 5.7 60.64 86.78"/>
+                  <polygon fill="#861e18" points="60.64 86.78 60.64 114.79 96.95 109.95 96.95 81.94 60.64 86.78"/>
+                  <polygon fill="#861e18" points="381.02 75.99 319.92 24.37 319.92 24.37 312.66 18.24 301.53 18.24 301.53 18.24 301.5 18.24 301.31 18.24 301.31 18.24 166.07 20.86 45.29 20.86 59.84 38.02 166.38 36.77 166.38 36.77 302.06 34.9 302.05 34.79 302.06 34.9 312.66 34.75 319.92 40.54 319.92 40.54 375.04 85.15 382 94.64 410.55 90.84 410.55 72.19 381.02 75.99"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="gastro">
+                <g class="gplan-plate__lift">
+                  <polyline fill="#a52422" points="143.24 2.69 .94 5.67 60.64 86.75 97.1 81.94 45.29 20.83 166.46 20.82 166.5 20.85 301.53 18.24 301.46 18.19 301.53 18.24 312.66 18.24 319.92 24.37 319.92 24.37 381.02 75.99 410.55 72.19 323.64 0 280.23 .65 280.23 .65 280.13 .65 279.84 .65 279.84 .65"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="gestaltung">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#f39300" points="381.16 75.96 410.55 72.19 380.47 122.13 352.96 118.68 381.16 75.96"/>
+                  <polygon fill="#ce7e00" points="380.47 122.13 352.96 118.68 353.94 146.48 380.47 151.09 410.55 98.16 410.55 72.19 380.47 122.13"/>
+                </g>
+              </g>
+              <g class="gplan-plate__band" data-band="aula">
+                <g class="gplan-plate__lift">
+                  <polygon fill="#b2b2b2" points="380.47 122.13 352.96 118.68 99.18 83.73 96.74 81.93 60.64 86.75 69.74 98.16 368.68 141.77 380.47 122.13"/>
+                  <polygon fill="#8f9090" points="380.47 122.13 368.68 141.77 69.74 98.16 60.64 86.75 60.64 114.76 69.74 126.54 368.26 170.16 380.47 151.09 380.47 122.13"/>
+                </g>
+              </g>
+            </svg>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Raumliste der aktiven Etage. Feste Höhe: siehe Kommentar im SCSS. -->
+      <div class="gplan__rooms">
+
+        <!-- Ruhezustand: statt einer leeren Fläche die beiden Rundgänge als
+             direkter Einstieg. Wird ausgeblendet, sobald eine Etage gewählt
+             ist - dann steht hier deren Bereichsliste. -->
+        <div class="gplan__intro">
+          <p class="gplan__hint">
+            Etage wählen — oder direkt in einen 360°-Rundgang starten.
+          </p>
+
+          <a class="gplan__tour-card" href="assets/tour/index.html"
+             target="_blank" rel="noopener">
+            <span class="gplan__tour-card-pin" aria-hidden="true">360°</span>
+            <span class="gplan__tour-card-text">
+              <b>Küche</b>
+              <span>Erdgeschoss · Gastgewerbe</span>
+            </span>
+            <svg class="gplan__tour-card-go" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <a class="gplan__tour-card" href="assets/tour-1og/index.html"
+             target="_blank" rel="noopener">
+            <span class="gplan__tour-card-pin" aria-hidden="true">360°</span>
+            <span class="gplan__tour-card-text">
+              <b>Zahntechnik</b>
+              <span>1. Obergeschoss · Gesundheitstechnik</span>
+            </span>
+            <svg class="gplan__tour-card-go" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <p class="gplan__intro-stats">
+            <span>3 Etagen</span><span>14 Bereiche</span><span>2 Rundgänge</span>
+          </p>
+        </div>
+
+        <div class="gplan__room-group" data-gplan-rooms="0">
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="holz" data-band="holz">
+            <i style="--swatch:#861e18"></i>
+            <span class="gplan__cat-name">Bau- und Holztechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gastro" data-band="gastro">
+            <i style="--swatch:#a52422"></i>
+            <span class="gplan__cat-name">Gastgewerbe</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gestaltung" data-band="gestaltung">
+            <i style="--swatch:#f39300"></i>
+            <span class="gplan__cat-name">Gestaltungstechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="aula" data-band="aula">
+            <i style="--swatch:#b2b2b2"></i>
+            <span class="gplan__cat-name">Aula</span>
+          </button>
+        </div>
+
+        <div class="gplan__room-group" data-gplan-rooms="1">
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gastro" data-band="gastro">
+            <i style="--swatch:#a52422"></i>
+            <span class="gplan__cat-name">Gastgewerbe</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="druck" data-band="druck">
+            <i style="--swatch:#e3007d"></i>
+            <span class="gplan__cat-name">Druck- und Medientechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gestaltung" data-band="gestaltung">
+            <i style="--swatch:#f39300"></i>
+            <span class="gplan__cat-name">Gestaltungstechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gesundheit" data-band="gesundheit">
+            <i style="--swatch:#00a09a"></i>
+            <span class="gplan__cat-name">Gesundheitstechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="verwaltung" data-band="verwaltung">
+            <i style="--swatch:#2e2d7e"></i>
+            <span class="gplan__cat-name">Verwaltung</span>
+          </button>
+        </div>
+
+        <div class="gplan__room-group" data-gplan-rooms="2">
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="sport" data-band="sport">
+            <i style="--swatch:#1a1a1a"></i>
+            <span class="gplan__cat-name">Sport</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="beq" data-band="beq">
+            <i style="--swatch:#94c121"></i>
+            <span class="gplan__cat-name">Berufseinstiegsqualifizierung</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="druck" data-band="druck">
+            <i style="--swatch:#e3007d"></i>
+            <span class="gplan__cat-name">Druck- und Medientechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="holz" data-band="holz">
+            <i style="--swatch:#a4897a"></i>
+            <span class="gplan__cat-name">Bau- und Holztechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="allgemein" data-band="allgemein">
+            <i style="--swatch:#616160"></i>
+            <span class="gplan__cat-name">Bistro und Foyer</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Infozeile zum gewählten Raum. Feste Höhe, damit das Panel nicht wächst. -->
+      <!-- Muss INFO_CLOSED in gebaeudeplan.js entsprechen: das JS schreibt
+           denselben Text, sobald die Auswahl zurückgesetzt wird. -->
+      <p class="gplan__info" data-gplan-info>
+        Etage wählen oder einen Rundgang starten.
+      </p>
+
+    </div>
+  </div>
+
+<script src="assets/js/gebaeudeplan.js?v=2770f680" defer></script>
+</body>
+</html>

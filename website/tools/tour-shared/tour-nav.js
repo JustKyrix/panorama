@@ -44,37 +44,86 @@
     'aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/>' +
     '<path d="M3 13l9 5 9-5"/></svg>';
 
-  var nav = document.createElement("nav");
-  nav.className = "tnav";
-  nav.setAttribute("aria-label", "Rundgänge");
-
-  // #gebaeudeplan rather than a plain link home: gebaeudeplan.js reads that
-  // hash on load and opens the panel, so this lands on the plan itself
-  // instead of on the top of the homepage.
-  var html =
-    '<a class="tnav__home" href="../../index.html#gebaeudeplan">' +
-    PLAN_ICON +
-    "<span>Gebäudeplan</span></a>" +
-    '<span class="tnav__sep"></span>';
-
+  var label = "";
   TOURS.forEach(function (tour) {
-    if (tour.dir === current) {
-      html +=
-        '<span class="tnav__item is-current" aria-current="page">' +
-        tour.label +
-        "</span>";
-    } else {
-      html +=
-        '<a class="tnav__item" href="../' +
-        tour.dir +
-        '/index.html">' +
-        tour.label +
-        "</a>";
-    }
+    if (tour.dir === current) label = tour.label;
   });
 
-  nav.innerHTML = html;
+  var nav = document.createElement("nav");
+  nav.className = "tnav";
+  nav.setAttribute("aria-label", "Rundgang");
+
+  // Only the plan and where you are. The other tour is deliberately NOT
+  // offered here: the Gebäudeplan is the way between them, the same way you
+  // got into this one, so a panorama never advertises a room in a part of the
+  // building you have not navigated to.
+  nav.innerHTML =
+    '<button class="tnav__home" type="button" data-plan-open>' +
+    PLAN_ICON +
+    "<span>Gebäudeplan</span></button>" +
+    '<span class="tnav__sep"></span>' +
+    '<span class="tnav__item is-current" aria-current="page">' +
+    label +
+    "</span>";
+
   document.body.appendChild(nav);
+
+  // ---------------------------------------------------------------------------
+  //  Gebäudeplan als Overlay
+  //
+  //  Pressing it opens the very panel the homepage opens, over the panorama,
+  //  rather than navigating away from it. The plan is loaded from
+  //  assets/plan.html - generated out of index.html by tools/make-plan-page.mjs
+  //  - in a frame, so there is still only one copy of that markup anywhere.
+  // ---------------------------------------------------------------------------
+
+  var overlay = document.createElement("div");
+  overlay.className = "tplan";
+  overlay.hidden = true;
+  overlay.innerHTML = '<iframe class="tplan__frame" title="Gebäudeplan"></iframe>';
+  document.body.appendChild(overlay);
+
+  // NOT `frame`: the countdown further down declares a `var frame` timer
+  // handle, and var-hoisting lets that one clobber this reference.
+  var planFrame = overlay.querySelector(".tplan__frame");
+  var loaded = false;
+
+  function openPlan() {
+    // Loaded on first use, so a visitor who never opens the plan never pays
+    // for it.
+    if (!loaded) {
+      planFrame.src = "../plan.html";
+      loaded = true;
+    }
+    overlay.hidden = false;
+    // The class drives the transition, so it has to land on a frame after the
+    // element stops being hidden.
+    window.requestAnimationFrame(function () {
+      overlay.classList.add("is-open");
+    });
+  }
+
+  function closePlan() {
+    overlay.classList.remove("is-open");
+    // Matches the transition in tour-skin.css. A timer rather than
+    // `transitionend`, which never fires while the tab is in the background.
+    window.setTimeout(function () {
+      if (!overlay.classList.contains("is-open")) overlay.hidden = true;
+    }, 240);
+  }
+
+  nav.querySelector("[data-plan-open]").addEventListener("click", openPlan);
+
+  // The plan asks to be dismissed from inside the frame - its close button,
+  // Escape, or a click on the backdrop around the panel.
+  window.addEventListener("message", function (event) {
+    if (event.origin !== window.location.origin) return;
+    if (event.data === "gplan:close") closePlan();
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !overlay.hidden) closePlan();
+  });
 
   // ---------------------------------------------------------------------------
   //  Autodreh-Countdown

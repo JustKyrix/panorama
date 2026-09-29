@@ -265,6 +265,12 @@ body.fullscreen-enabled #autorotateToggle {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  /* .tnav__home is a <button> now, so the UA's own chrome has to go. */
+  margin: 0;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
   height: 38px;
   padding: 0 0.85rem;
   font-size: 0.78rem;
@@ -294,6 +300,47 @@ a.tnav__item:hover {
   height: 20px;
   margin-inline: 0.15rem;
   background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* -----------------------------------------------------------------------------
+ *  Gebäudeplan über dem Panorama
+ *  assets/plan.html in a frame, so the panel here is the same one the homepage
+ *  shows rather than a second copy of it.
+ * -------------------------------------------------------------------------- */
+
+.tplan {
+  position: fixed;
+  inset: 0;
+  /* Above everything the generated style.css puts on screen - its
+     info-hotspot modal claims 11000, and the plan has to cover that. */
+  z-index: 12000;
+  background-color: rgba(8, 11, 18, 0.62);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 220ms var(--ui-ease);
+}
+
+.tplan[hidden] { display: none; }
+
+.tplan.is-open { opacity: 1; }
+
+.tplan__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  /* Transparent so the panorama stays visible around the panel - the page
+     inside sets no background of its own. */
+  background: transparent;
+  transform: scale(0.97);
+  transition: transform 260ms var(--ui-ease);
+}
+
+.tplan.is-open .tplan__frame { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tplan,
+  .tplan__frame { transition: none; }
 }
 
 /* The tour you are already in: filled, and not a link. */
