@@ -235,8 +235,12 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 .gplan__floors {
   position: absolute;
   inset: 0;
-  // Listed top-to-bottom in the DOM, so the ground floor paints last and sits
-  // in front - which is what the viewing angle calls for.
+  // The floors are listed bottom-to-top in the DOM - EG, 1. OG, 2. OG - so
+  // they paint in the same order as ADBK_plan.svg draws them and the upper
+  // floors sit in front, which is what the viewing angle calls for. Every
+  // floor is positioned absolutely, so this order decides z-order only; the
+  // layout comes from the `translate` offsets below, keyed on
+  // data-floor-index. Reversing it makes the closed stack come apart.
 }
 
 .gplan__floor {
