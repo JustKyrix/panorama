@@ -388,7 +388,9 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
     fill: none;
     stroke: v.$schulfarbe;
     stroke-width: 2;
-    transform-origin: 375px 82px;
+    // Each badge supplies its own centre via --px/--py: the halo scales from
+    // the circle it belongs to, not from a position baked into the stylesheet.
+    transform-origin: var(--px) var(--py);
     animation: gplan-tour-pulse 2.4s ease-out infinite;
     pointer-events: none;
   }

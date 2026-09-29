@@ -387,6 +387,25 @@
   }
 
   // Display the initial scene.
-  switchScene(scenes[0]);
+  // Open on the scene named in the URL hash, so one tour can be entered at
+  // different rooms: index.html#5-r0010035. Falls back to the first scene.
+  // Re-apply this if the tour is regenerated.
+  var requested = decodeURIComponent(String(window.location.hash).replace(/^#/, ''));
+  var startScene = scenes[0];
+  if (requested) {
+    for (var s = 0; s < scenes.length; s++) {
+      if (scenes[s].data.id === requested) { startScene = scenes[s]; break; }
+    }
+  }
+  switchScene(startScene);
+
+  // Changing only the hash does not reload the page, so the block above would
+  // never re-run and the tour would stay on the old room. Each badge opens a
+  // fresh tab today, but this keeps a hand-edited or shared link honest.
+  window.addEventListener('hashchange', function() {
+    var id = decodeURIComponent(String(window.location.hash).replace(/^#/, ''));
+    var target = findSceneById(id);
+    if (target) switchScene(target);
+  });
 
 })();

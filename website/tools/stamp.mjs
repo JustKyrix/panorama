@@ -80,7 +80,9 @@ const stampPage = (page, assets, dir = ".") => {
 // --- 1. the tour page, so its own stylesheet is versioned -------------------
 const tourDir = join("assets", "tour");
 const tourPage = join(tourDir, "index.html");
-const tour = stampPage(tourPage, ["tour-skin.css"], tourDir);
+// index.js is stamped too: it carries the scene-from-hash patch, so a
+// cached copy would silently ignore the #scene in a link.
+const tour = stampPage(tourPage, ["tour-skin.css", "index.js"], tourDir);
 
 // --- 2. the site page ------------------------------------------------------
 // The iframe URL is stamped from the tour page's hash, computed after the step
@@ -92,16 +94,22 @@ const site = stampPage("index.html", [
 
 let html = readFileSync("index.html", "utf8");
 const tourHash = hashOf(tourPage);
-const iframePattern = /(["'])assets\/tour\/index\.html(\?v=[a-f0-9]+)?\1/g;
 
-if (!iframePattern.test(html)) {
+// Links into the tour may carry a #scene fragment, which picks the room the
+// tour opens at. The version has to sit before it - a query string after a
+// fragment is part of the fragment, not a parameter, so the stamp would be
+// silently ignored and the cached page would win.
+const tourLink = /(["'])assets\/tour\/index\.html(?:\?v=[a-f0-9]+)?(#[^"']*)?\1/g;
+
+if (!tourLink.test(html)) {
   console.error("✗ no reference to assets/tour/index.html found in index.html");
   process.exit(1);
 }
 
 const withIframe = html.replace(
-  iframePattern,
-  `$1assets/tour/index.html?v=${tourHash}$1`
+  tourLink,
+  (_m, quote, fragment = "") =>
+    `${quote}assets/tour/index.html?v=${tourHash}${fragment}${quote}`
 );
 
 if (withIframe !== html) writeFileSync("index.html", withIframe);

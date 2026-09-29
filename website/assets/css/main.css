@@ -15004,7 +15004,7 @@ p {
   fill: none;
   stroke: #3357a1;
   stroke-width: 2;
-  transform-origin: 375px 82px;
+  transform-origin: var(--px) var(--py);
   animation: gplan-tour-pulse 2.4s ease-out infinite;
   pointer-events: none;
 }
