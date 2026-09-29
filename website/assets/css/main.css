@@ -15041,14 +15041,6 @@ p {
   }
 }
 
-.gplan__placeholder {
-  margin: 0;
-  padding: 0.35rem 0.25rem;
-  font-size: 0.76rem;
-  line-height: 1.5;
-  color: #98a1ae;
-}
-
 .gplan__cat {
   border-block-end: 1px solid #f0f2f5;
 }
