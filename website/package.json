@@ -12,7 +12,8 @@
     "serve": "npx --yes http-server . -p 4173 -c-1",
     "package": "npm run build && npm run stamp && node tools/package.mjs",
     "package:tour": "node tools/package.mjs tour",
-    "stamp": "node tools/stamp.mjs"
+    "stamp": "node tools/stamp.mjs",
+    "package:tour1og": "node tools/package.mjs tour-1og"
   },
   "browserslist": [
     "> 0.5%",

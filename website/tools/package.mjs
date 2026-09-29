@@ -2,13 +2,15 @@
  *  tools/package.mjs
  *  Builds the deployment archives for Plesk.
  *
- *    node tools/package.mjs         -> adbk-site.zip  (the site, ~2 MB)
- *    node tools/package.mjs tour    -> adbk-tour.zip  (the 360 tour, ~44 MB)
+ *    node tools/package.mjs           -> adbk-site.zip     (the site, ~2 MB)
+ *    node tools/package.mjs tour      -> adbk-tour.zip     (EG tour)
+ *    node tools/package.mjs tour-1og  -> adbk-tour-1og.zip (1. OG tour)
  *
- *  The tour is packaged separately on purpose. It is ~2000 tile files that
- *  practically never change, so folding it into the routine archive would mean
- *  re-uploading 44 MB for every CSS tweak. Upload the tour once; after that
- *  only the small site archive needs to travel.
+ *  Each tour is packaged separately on purpose. They are thousands of tile
+ *  files that practically never change, and together well over 100 MB, so
+ *  folding them into the routine archive would mean re-uploading all of it for
+ *  every CSS tweak. Upload a tour once; after that only the small site archive
+ *  needs to travel.
  *
  *  Why this is a script and not a one-line npm command:
  *
@@ -28,19 +30,39 @@ import { spawnSync } from "node:child_process";
 import { openSync, readSync, closeSync, statSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
-const TOUR_DIR = "assets/tour";
+// One self-contained Marzipano tour per floor. They are packaged separately
+// from the site and from each other: together they are well over 100 MB and
+// practically never change, so folding them into the routine archive would
+// mean re-uploading all of it for every CSS tweak.
+const TOUR_DIRS = ["assets/tour", "assets/tour-1og"];
 
-const mode = process.argv[2] === "tour" ? "tour" : "site";
+// No argument means the site archive; otherwise the argument names a tour by
+// its folder's last segment ("tour", "tour-1og").
+const arg = process.argv[2];
+const tourDir = arg
+  ? TOUR_DIRS.find((d) => d.split("/").pop() === arg)
+  : undefined;
 
-const target =
-  mode === "tour"
-    ? { out: "adbk-tour.zip", args: [TOUR_DIR], label: "360° tour" }
-    : {
-        out: "adbk-site.zip",
-        // The tour is excluded here and shipped by `package:tour` instead.
-        args: ["--exclude", TOUR_DIR, "index.html", "assets"],
-        label: "site",
-      };
+if (arg && !tourDir) {
+  console.error(
+    `✗ unknown target "${arg}" - expected one of: ` +
+      TOUR_DIRS.map((d) => d.split("/").pop()).join(", ")
+  );
+  process.exit(1);
+}
+
+const target = tourDir
+  ? {
+      out: `adbk-${tourDir.split("/").pop()}.zip`,
+      args: [tourDir],
+      label: `360° tour (${tourDir.split("/").pop()})`,
+    }
+  : {
+      out: "adbk-site.zip",
+      // Both tours are excluded here; they ship via `package:tour*`.
+      args: [...TOUR_DIRS.flatMap((d) => ["--exclude", d]), "index.html", "assets"],
+      label: "site",
+    };
 
 // --- pick an archiver that can actually write zip ---------------------------
 const tarBin =
@@ -53,8 +75,8 @@ if (process.platform === "win32" && !existsSync(tarBin)) {
   process.exit(1);
 }
 
-if (mode === "tour" && !existsSync(TOUR_DIR)) {
-  console.error(`✗ ${TOUR_DIR} does not exist`);
+if (tourDir && !existsSync(tourDir)) {
+  console.error(`✗ ${tourDir} does not exist`);
   process.exit(1);
 }
 

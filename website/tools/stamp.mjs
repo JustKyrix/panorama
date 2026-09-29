@@ -77,12 +77,12 @@ const stampPage = (page, assets, dir = ".") => {
   return { changed: html !== before, done };
 };
 
-// --- 1. the tour page, so its own stylesheet is versioned -------------------
-const tourDir = join("assets", "tour");
-const tourPage = join(tourDir, "index.html");
-// index.js is stamped too: it carries the scene-from-hash patch, so a
-// cached copy would silently ignore the #scene in a link.
-const tour = stampPage(tourPage, ["tour-skin.css", "index.js"], tourDir);
+// --- 1. the tour pages, so their own stylesheet is versioned ----------------
+// Each floor has its own self-contained tour, so each gets stamped.
+const TOURS = [join("assets", "tour"), join("assets", "tour-1og")];
+const tours = TOURS.map((dir) =>
+  stampPage(join(dir, "index.html"), ["tour-skin.css"], dir)
+);
 
 // --- 2. the site page ------------------------------------------------------
 // The iframe URL is stamped from the tour page's hash, computed after the step
@@ -93,35 +93,36 @@ const site = stampPage("index.html", [
 ]);
 
 let html = readFileSync("index.html", "utf8");
-const tourHash = hashOf(tourPage);
+const before = html;
+const tourStamps = [];
 
-// Links into the tour may carry a #scene fragment, which picks the room the
-// tour opens at. The version has to sit before it - a query string after a
-// fragment is part of the fragment, not a parameter, so the stamp would be
-// silently ignored and the cached page would win.
-const tourLink = /(["'])assets\/tour\/index\.html(?:\?v=[a-f0-9]+)?(#[^"']*)?\1/g;
+for (const dir of TOURS) {
+  const hash = hashOf(join(dir, "index.html"));
+  // `join` uses backslashes on Windows; the markup always uses forward ones.
+  const parts = dir.split(/[\\/]/);
+  const href = parts.join("/") + "/index.html";
 
-if (!tourLink.test(html)) {
-  console.error("✗ no reference to assets/tour/index.html found in index.html");
-  process.exit(1);
+  const pattern = new RegExp(
+    "([\"'])" + escapeRe(href) + "(?:\\?v=[a-f0-9]+)?\\1",
+    "g"
+  );
+
+  if (!pattern.test(html)) {
+    console.error(`✗ no reference to ${href} found in index.html`);
+    process.exit(1);
+  }
+
+  html = html.replace(pattern, `$1${href}?v=${hash}$1`);
+  tourStamps.push(`${parts.at(-1)}?v=${hash}`);
 }
 
-const withIframe = html.replace(
-  tourLink,
-  (_m, quote, fragment = "") =>
-    `${quote}assets/tour/index.html?v=${tourHash}${fragment}${quote}`
-);
-
-if (withIframe !== html) writeFileSync("index.html", withIframe);
+if (html !== before) writeFileSync("index.html", html);
+const withIframe = html;
 
 // --- report -----------------------------------------------------------------
-const parts = [
-  ...site.done,
-  ...tour.done,
-  `tour/index.html?v=${tourHash}`,
-];
+const parts = [...site.done, ...tours.flatMap((t) => t.done), ...tourStamps];
 
-const touched = site.changed || tour.changed || withIframe !== html;
+const touched = site.changed || tours.some((t) => t.changed) || withIframe !== before;
 console.log(
   `${touched ? "✓ stamped" : "· already current"} — ${parts.join(", ")}`
 );
