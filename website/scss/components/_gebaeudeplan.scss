@@ -622,6 +622,11 @@ body.gplan-standalone {
 .gplan__intro {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  // Centred in the reserved height, so that dropping a card - which the plan
+  // does when it is opened from inside that very tour - still looks composed
+  // instead of leaving a hole at the bottom.
+  min-block-size: 100%;
   gap: 0.4rem;
 
   // Gone the moment a floor is chosen - then this space belongs to its areas.

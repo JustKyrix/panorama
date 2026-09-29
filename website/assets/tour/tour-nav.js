@@ -68,6 +68,20 @@
 
   document.body.appendChild(nav);
 
+  // A plain way out to the homepage, top left, icon only - the Gebäudeplan
+  // below is for moving around the building, this is for leaving it.
+  var home = document.createElement("a");
+  home.className = "thome";
+  home.href = "../../index.html";
+  home.title = "Zur Startseite";
+  home.setAttribute("aria-label", "Zur Startseite");
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" ' +
+    'aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>' +
+    "</svg>";
+  document.body.appendChild(home);
+
   // ---------------------------------------------------------------------------
   //  Gebäudeplan als Overlay
   //
@@ -92,7 +106,13 @@
     // Loaded on first use, so a visitor who never opens the plan never pays
     // for it.
     if (!loaded) {
-      planFrame.src = "../plan.html?v=73f13848";
+      // `here` tells the plan which tour this is, so it can leave that one
+      // out - from inside a panorama the plan should only offer somewhere
+      // else to go. Built up rather than written into the string, because the
+      // literal below is what stamp.mjs rewrites with the plan's version.
+      var src = "../plan.html?v=85253559";
+      planFrame.src = src + (src.indexOf("?") === -1 ? "?" : "&") +
+        "here=" + encodeURIComponent(current || "");
       loaded = true;
     }
     overlay.hidden = false;

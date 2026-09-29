@@ -68,6 +68,24 @@
   const standalone = document.body.classList.contains("gplan-standalone");
   const embedded = standalone && window.parent !== window;
 
+  // Opened from inside a 360° tour, which names itself in ?here=<folder>.
+  // That tour is where the visitor already stands, so the plan drops it: what
+  // is left is only what they can still go and see.
+  const here = standalone
+    ? new URLSearchParams(window.location.search).get("here")
+    : null;
+
+  if (here) {
+    // Both the marker in the plan and the card in the resting state, matched
+    // on the folder so "tour" cannot also catch "tour-1og".
+    root
+      .querySelectorAll(`[data-tour*="/${here}/"], .gplan__tour-card[href*="/${here}/"]`)
+      .forEach((el) => el.remove());
+
+    // The tally would otherwise still promise a tour that is no longer shown.
+    root.querySelector(".gplan__intro-stats")?.remove();
+  }
+
   const openTour = (src) => {
     if (!src) return;
 

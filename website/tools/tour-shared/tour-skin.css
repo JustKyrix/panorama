@@ -260,6 +260,41 @@ body.fullscreen-enabled #autorotateToggle {
   backdrop-filter: var(--ui-blur);
 }
 
+/* Zurück zur Startseite - oben links, nur das Zeichen. */
+.thome {
+  position: absolute;
+  top: var(--edge);
+  left: var(--edge);
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  width: var(--btn);
+  height: var(--btn);
+  color: rgba(255, 255, 255, 0.82);
+  background-color: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 50%;
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: var(--ui-blur);
+  backdrop-filter: var(--ui-blur);
+  transition: background-color 200ms var(--ui-ease),
+              color 200ms var(--ui-ease),
+              transform 260ms var(--ui-ease);
+}
+
+.thome:hover {
+  color: #fff;
+  background-color: var(--ui-bg-hover);
+  transform: translateY(-2px);
+}
+
+.thome:active { transform: translateY(0) scale(0.94); }
+
+.thome svg {
+  width: 20px;
+  height: 20px;
+}
+
 .tnav__home,
 .tnav__item {
   display: flex;
