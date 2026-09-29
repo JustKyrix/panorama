@@ -41,6 +41,61 @@ $ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
 // -----------------------------------------------------------------------------
+//  KLICK MICH
+//  A curtain that lowers itself over the whole page and opens the Gebäudeplan
+//  when clicked. It starts entirely above the viewport, so until it has come
+//  down far enough the page underneath stays usable - a transformed box takes
+//  its clicks with it.
+// -----------------------------------------------------------------------------
+
+.klickmich {
+  position: fixed;
+  inset: 0;
+  // Over everything, the plan's own panel (1080) included.
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  color: #fff;
+  background-color: v.$druck-medien;
+  border: 0;
+  cursor: pointer;
+  animation: klickmich-drop 14s $ease-soft both;
+
+  &.is-gone {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 380ms $ease-soft;
+  }
+}
+
+.klickmich__text {
+  font-size: clamp(3rem, 17vw, 15rem);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 0.06em 0.3em rgba(0, 0, 0, 0.25);
+}
+
+@keyframes klickmich-drop {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+// Sliding a full screen of colour down for fourteen seconds is exactly what
+// this setting is meant to spare people, so it just fades in instead.
+@media (prefers-reduced-motion: reduce) {
+  .klickmich { animation: klickmich-fade 600ms ease both; }
+}
+
+@keyframes klickmich-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// -----------------------------------------------------------------------------
 //  Eigenständige Plan-Seite (assets/plan.html)
 //  Loaded in an overlay by the 360° tours, so pressing "Gebäudeplan" in a
 //  panorama opens the same panel as on the homepage. There is no button to

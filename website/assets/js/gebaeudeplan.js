@@ -299,11 +299,32 @@
   // keyboard is covered by the same handler.
   fab.addEventListener("click", () => (isOpen() ? close() : open()));
 
+  // --- KLICK MICH -----------------------------------------------------------
+  // The curtain coming down over the page: clicking it anywhere opens the
+  // plan, then it fades out and is gone for the rest of the visit.
+  const curtain = document.querySelector("[data-gplan-klickmich]");
+
+  const dropCurtain = () => {
+    if (!curtain) return;
+    curtain.classList.add("is-gone");
+    // Matches the fade in the stylesheet; a timer rather than
+    // `transitionend`, which never fires while the tab is in the background.
+    window.setTimeout(() => curtain.remove(), 400);
+  };
+
+  curtain?.addEventListener("click", () => {
+    dropCurtain();
+    open();
+  });
+
   // Coming back from a 360° tour, whose "Gebäudeplan" link points at
   // #gebaeudeplan: open the panel straight away so the way back lands on the
   // plan rather than on the top of the page. The hash is then dropped, so a
   // later reload starts from the normal closed state.
   if (window.location.hash === "#gebaeudeplan") {
+    // ...and the curtain goes at once, otherwise it would come down over the
+    // very plan the visitor just asked for.
+    curtain?.remove();
     open();
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }
