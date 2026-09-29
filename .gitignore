@@ -25,3 +25,7 @@ adbk-tour-update.zip
 # voller Groesse dauerhaft in der History. Was auf die Seite soll, wird
 # vorher fuer das Web optimiert und gezielt unter assets/images/ abgelegt.
 bilder/
+
+# Quellarchive der Marzipano-Touren (zig MB, werden entpackt nach
+# website/assets/tour/ - das Archiv selbst gehoert nicht ins Repo).
+project-title*.zip
