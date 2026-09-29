@@ -300,31 +300,115 @@
   fab.addEventListener("click", () => (isOpen() ? close() : open()));
 
   // --- KLICK MICH -----------------------------------------------------------
-  // The curtain coming down over the page: clicking it anywhere opens the
-  // plan, then it fades out and is gone for the rest of the visit.
+  //
+  //  0s   the curtain starts down, the scrape plays
+  //  14s  it is fully down
+  //  19s  flashing, shifting colours, and Caramelldansen
+  //
+  //  Clicking the curtain opens the plan; the button on it calls the whole
+  //  thing off. Either way everything stops together - there is one function
+  //  that tears it all down, so nothing can be left playing behind a closed
+  //  curtain.
   const curtain = document.querySelector("[data-gplan-klickmich]");
+  const stopBtn = document.querySelector("[data-gplan-stop]");
+  const scrape = document.querySelector("[data-gplan-scrape]");
+  const party = document.querySelector("[data-gplan-party]");
 
-  const dropCurtain = () => {
-    if (!curtain) return;
-    curtain.classList.add("is-gone");
-    // Matches the fade in the stylesheet; a timer rather than
-    // `transitionend`, which never fires while the tab is in the background.
-    window.setTimeout(() => curtain.remove(), 400);
+  const DROP_MS = 14000;  // matches the animation in the stylesheet
+  const WAIT_MS = 5000;   // the pause once it is fully down
+
+  let partyTimer = 0;
+  let colourTimer = 0;
+
+  // Browsers refuse audio until the visitor has interacted with the page, and
+  // the curtain starts on its own. So: try, and if the promise is rejected,
+  // hang the attempt on the first gesture that comes along.
+  const play = (el) => {
+    if (!el) return;
+    const attempt = el.play();
+    if (!attempt?.catch) return;
+
+    attempt.catch(() => {
+      const retry = () => {
+        el.play().catch(() => {});
+        document.removeEventListener("pointerdown", retry);
+        document.removeEventListener("keydown", retry);
+      };
+      document.addEventListener("pointerdown", retry, { once: true });
+      document.addEventListener("keydown", retry, { once: true });
+    });
   };
 
-  curtain?.addEventListener("click", () => {
-    dropCurtain();
-    open();
-  });
+  const stopEverything = () => {
+    window.clearTimeout(partyTimer);
+    window.clearInterval(colourTimer);
+
+    [scrape, party].forEach((el) => {
+      if (!el) return;
+      el.pause();
+      el.currentTime = 0;
+    });
+
+    curtain?.classList.remove("is-party");
+
+    if (curtain) {
+      curtain.classList.add("is-gone");
+      // Matches the fade in the stylesheet; a timer rather than
+      // `transitionend`, which never fires while the tab is in the background.
+      window.setTimeout(() => curtain.remove(), 400);
+    }
+  };
+
+  if (curtain) {
+    play(scrape);
+
+    const quiet = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    partyTimer = window.setTimeout(() => {
+      if (!document.body.contains(curtain)) return;
+
+      curtain.classList.add("is-party");
+      play(party);
+
+      // Same slow beat as the brightness pulse, and left out entirely for
+      // anyone who asked for less motion.
+      if (!quiet) {
+        colourTimer = window.setInterval(() => {
+          curtain.style.setProperty(
+            "--party",
+            `hsl(${Math.floor(Math.random() * 360)} 85% 45%)`
+          );
+        }, 400);
+      }
+    }, DROP_MS + WAIT_MS);
+
+    curtain.addEventListener("click", () => {
+      stopEverything();
+      open();
+    });
+
+    // Stops the party without opening anything - and must not let the click
+    // reach the curtain underneath it.
+    const stop = (event) => {
+      event.stopPropagation();
+      stopEverything();
+    };
+
+    stopBtn?.addEventListener("click", stop);
+    stopBtn?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") stop(event);
+    });
+  }
 
   // Coming back from a 360° tour, whose "Gebäudeplan" link points at
   // #gebaeudeplan: open the panel straight away so the way back lands on the
   // plan rather than on the top of the page. The hash is then dropped, so a
   // later reload starts from the normal closed state.
   if (window.location.hash === "#gebaeudeplan") {
-    // ...and the curtain goes at once, otherwise it would come down over the
-    // very plan the visitor just asked for.
-    curtain?.remove();
+    // ...and the whole performance is called off, otherwise the curtain would
+    // come down over the very plan the visitor just asked for - and the
+    // scrape, already started above, would keep playing behind it.
+    stopEverything();
     open();
     history.replaceState(null, "", window.location.pathname + window.location.search);
   }

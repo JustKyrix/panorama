@@ -6,7 +6,7 @@
   <title>ADBK</title>
   <meta name="description" content="Albrecht-Dürer-Berufskolleg, Städtische Schule der Sekundarstufe II, Düsseldorf.">
   <link rel="icon" href="assets/images/adbk-logo.png" type="image/png">
-  <link rel="stylesheet" href="assets/css/main.css?v=08ea84e4">
+  <link rel="stylesheet" href="assets/css/main.css?v=8e9f2e17">
 </head>
 
 <body>
@@ -384,7 +384,18 @@
   <button class="klickmich" type="button" data-gplan-klickmich
           aria-label="Gebäudeplan öffnen">
     <span class="klickmich__text">KLICK MICH</span>
+
+    <!-- Hält alles auf einen Schlag an: beide Titel, das Blinken, den
+         Vorhang. Muss die Klicks aufhalten, sonst öffnet derselbe Klick
+         auch noch den Gebäudeplan. -->
+    <span class="klickmich__stop" role="button" tabindex="0"
+          data-gplan-stop>Alles stoppen</span>
   </button>
+
+  <audio data-gplan-scrape preload="auto"
+         src="assets/audio/curtain-scrape.mp3"></audio>
+  <audio data-gplan-party preload="none" loop
+         src="assets/audio/caramelldansen.mp3"></audio>
 
   <div class="gplan" data-gplan>
 
@@ -443,7 +454,7 @@
                   <polygon fill="#83a329" points="319.99 137.82 319.99 153.98 375.1 198.59 381.09 189.44 319.99 137.82"/>
                   <polygon fill="#83a329" points="358.93 223.43 359.9 251.23 387.02 254.34 386.04 226.54 358.93 223.43"/>
                   <polygon fill="#83a329" points="410.48 185.67 410.48 211.64 387.02 254.34 386.04 226.54 410.48 185.67"/>
-                  <g class="gplan-plate__tour" data-tour="assets/tour/index.html?v=3351dc7f"
+                  <g class="gplan-plate__tour" data-tour="assets/tour/index.html?v=443149b9"
                      style="--px:369.9px; --py:193px">
                     <ellipse class="gplan-plate__tour-pulse" cx="369.9" cy="193" rx="9.36" ry="3.536"/>
                     <path class="gplan-plate__tour-pin" d="M369.9 193 C364.7 184.45 359.5 181.49 359.5 174 A10.4 10.4 0 0 1 380.3 174 C380.3 181.49 375.1 184.45 369.9 193 Z"/>
@@ -502,7 +513,7 @@
                 <g class="gplan-plate__lift">
                   <polygon fill="#00a09a" points="59.5 95.66 44.95 78.5 11.76 78.5 60.3 144.39 96.4 139.58 59.5 95.66"/>
                   <polygon fill="#008780" points="60.3 144.39 11.76 78.5 11.76 106.82 60.3 172.4 96.4 167.56 96.4 139.58 60.3 144.39"/>
-                  <g class="gplan-plate__tour" data-tour="assets/tour-1og/index.html?v=beb70973"
+                  <g class="gplan-plate__tour" data-tour="assets/tour-1og/index.html?v=7c13c254"
                      style="--px:56.7px; --py:136.2px">
                     <ellipse class="gplan-plate__tour-pulse" cx="56.7" cy="136.2" rx="9.36" ry="3.536"/>
                     <path class="gplan-plate__tour-pin" d="M56.7 136.2 C51.5 127.65 46.3 124.69 46.3 117.2 A10.4 10.4 0 0 1 67.1 117.2 C67.1 124.69 61.9 127.65 56.7 136.2 Z"/>
@@ -561,7 +572,7 @@
             Etage wählen — oder direkt in einen 360°-Rundgang starten.
           </p>
 
-          <a class="gplan__tour-card" href="assets/tour/index.html?v=3351dc7f"
+          <a class="gplan__tour-card" href="assets/tour/index.html?v=443149b9"
              target="_blank" rel="noopener">
             <span class="gplan__tour-card-pin" aria-hidden="true">360°</span>
             <span class="gplan__tour-card-text">
@@ -575,7 +586,7 @@
             </svg>
           </a>
 
-          <a class="gplan__tour-card" href="assets/tour-1og/index.html?v=beb70973"
+          <a class="gplan__tour-card" href="assets/tour-1og/index.html?v=7c13c254"
              target="_blank" rel="noopener">
             <span class="gplan__tour-card-pin" aria-hidden="true">360°</span>
             <span class="gplan__tour-card-text">
@@ -684,6 +695,6 @@
 
 
   <script src="assets/js/vendor/bootstrap.bundle.min.js" defer></script>
-  <script src="assets/js/gebaeudeplan.js?v=d56bcbfc" defer></script>
+  <script src="assets/js/gebaeudeplan.js?v=d6f743d6" defer></script>
 </body>
 </html>
