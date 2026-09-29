@@ -1,0 +1,70 @@
+# =============================================================================
+#  Veroeffentlicht die Seite auf GitHub Pages - bei jedem Push auf main.
+#
+#  Der Seiteninhalt liegt in website/, nicht im Repo-Wurzelverzeichnis, deshalb
+#  laeuft das ueber Actions und nicht ueber "deploy from a branch": so muss
+#  weder ein gh-pages-Branch gepflegt noch der Build verschoben werden.
+#
+#  configure-pages mit enablement: true schaltet Pages beim ersten Lauf selbst
+#  ein, damit das nicht von Hand in den Repo-Einstellungen passieren muss.
+#
+#  Das CSS wird hier neu gebaut, statt dem eingecheckten Stand zu vertrauen -
+#  so kann die veroeffentlichte Seite nicht von den Quellen abweichen, falls
+#  ein Build mal vergessen wurde.
+# =============================================================================
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Nur lesen fuer den Code, schreiben ausschliesslich fuer Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Laufende Deployments nicht abbrechen, aber auch nicht doppelt starten.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Abhaengigkeiten installieren
+        working-directory: website
+        run: npm ci
+
+      - name: CSS bauen
+        working-directory: website
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: website
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -6,7 +6,7 @@
   <title>ADBK</title>
   <meta name="description" content="Albrecht-Dürer-Berufskolleg, Städtische Schule der Sekundarstufe II, Düsseldorf.">
   <link rel="icon" href="assets/images/adbk-logo.png" type="image/png">
-  <link rel="stylesheet" href="assets/css/main.css?v=642c68ba">
+  <link rel="stylesheet" href="assets/css/main.css?v=2a338dd2">
 </head>
 
 <body>
@@ -436,9 +436,9 @@
                   <polygon fill="#83a329" points="410.48 185.67 410.48 211.64 387.02 254.34 386.04 226.54 410.48 185.67"/>
                   <g class="gplan-plate__tour" data-tour="assets/tour/index.html?v=fbc0c69e"
                      style="--px:369.9px; --py:193px">
-                    <circle class="gplan-plate__tour-pulse" cx="369.9" cy="193" r="15"/>
-                    <circle class="gplan-plate__tour-dot" cx="369.9" cy="193" r="15"/>
-                    <text class="gplan-plate__tour-label" x="369.9" y="196.4">360°</text>
+                    <ellipse class="gplan-plate__tour-pulse" cx="369.9" cy="193" rx="9.36" ry="3.536"/>
+                    <path class="gplan-plate__tour-pin" d="M369.9 193 C364.7 184.45 359.5 181.49 359.5 174 A10.4 10.4 0 0 1 380.3 174 C380.3 181.49 375.1 184.45 369.9 193 Z"/>
+                    <text class="gplan-plate__tour-label" x="369.9" y="176.6">360°</text>
                   </g>
                 </g>
               </g>
@@ -495,9 +495,9 @@
                   <polygon fill="#008780" points="60.3 144.39 11.76 78.5 11.76 106.82 60.3 172.4 96.4 167.56 96.4 139.58 60.3 144.39"/>
                   <g class="gplan-plate__tour" data-tour="assets/tour-1og/index.html?v=17bca2df"
                      style="--px:56.7px; --py:136.2px">
-                    <circle class="gplan-plate__tour-pulse" cx="56.7" cy="136.2" r="15"/>
-                    <circle class="gplan-plate__tour-dot" cx="56.7" cy="136.2" r="15"/>
-                    <text class="gplan-plate__tour-label" x="56.7" y="139.6">360°</text>
+                    <ellipse class="gplan-plate__tour-pulse" cx="56.7" cy="136.2" rx="9.36" ry="3.536"/>
+                    <path class="gplan-plate__tour-pin" d="M56.7 136.2 C51.5 127.65 46.3 124.69 46.3 117.2 A10.4 10.4 0 0 1 67.1 117.2 C67.1 124.69 61.9 127.65 56.7 136.2 Z"/>
+                    <text class="gplan-plate__tour-label" x="56.7" y="119.8">360°</text>
                   </g>
                 </g>
               </g>
@@ -548,171 +548,124 @@
       <!-- Raumliste der aktiven Etage. Feste Höhe: siehe Kommentar im SCSS. -->
       <div class="gplan__rooms">
 
-        <p class="gplan__hint">
-          Etage anklicken, um sie zu öffnen.
-        </p>
+        <!-- Ruhezustand: statt einer leeren Fläche die beiden Rundgänge als
+             direkter Einstieg. Wird ausgeblendet, sobald eine Etage gewählt
+             ist - dann steht hier deren Bereichsliste. -->
+        <div class="gplan__intro">
+          <p class="gplan__hint">
+            Etage wählen — oder direkt in einen 360°-Rundgang starten.
+          </p>
+
+          <a class="gplan__tour-card" href="assets/tour/index.html?v=fbc0c69e"
+             target="_blank" rel="noopener">
+            <span class="gplan__tour-card-pin" aria-hidden="true">360°</span>
+            <span class="gplan__tour-card-text">
+              <b>Küche</b>
+              <span>Erdgeschoss · Gastgewerbe</span>
+            </span>
+            <svg class="gplan__tour-card-go" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <a class="gplan__tour-card" href="assets/tour-1og/index.html?v=17bca2df"
+             target="_blank" rel="noopener">
+            <span class="gplan__tour-card-pin" aria-hidden="true">360°</span>
+            <span class="gplan__tour-card-text">
+              <b>Zahntechnik</b>
+              <span>1. Obergeschoss · Gesundheitstechnik</span>
+            </span>
+            <svg class="gplan__tour-card-go" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor"
+                    stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <p class="gplan__intro-stats">
+            <span>3 Etagen</span><span>14 Bereiche</span><span>2 Rundgänge</span>
+          </p>
+        </div>
 
         <div class="gplan__room-group" data-gplan-rooms="0">
-          <details class="gplan__cat" data-gplan-cat="holz">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#861e18"></i>
-              <span class="gplan__cat-name">Bau- und Holztechnik</span>
-              <span class="gplan__cat-count">1</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Bau- und Holztechnik</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="gastro">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#a52422"></i>
-              <span class="gplan__cat-name">Gastgewerbe</span>
-              <span class="gplan__cat-count">3</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastgewerbe">Restaurant Hotelfachleute</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastgewerbe">Küchen</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastgewerbe">Präsentationsküche</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="gestaltung">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#f39300"></i>
-              <span class="gplan__cat-name">Gestaltungstechnik</span>
-              <span class="gplan__cat-count">3</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik">Steinmetz-Werkstatt</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik">Visuelles Marketing</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik">Raumausstatter-Werkstatt</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="aula">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#b2b2b2"></i>
-              <span class="gplan__cat-name">Aula</span>
-              <span class="gplan__cat-count">1</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="aula" data-fach="Aula">Aula</button></li>
-            </ul>
-          </details>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="holz" data-band="holz">
+            <i style="--swatch:#861e18"></i>
+            <span class="gplan__cat-name">Bau- und Holztechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gastro" data-band="gastro">
+            <i style="--swatch:#a52422"></i>
+            <span class="gplan__cat-name">Gastgewerbe</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gestaltung" data-band="gestaltung">
+            <i style="--swatch:#f39300"></i>
+            <span class="gplan__cat-name">Gestaltungstechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="aula" data-band="aula">
+            <i style="--swatch:#b2b2b2"></i>
+            <span class="gplan__cat-name">Aula</span>
+          </button>
         </div>
 
         <div class="gplan__room-group" data-gplan-rooms="1">
-          <details class="gplan__cat" data-gplan-cat="gastro">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#a52422"></i>
-              <span class="gplan__cat-name">Gastgewerbe</span>
-              <span class="gplan__cat-count">1</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gastro" data-fach="Gastgewerbe">Gastgewerbe</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="druck">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#e3007d"></i>
-              <span class="gplan__cat-name">Druck- und Medientechnik</span>
-              <span class="gplan__cat-count">2</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik">EDV Mediengestaltung</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik">Fotostudios</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="gestaltung">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#f39300"></i>
-              <span class="gplan__cat-name">Gestaltungstechnik</span>
-              <span class="gplan__cat-count">2</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik">Maler- und Lackierer-Werkstatt</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gestaltung" data-fach="Gestaltungstechnik">Airbrush</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="gesundheit">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#00a09a"></i>
-              <span class="gplan__cat-name">Gesundheitstechnik</span>
-              <span class="gplan__cat-count">2</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gesundheit" data-fach="Gesundheitstechnik">Zahntechniklabore</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="gesundheit" data-fach="Gesundheitstechnik">Augenoptikwerkstatt</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="verwaltung">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#2e2d7e"></i>
-              <span class="gplan__cat-name">Verwaltung</span>
-              <span class="gplan__cat-count">2</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="verwaltung" data-fach="Verwaltung">Sekretariat</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="verwaltung" data-fach="Verwaltung">Schulleitung</button></li>
-            </ul>
-          </details>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gastro" data-band="gastro">
+            <i style="--swatch:#a52422"></i>
+            <span class="gplan__cat-name">Gastgewerbe</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="druck" data-band="druck">
+            <i style="--swatch:#e3007d"></i>
+            <span class="gplan__cat-name">Druck- und Medientechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gestaltung" data-band="gestaltung">
+            <i style="--swatch:#f39300"></i>
+            <span class="gplan__cat-name">Gestaltungstechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="gesundheit" data-band="gesundheit">
+            <i style="--swatch:#00a09a"></i>
+            <span class="gplan__cat-name">Gesundheitstechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="verwaltung" data-band="verwaltung">
+            <i style="--swatch:#2e2d7e"></i>
+            <span class="gplan__cat-name">Verwaltung</span>
+          </button>
         </div>
 
         <div class="gplan__room-group" data-gplan-rooms="2">
-          <details class="gplan__cat" data-gplan-cat="sport">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#1a1a1a"></i>
-              <span class="gplan__cat-name">Sport</span>
-              <span class="gplan__cat-count">1</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="sport" data-fach="Sport">Sporthalle</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="beq">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#94c121"></i>
-              <span class="gplan__cat-name">Berufseinstiegsqualifizierung</span>
-              <span class="gplan__cat-count">1</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="beq" data-fach="Berufseinstiegsqualifizierung">BEQ</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="druck">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#e3007d"></i>
-              <span class="gplan__cat-name">Druck- und Medientechnik</span>
-              <span class="gplan__cat-count">2</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik">Buchbinderei</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="druck" data-fach="Druck- und Medientechnik">Druckerei</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="holz">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#a4897a"></i>
-              <span class="gplan__cat-name">Bau- und Holztechnik</span>
-              <span class="gplan__cat-count">4</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Glaserei</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Betonlabor</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Brennraum</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="holz" data-fach="Bau- und Holztechnik">Tischlerei</button></li>
-            </ul>
-          </details>
-          <details class="gplan__cat" data-gplan-cat="allgemein">
-            <summary class="gplan__cat-head">
-              <i style="--swatch:#616160"></i>
-              <span class="gplan__cat-name">Bistro und Foyer</span>
-              <span class="gplan__cat-count">3</span>
-            </summary>
-            <ul class="gplan__room-list">
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Bistro und Foyer">Selbstlernzentrum</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Bistro und Foyer">Foyer</button></li>
-              <li><button class="gplan__room" type="button" aria-pressed="false" data-gplan-room data-band="allgemein" data-fach="Bistro und Foyer">Bistro</button></li>
-            </ul>
-          </details>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="sport" data-band="sport">
+            <i style="--swatch:#1a1a1a"></i>
+            <span class="gplan__cat-name">Sport</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="beq" data-band="beq">
+            <i style="--swatch:#94c121"></i>
+            <span class="gplan__cat-name">Berufseinstiegsqualifizierung</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="druck" data-band="druck">
+            <i style="--swatch:#e3007d"></i>
+            <span class="gplan__cat-name">Druck- und Medientechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="holz" data-band="holz">
+            <i style="--swatch:#a4897a"></i>
+            <span class="gplan__cat-name">Bau- und Holztechnik</span>
+          </button>
+          <button class="gplan__cat" type="button" aria-pressed="false"
+                  data-gplan-cat="allgemein" data-band="allgemein">
+            <i style="--swatch:#616160"></i>
+            <span class="gplan__cat-name">Bistro und Foyer</span>
+          </button>
         </div>
 
       </div>
@@ -729,6 +682,6 @@
 
 
   <script src="assets/js/vendor/bootstrap.bundle.min.js" defer></script>
-  <script src="assets/js/gebaeudeplan.js?v=dc4000c9" defer></script>
+  <script src="assets/js/gebaeudeplan.js?v=7733d6e5" defer></script>
 </body>
 </html>

@@ -9,8 +9,9 @@
  *                        that floor moves to the centre and the other two are
  *                        taken away. Picking the same one again brings the
  *                        full stack back.
- *    click a room     -> its zone lights up in the plan, the rest recede
- *    click a zone     -> a zone with a 360° tour opens it in a new tab
+ *    pick an area     -> from the list or by clicking its block in the plan:
+ *                        either way that zone lights up and the rest recede
+ *    click a 360 pin  -> opens that tour in a new tab
  *
  *  Hover deliberately has no effect on layout: with the plates anchored to the
  *  selected floor, letting hover drive the fan meant the whole stack jumped to
@@ -34,15 +35,15 @@
   const floors = [...root.querySelectorAll("[data-gplan-floor]")];
   const picks = [...root.querySelectorAll("[data-gplan-pick]")];
   const groups = [...root.querySelectorAll("[data-gplan-rooms]")];
-  const rooms = [...root.querySelectorAll("[data-gplan-room]")];
+  const cats = [...root.querySelectorAll("[data-gplan-cat]")];
 
   if (!fab || !panel || !stage || !floors.length) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const FLOOR_NAMES = ["2. Obergeschoss", "1. Obergeschoss", "Erdgeschoss"];
-  const INFO_CLOSED = "Etage anklicken, um sie zu öffnen.";
-  const INFO_PICK = "Raum auswählen, um ihn im Plan zu markieren.";
+  const INFO_CLOSED = "Etage wählen oder einen Rundgang starten.";
+  const INFO_PICK = "Bereich auswählen, um ihn im Plan zu markieren.";
 
   let selected = null; // the one and only piece of state
 
@@ -77,45 +78,52 @@
     if (info) info.innerHTML = html;
   };
 
-  const clearRoom = () => {
-    rooms.forEach((room) => room.setAttribute("aria-pressed", "false"));
+  const clearArea = () => {
+    cats.forEach((cat) => cat.setAttribute("aria-pressed", "false"));
     root.querySelectorAll(".gplan-plate__band").forEach((band) => {
       band.classList.remove("is-highlight", "is-dim");
     });
   };
 
-  const selectRoom = (room) => {
-    const wasSelected = room.getAttribute("aria-pressed") === "true";
-    clearRoom();
+  // The row in the open floor's list that names a given band.
+  const catOf = (band) =>
+    groups
+      .find((g) => Number(g.dataset.gplanRooms) === selected)
+      ?.querySelector(`[data-gplan-cat="${band}"]`);
 
-    if (wasSelected) {
+  /**
+   * Select an area by its band name. The block in the plan and the row in the
+   * list are two faces of one thing, so both routes land here and the two can
+   * never end up showing different selections. Selecting the one already
+   * selected clears it.
+   */
+  const selectArea = (band) => {
+    const cat = catOf(band);
+    const wasSelected = cat?.getAttribute("aria-pressed") === "true";
+
+    clearArea();
+
+    if (wasSelected || !cat) {
       setInfo(INFO_PICK);
       return;
     }
 
-    room.setAttribute("aria-pressed", "true");
+    cat.setAttribute("aria-pressed", "true");
 
-    // Light up this room's zone on the open floor, let the others recede.
+    // Light up the matching zone on the open floor, let the others recede.
     const floor = floorByIndex(selected);
-    if (floor) {
-      floor.querySelectorAll(".gplan-plate__band").forEach((band) => {
-        const match = band.dataset.band === room.dataset.band;
-        band.classList.toggle("is-highlight", match);
-        band.classList.toggle("is-dim", !match);
-      });
-    }
+    floor?.querySelectorAll(".gplan-plate__band").forEach((zone) => {
+      const match = zone.dataset.band === band;
+      zone.classList.toggle("is-highlight", match);
+      zone.classList.toggle("is-dim", !match);
+    });
 
-    // The room's label is the button's own text, and the colour now lives on
-    // the category header it sits under.
-    const name = room.textContent.trim();
-    const swatch =
-      room
-        .closest("[data-gplan-cat]")
-        ?.querySelector("i")
-        ?.style.getPropertyValue("--swatch") ?? "";
+    const name = cat.querySelector(".gplan__cat-name")?.textContent.trim() ?? band;
+    const swatch = cat.querySelector("i")?.style.getPropertyValue("--swatch") ?? "";
+
     setInfo(
       `<i style="--swatch:${swatch}"></i>` +
-        `<span><b>${name}</b> · ${room.dataset.fach} · ${FLOOR_NAMES[selected]}</span>`
+        `<span><b>${name}</b> · ${FLOOR_NAMES[selected]}</span>`
     );
   };
 
@@ -155,13 +163,9 @@
       );
     });
 
-    // Changing floors starts the list from scratch, so a category left open
-    // on one floor does not carry over to the next.
-    root.querySelectorAll("[data-gplan-cat]").forEach((cat) => {
-      cat.open = false;
-    });
-
-    clearRoom();
+    // Changing floors starts the list from scratch, so an area picked on one
+    // floor does not stay highlighted on the next.
+    clearArea();
     setInfo(index === null ? INFO_CLOSED : INFO_PICK);
   };
 
@@ -179,54 +183,16 @@
     );
   });
 
-  rooms.forEach((room) => {
-    room.addEventListener("click", () => selectRoom(room));
+  cats.forEach((cat) => {
+    cat.addEventListener("click", () => selectArea(cat.dataset.band));
   });
-
-  // The category belonging to a band, within the open floor's list.
-  const categoryOf = (band) =>
-    groups
-      .find((g) => Number(g.dataset.gplanRooms) === selected)
-      ?.querySelector(`[data-gplan-cat="${band}"]`);
-
-  // Clicking a block in the plan picks that category: its zone lights up, the
-  // others recede, and its section opens in the list. The blocks are the
-  // bigger, more obvious target, so this is the main way in - the list is the
-  // way to drill down to a single room.
-  const selectZone = (zone) => {
-    const band = zone.dataset.band;
-    const floor = zone.closest("[data-gplan-floor]");
-
-    clearRoom();
-
-    floor.querySelectorAll(".gplan-plate__band").forEach((other) => {
-      const match = other.dataset.band === band;
-      other.classList.toggle("is-highlight", match);
-      other.classList.toggle("is-dim", !match);
-    });
-
-    const group = groups.find((g) => Number(g.dataset.gplanRooms) === selected);
-    group?.querySelectorAll("[data-gplan-cat]").forEach((cat) => {
-      cat.open = cat.dataset.gplanCat === band;
-    });
-
-    const cat = categoryOf(band);
-    const label = cat?.querySelector(".gplan__cat-name")?.textContent ?? band;
-    const swatch =
-      cat?.querySelector("i")?.style.getPropertyValue("--swatch") ?? "";
-
-    setInfo(
-      `<i style="--swatch:${swatch}"></i>` +
-        `<span><b>${label}</b> · ${FLOOR_NAMES[selected]}</span>`
-    );
-  };
 
   root.querySelectorAll(".gplan-plate__band").forEach((zone) => {
     zone.addEventListener("click", (event) => {
       const floor = zone.closest("[data-gplan-floor]");
       if (!floor || selected !== indexOfFloor(floor)) return;
       event.stopPropagation(); // do not collapse the floor we are standing on
-      selectZone(zone);
+      selectArea(zone.dataset.band);
     });
   });
 

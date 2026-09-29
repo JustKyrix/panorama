@@ -33,6 +33,7 @@
 
 @use "sass:map";
 @use "sass:math";
+@use "sass:color";
 @use "../abstracts/variables" as v;
 @use "../abstracts/mixins" as mx;
 
@@ -118,7 +119,7 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   order: 1;
   display: flex;
   flex-direction: column;
-  inline-size: min(25rem, calc(100vw - 2rem));
+  inline-size: min(30rem, calc(100vw - 2rem));
   max-block-size: calc(100dvh - 6rem);
   background-color: #fff;
   border-radius: 1.25rem;
@@ -211,8 +212,8 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // ADBK_plan.svg draws its own storeys about 50px apart at this size, so
   // anything above that reads as deliberately pulled apart rather than as
   // the building's own perspective.
-  --gap-rest: 64px;
-  --rail-w: 2.4rem;
+  --gap-rest: 40px;
+  --rail-w: 3.1rem;
 
   position: relative;
   flex: none;
@@ -230,8 +231,8 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @include mx.down("small") {
-    --gap-rest: 50px;
-    --rail-w: 2.4rem;
+    --gap-rest: 32px;
+    --rail-w: 2.8rem;
   }
 }
 
@@ -259,6 +260,8 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 //  top, ground floor at the bottom, so it lines up with the stack beside it.
 // -----------------------------------------------------------------------------
 
+// One floating card holding all three, the way a map's floor switcher looks,
+// rather than three loose buttons.
 .gplan__rail {
   position: absolute;
   inset-inline-start: 0;
@@ -267,30 +270,41 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.3rem;
+  align-self: center;
+  block-size: fit-content;
+  margin-block: auto;
   inline-size: var(--rail-w);
+  padding: 0.25rem;
+  background-color: #fff;
+  border: 1px solid #e6e9ef;
+  border-radius: 0.85rem;
+  box-shadow: 0 4px 14px -4px rgba(12, 23, 48, 0.22),
+              0 1px 3px rgba(12, 23, 48, 0.08);
 }
 
 .gplan__pick {
   display: grid;
   place-items: center;
-  block-size: 2rem;
+  block-size: 2.15rem;
   padding: 0;
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: #5c6675;
-  background-color: #fff;
-  border: 1px solid #e2e6ec;
-  border-radius: 0.55rem;
-  box-shadow: 0 1px 2px rgba(12, 23, 48, 0.06);
+  background: none;
+  border-radius: 0.6rem;
   cursor: pointer;
   transition: color 160ms $ease-soft, background-color 160ms $ease-soft,
-              border-color 160ms $ease-soft, scale 160ms $ease-soft;
+              scale 160ms $ease-soft;
+
+  // Hairline between the rows, never after the last one.
+  & + & {
+    box-shadow: 0 -1px 0 #eef0f4;
+  }
 
   &:hover {
     color: v.$schulfarbe;
-    border-color: #c9d2de;
+    background-color: #f4f6f9;
   }
 
   &:active { scale: 0.94; }
@@ -299,8 +313,14 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   &[aria-pressed="true"] {
     color: #fff;
     background-color: v.$schulfarbe;
-    border-color: v.$schulfarbe;
-    box-shadow: 0 4px 10px rgba(51, 87, 161, 0.32);
+    box-shadow: none;
+
+    & + & { box-shadow: none; }
+  }
+
+  // The row after the active one must not draw its divider either.
+  &[aria-pressed="true"] + & {
+    box-shadow: none;
   }
 
   &:focus-visible {
@@ -418,37 +438,57 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
     animation: gplan-zone-bob 2.6s ease-in-out infinite;
   }
 
-  // --- 360° marker, riding along inside the block --------------------------
+  // --- 360° marker ---------------------------------------------------------
+  // A map pin standing on the block rather than a disc lying flat on it: the
+  // tip touches the spot, the head floats clear of the artwork, and the whole
+  // thing reads as a control instead of as part of the drawing. Each marker
+  // supplies its own tip through --px/--py, so every transform pivots on the
+  // point it is actually marking.
   &__tour {
     cursor: pointer;
+    transform-origin: var(--px) var(--py);
+    transition: transform 260ms $ease-out;
+    // Lifts the pin off the coloured block underneath.
+    filter: drop-shadow(0 3px 3px rgba(12, 23, 48, 0.4));
   }
 
-  &__tour-dot {
-    fill: #fff;
-    stroke: v.$schulfarbe;
-    stroke-width: 2.4;
+  &__tour-pin {
+    fill: v.$schulfarbe;
+    stroke: #fff;
+    stroke-width: 2.6;
+    stroke-linejoin: round;
+    transition: fill 200ms $ease-soft;
   }
 
   &__tour-label {
-    fill: v.$schulfarbe;
+    fill: #fff;
     font-family: v.$font-base;
-    font-size: 8.6px;
+    font-size: 8.2px;
     font-weight: bold;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.4px;
     text-anchor: middle;
     pointer-events: none;
     user-select: none;
   }
 
+  // A shadow-like ring on the ground, pulsing outwards, so the eye is drawn
+  // to the marker without the pin itself having to move.
   &__tour-pulse {
     fill: none;
-    stroke: v.$schulfarbe;
-    stroke-width: 2;
-    // Each badge supplies its own centre via --px/--py: the halo scales from
-    // the circle it belongs to, not from a position baked into the stylesheet.
+    stroke: #fff;
+    stroke-width: 2.2;
     transform-origin: var(--px) var(--py);
-    animation: gplan-tour-pulse 2.4s ease-out infinite;
+    transform-box: view-box;
+    animation: gplan-tour-pulse 2.6s ease-out infinite;
     pointer-events: none;
+  }
+
+  &__tour:hover {
+    transform: scale(1.16);
+  }
+
+  &__tour:hover &__tour-pin {
+    fill: color.adjust(v.$schulfarbe, $lightness: 8%);
   }
 }
 
@@ -470,7 +510,9 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
 .gplan__rooms {
   flex: none;
-  block-size: 10.5rem;
+  // Sized so the longest list - five areas on the EG and the 1. OG - fits
+  // without scrolling, and the resting state's two tour cards fill it.
+  block-size: 12rem;
   overflow-y: auto;
   overscroll-behavior: contain;
   margin-block-start: 0.5rem;
@@ -479,127 +521,164 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   @include mx.down("small") { block-size: 9.5rem; }
 }
 
-// --- Oberbegriff -------------------------------------------------------------
+// --- Bereiche ----------------------------------------------------------------
+// One flat row per Oberbegriff - no expanding. Each row is the twin of the
+// block it names: selecting either one selects the other.
 
 .gplan__cat {
-  border-block-end: 1px solid #f0f2f5;
-
-  &:last-child { border-block-end: 0; }
-
-  &[open] > .gplan__cat-head {
-    color: v.$text;
-  }
-}
-
-.gplan__cat-head {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.45rem 0.35rem;
-  font-size: 0.78rem;
-  font-weight: bold;
-  color: #4b5563;
-  cursor: pointer;
-  list-style: none;                       // Firefox
-  transition: color 160ms $ease-soft, background-color 160ms $ease-soft;
-
-  &::-webkit-details-marker { display: none; }   // Safari / Chrome
-
-  &:hover { background-color: #f6f7f9; }
-
-  i {
-    inline-size: 0.7rem;
-    block-size: 0.7rem;
-    flex: none;
-    border-radius: 0.15rem;
-    background-color: var(--swatch);
-  }
-
-  // Caret, rotated when the category is open.
-  &::after {
-    content: "";
-    inline-size: 0.42rem;
-    block-size: 0.42rem;
-    margin-inline-start: 0.1rem;
-    border-inline-end: 1.6px solid currentColor;
-    border-block-end: 1.6px solid currentColor;
-    rotate: 45deg;
-    translate: 0 -1px;
-    opacity: 0.55;
-    transition: rotate 220ms $ease-out;
-  }
-}
-
-.gplan__cat[open] > .gplan__cat-head::after {
-  rotate: -135deg;
-  translate: 0 1px;
-}
-
-.gplan__cat-name { flex: 1; }
-
-.gplan__cat-count {
-  font-size: 0.65rem;
-  font-weight: bold;
-  color: #98a1ae;
-  font-variant-numeric: tabular-nums;
-}
-
-// --- Räume -------------------------------------------------------------------
-
-.gplan__room-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  margin: 0 0 0.35rem;
-  padding: 0 0 0 1.25rem;
-  list-style: none;
-}
-
-.gplan__room {
+  gap: 0.6rem;
   inline-size: 100%;
-  padding: 0.28rem 0.45rem;
-  font-size: 0.76rem;
-  line-height: 1.3;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
   text-align: start;
-  color: #6b7280;
+  color: #4b5563;
   background: none;
-  border-radius: 0.35rem;
+  border-radius: 0.6rem;
   cursor: pointer;
-  transition: background-color 160ms $ease-soft, color 160ms $ease-soft,
+  transition: color 160ms $ease-soft, background-color 160ms $ease-soft,
               opacity 200ms $ease-soft;
 
   &:hover {
-    background-color: #f2f4f7;
+    background-color: #f4f6f9;
     color: v.$text;
   }
 
   &[aria-pressed="true"] {
     color: v.$text;
-    font-weight: bold;
     background-color: rgba(v.$schulfarbe, 0.1);
+  }
+
+  i {
+    inline-size: 0.8rem;
+    block-size: 0.8rem;
+    flex: none;
+    border-radius: 0.25rem;
+    background-color: var(--swatch);
   }
 
   @include mx.focus-ring;
 }
 
-// Picking a room pushes everything else back, so the choice stands alone.
-// Done with :has() rather than a JS-managed class - the state already lives
-// in aria-pressed, and duplicating it would be a second source of truth.
-.gplan__room-group:has(.gplan__room[aria-pressed="true"]) {
-  .gplan__room:not([aria-pressed="true"]) { opacity: 0.3; }
+.gplan__cat-name { flex: 1; }
 
-  .gplan__cat:not(:has(.gplan__room[aria-pressed="true"])) > .gplan__cat-head {
-    opacity: 0.35;
-  }
+// Picking an area pushes the rest back, so the choice stands alone. Done with
+// :has() rather than a JS-managed class - the state already lives in
+// aria-pressed, and duplicating it would be a second source of truth.
+.gplan__room-group:has(.gplan__cat[aria-pressed="true"])
+  .gplan__cat:not([aria-pressed="true"]) {
+  opacity: 0.35;
 }
 
 .gplan__room-group {
   display: none;
 
   &.is-active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
     animation: gplan-fade-up 260ms $ease-out both;
   }
+}
+
+// --- Ruhezustand: Einstieg in die Rundgänge ----------------------------------
+// The area list is empty until a floor is picked, which left a tall blank
+// panel. The two tours fill it with the one thing worth doing from here
+// without choosing a floor first.
+
+.gplan__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  // Gone the moment a floor is chosen - then this space belongs to its areas.
+  .gplan__stage[data-active] ~ .gplan__rooms & { display: none; }
+}
+
+.gplan__tour-card {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.72rem;
+  color: inherit;
+  text-decoration: none;
+  background-color: #f7f9fc;
+  border: 1px solid #e9edf3;
+  border-radius: 0.75rem;
+  transition: background-color 180ms $ease-soft, border-color 180ms $ease-soft,
+              transform 180ms $ease-out;
+
+  &:hover {
+    background-color: #fff;
+    border-color: rgba(v.$schulfarbe, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -8px rgba(12, 23, 48, 0.3);
+  }
+
+  &:hover .gplan__tour-card-go { transform: translateX(2px); }
+
+  @include mx.focus-ring;
+}
+
+// Echoes the pin in the plan, so the two read as the same thing.
+.gplan__tour-card-pin {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+  font-size: 0.6rem;
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  color: #fff;
+  background-color: v.$schulfarbe;
+  border-radius: 50%;
+  box-shadow: 0 3px 8px -2px rgba(51, 87, 161, 0.6);
+}
+
+.gplan__tour-card-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  line-height: 1.3;
+
+  b {
+    font-size: 0.84rem;
+    color: v.$text;
+  }
+
+  span {
+    font-size: 0.72rem;
+    color: #8b95a3;
+  }
+}
+
+.gplan__tour-card-go {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  color: #b3bcc9;
+  transition: transform 180ms $ease-out;
+}
+
+// Closes the last of the blank space, and says what there is to explore.
+.gplan__intro-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.1rem 0 0;
+  font-size: 0.7rem;
+  color: #aab3c0;
+
+  span::after {
+    content: "·";
+    margin-inline-start: 0.5rem;
+    color: #d5dae1;
+  }
+
+  span:last-child::after { content: none; }
 }
 
 @keyframes gplan-fade-up {
@@ -609,12 +688,10 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
 .gplan__hint {
   margin: 0;
-  padding: 0.35rem 0.25rem;
+  padding: 0.1rem 0.25rem 0.25rem;
   font-size: 0.76rem;
   line-height: 1.5;
   color: #98a1ae;
-
-  .gplan__stage[data-active] ~ .gplan__rooms & { display: none; }
 }
 
 // -----------------------------------------------------------------------------
