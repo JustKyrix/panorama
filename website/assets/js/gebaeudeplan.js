@@ -321,22 +321,23 @@
   let colourTimer = 0;
 
   // Browsers refuse audio until the visitor has interacted with the page, and
-  // the curtain starts on its own. So: try, and if the promise is rejected,
-  // hang the attempt on the first gesture that comes along.
-  const play = (el) => {
-    if (!el) return;
-    const attempt = el.play();
-    if (!attempt?.catch) return;
+  // the curtain starts on its own, so the first attempt is often refused.
+  //
+  // Retrying on the next click does NOT work here: the only thing on screen
+  // is the curtain, and clicking that tears the whole thing down - the sound
+  // would start and stop in the same gesture. So a refusal reveals a button
+  // of its own, which is the one place a click means "sound" and nothing
+  // else. `wanted` is whatever should be audible at that moment, so pressing
+  // it late still starts the right track.
+  const soundBtn = document.querySelector("[data-gplan-sound]");
+  let wanted = null;
 
-    attempt.catch(() => {
-      const retry = () => {
-        el.play().catch(() => {});
-        document.removeEventListener("pointerdown", retry);
-        document.removeEventListener("keydown", retry);
-      };
-      document.addEventListener("pointerdown", retry, { once: true });
-      document.addEventListener("keydown", retry, { once: true });
-    });
+  const play = (el) => {
+    wanted = el;
+    if (!el) return;
+
+    const attempt = el.play();
+    attempt?.catch?.(() => curtain?.classList.add("is-muted"));
   };
 
   const stopEverything = () => {
@@ -397,6 +398,18 @@
     stopBtn?.addEventListener("click", stop);
     stopBtn?.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") stop(event);
+    });
+
+    // The one click that means "sound" rather than "open the plan".
+    const unmute = (event) => {
+      event.stopPropagation();
+      curtain.classList.remove("is-muted");
+      wanted?.play().catch(() => curtain.classList.add("is-muted"));
+    };
+
+    soundBtn?.addEventListener("click", unmute);
+    soundBtn?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") unmute(event);
     });
   }
 

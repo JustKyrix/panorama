@@ -14749,6 +14749,28 @@ p {
     opacity: 0.25;
   }
 }
+.klickmich__sound {
+  position: absolute;
+  inset-block-end: 1.5rem;
+  inset-inline-start: 1.5rem;
+  display: none;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #111;
+  background-color: #ffd400;
+  border-radius: 0.7rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.klickmich.is-muted .klickmich__sound {
+  display: block;
+}
+.klickmich__sound:focus-visible {
+  outline: 3px solid #111;
+  outline-offset: 3px;
+}
+
 .klickmich__stop {
   position: absolute;
   inset-block-end: 1.5rem;
