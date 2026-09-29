@@ -83,7 +83,11 @@ const TOURS = [join("assets", "tour"), join("assets", "tour-1og")];
 // data.js is stamped too: it holds the scene names, so a cached copy would
 // keep showing the old ones even once the page itself has been refetched.
 const tours = TOURS.map((dir) =>
-  stampPage(join(dir, "index.html"), ["tour-skin.css", "data.js"], dir)
+  stampPage(
+    join(dir, "index.html"),
+    ["tour-skin.css", "tour-nav.js", "data.js"],
+    dir
+  )
 );
 
 // --- 2. the site page ------------------------------------------------------

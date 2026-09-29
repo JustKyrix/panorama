@@ -65,24 +65,26 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   order: 2;
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.8rem 1.25rem;
-  font-size: 0.9rem;
+  gap: 0.6rem;
+  padding: 0.95rem 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   letter-spacing: -0.01em;
   color: #fff;
-  background-color: v.$schulfarbe;
-  border-radius: 999px;
-  box-shadow: 0 6px 16px -6px rgba(v.$schulfarbe, 0.7),
+  // Magenta from the school's own key ($druck-medien), not an invented one.
+  background-color: v.$druck-medien;
+  // A rounded rectangle rather than a full pill - softened, not a capsule.
+  border-radius: 0.9rem;
+  box-shadow: 0 6px 16px -6px rgba(v.$druck-medien, 0.7),
               0 2px 6px rgba(0, 0, 0, 0.16);
   cursor: pointer;
   transition: transform 260ms $ease-out, box-shadow 260ms $ease-out,
               background-color 200ms $ease-soft;
 
   &:hover {
-    background-color: #2a4784;
+    background-color: color.adjust(v.$druck-medien, $lightness: -7%);
     transform: translateY(-3px);
-    box-shadow: 0 14px 28px -10px rgba(v.$schulfarbe, 0.75),
+    box-shadow: 0 14px 28px -10px rgba(v.$druck-medien, 0.75),
                 0 3px 8px rgba(0, 0, 0, 0.2);
   }
 
@@ -91,21 +93,21 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   svg {
-    inline-size: 1.1rem;
-    block-size: 1.1rem;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
     flex: none;
     transition: transform 420ms $ease-out;
   }
 
   // The icon flips over while the panel is open.
   &[aria-expanded="true"] {
-    background-color: #2a4784;
+    background-color: color.adjust(v.$druck-medien, $lightness: -7%);
 
     svg { transform: rotateX(180deg); }
   }
 
   @include mx.down("small") {
-    padding: 0.9rem;
+    padding: 1rem;
 
     .gplan__fab-text { @include mx.visually-hidden; }
   }
@@ -119,7 +121,7 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   order: 1;
   display: flex;
   flex-direction: column;
-  inline-size: min(30rem, calc(100vw - 2rem));
+  inline-size: min(34rem, calc(100vw - 2rem));
   max-block-size: calc(100dvh - 6rem);
   background-color: #fff;
   border-radius: 1.25rem;
@@ -213,7 +215,7 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // anything above that reads as deliberately pulled apart rather than as
   // the building's own perspective.
   --gap-rest: 40px;
-  --rail-w: 3.1rem;
+  --rail-w: 3.6rem;
 
   position: relative;
   flex: none;
@@ -285,9 +287,9 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 .gplan__pick {
   display: grid;
   place-items: center;
-  block-size: 2.15rem;
+  block-size: 2.5rem;
   padding: 0;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: #5c6675;

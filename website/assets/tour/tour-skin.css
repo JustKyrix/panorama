@@ -1,15 +1,24 @@
 /* =============================================================================
- *  tour-skin.css
- *  Modern skin for the Marzipano tour controls.
+ *  tour-skin.css  -  SOURCE FILE
+ *
+ *  Do not edit the copies in assets/tour/ and assets/tour-1og/. Edit this one
+ *  and run `npm run sync:tour`, which copies it into both tours and makes sure
+ *  each index.html links it. Two hand-maintained copies had already started to
+ *  drift once; one source removes the possibility.
  *
  *  Loaded AFTER the generated style.css and overriding it, rather than editing
  *  that file: style.css is Marzipano Tool output, so keeping the changes
- *  separate means the tour can be regenerated without losing this work. If the
- *  tour IS regenerated, re-add the one <link> to this file in index.html.
+ *  separate means a tour can be regenerated without losing this work.
  *
- *  The default UI is flat grey panels with bitmap icons. This replaces them
- *  with floating glass controls and vector icons drawn as CSS masks, so they
- *  stay sharp at any density and can be recoloured from one place.
+ *  Layout, following a gamepad:
+ *
+ *      [ nav ]          [ scene name ]          [ autorotate ]
+ *
+ *      [ D-pad ]                                    [ +/- ]
+ *
+ *  The arrows sit in a cross bottom-left and the zoom pair bottom-right, the
+ *  way a controller puts the d-pad under the left thumb and the buttons under
+ *  the right.
  * ========================================================================== */
 
 :root {
@@ -17,10 +26,30 @@
   --ui-bg-hover: rgba(18, 22, 30, 0.82);
   --ui-border: rgba(255, 255, 255, 0.16);
   --ui-fg: #fff;
-  --ui-accent: #3357a1;
+  --ui-accent: #c20073;
   --ui-blur: blur(14px) saturate(1.4);
   --ui-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
   --ui-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --btn: 46px;      /* control diameter        */
+  --cell: 50px;     /* d-pad grid pitch        */
+  --edge: 20px;     /* distance from the edges */
+
+  /* Must match viewer.setIdleMovement() in index.js. */
+  --idle: 3000ms;
+}
+
+/* -----------------------------------------------------------------------------
+ *  Szenenliste - entfernt
+ *  Every scene carries link hotspots, so the panorama itself is the way
+ *  between them and the list on the left was redundant. Hidden rather than
+ *  deleted from the markup: index.js queries these elements on load and would
+ *  throw on null.
+ * -------------------------------------------------------------------------- */
+
+#sceneList,
+#sceneListToggle {
+  display: none !important;
 }
 
 /* -----------------------------------------------------------------------------
@@ -30,22 +59,20 @@
  * -------------------------------------------------------------------------- */
 
 #autorotateToggle .icon,
-#sceneListToggle .icon,
 #fullscreenToggle .icon,
 .viewControlButton .icon {
   display: none !important;
 }
 
 #autorotateToggle::after,
-#sceneListToggle::after,
 #fullscreenToggle::after,
 .viewControlButton::after {
   content: "";
   position: absolute;
   inset: 0;
   margin: auto;
-  width: 20px;
-  height: 20px;
+  width: 21px;
+  height: 21px;
   background-color: var(--ui-fg);
   -webkit-mask: var(--ico) center / contain no-repeat;
   mask: var(--ico) center / contain no-repeat;
@@ -60,19 +87,17 @@
    #fullscreenToggle hidden unless the tour enables the fullscreen button, and
    forcing it visible here made it overlap the autorotate button. */
 #autorotateToggle,
-#sceneListToggle,
 .viewControlButton,
 body.fullscreen-enabled #fullscreenToggle {
   display: grid !important;
 }
 
 #autorotateToggle,
-#sceneListToggle,
 #fullscreenToggle,
 .viewControlButton {
   place-items: center;
-  width: 42px !important;
-  height: 42px !important;
+  width: var(--btn) !important;
+  height: var(--btn) !important;
   padding: 0 !important;
   background-color: var(--ui-bg) !important;
   border: 1px solid var(--ui-border);
@@ -87,7 +112,6 @@ body.fullscreen-enabled #fullscreenToggle {
 }
 
 #autorotateToggle:hover,
-#sceneListToggle:hover,
 #fullscreenToggle:hover,
 .viewControlButton:hover {
   background-color: var(--ui-bg-hover) !important;
@@ -96,68 +120,205 @@ body.fullscreen-enabled #fullscreenToggle {
 }
 
 #autorotateToggle:active,
-#sceneListToggle:active,
 #fullscreenToggle:active,
 .viewControlButton:active {
   transform: translateY(0) scale(0.94);
 }
 
 /* -----------------------------------------------------------------------------
- *  Corner buttons
+ *  Autodreh - top right, and the most prominent control on screen
  * -------------------------------------------------------------------------- */
 
-#sceneListToggle {
-  top: 14px !important;
-  left: 14px !important;
-  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M4 7h16M4 12h16M4 17h16'/%3E%3C/svg%3E");
-}
-
-/* Turns into a cross while the list is open. */
-#sceneListToggle.enabled {
-  background-color: var(--ui-accent) !important;
-  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
-}
-
-#sceneListToggle .text {
-  display: none !important;
-}
-
 #autorotateToggle {
-  top: 14px !important;
-  right: 14px !important;
+  position: absolute;
+  top: var(--edge) !important;
+  right: var(--edge) !important;
+  width: 54px !important;
+  height: 54px !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M8 5.2v13.6L19 12z'/%3E%3C/svg%3E");
 }
 
-/* `enabled` means autorotate is running, so the button offers pause. */
+#autorotateToggle::after {
+  width: 24px;
+  height: 24px;
+}
+
+/* `enabled` means autorotate is running, so the button offers pause. Filled in
+   the accent colour: this is the one control people look for. */
 #autorotateToggle.enabled {
   background-color: var(--ui-accent) !important;
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 6px 22px rgba(194, 0, 115, 0.55);
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Crect x='7' y='5' width='3.4' height='14' rx='1.2'/%3E%3Crect x='13.6' y='5' width='3.4' height='14' rx='1.2'/%3E%3C/svg%3E");
 }
 
+#autorotateToggle.enabled:hover {
+  background-color: var(--ui-accent) !important;
+  filter: brightness(1.12);
+}
+
 body.fullscreen-enabled #autorotateToggle {
-  right: 66px !important;
+  right: calc(var(--edge) + 62px) !important;
 }
 
 #fullscreenToggle {
-  top: 14px !important;
-  right: 14px !important;
+  top: var(--edge) !important;
+  right: var(--edge) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'/%3E%3C/svg%3E");
 }
 
+/* --- Countdown bis der Autodreh wieder einsetzt ----------------------------
+ * Touching the panorama pauses the rotation for a moment and then it starts
+ * again on its own, which is startling when nothing says it is coming. The
+ * ring drains around the button over exactly that delay and the pill spells
+ * out the seconds.
+ * ------------------------------------------------------------------------- */
+
+.ar-ring {
+  position: absolute;
+  inset: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  pointer-events: none;
+  opacity: 0;
+  transform: rotate(-90deg);          /* start the sweep at 12 o'clock */
+  transition: opacity 200ms var(--ui-ease);
+}
+
+.ar-ring circle {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.ar-ring__track { stroke: rgba(255, 255, 255, 0.22); }
+
+.ar-ring__bar {
+  stroke: #fff;
+  /* r = 30 -> circumference 188.5 */
+  stroke-dasharray: 188.5;
+  stroke-dashoffset: 188.5;
+}
+
+#autorotateToggle.is-counting .ar-ring { opacity: 1; }
+
+#autorotateToggle.is-counting .ar-ring__bar {
+  animation: ar-drain var(--idle) linear forwards;
+}
+
+@keyframes ar-drain {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 188.5; }
+}
+
+.ar-countdown {
+  position: absolute;
+  top: calc(var(--edge) + 62px);
+  right: var(--edge);
+  padding: 0.4rem 0.7rem;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ui-fg);
+  background-color: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: var(--ui-blur);
+  backdrop-filter: var(--ui-blur);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 200ms var(--ui-ease), transform 200ms var(--ui-ease);
+}
+
+.ar-countdown.is-on {
+  opacity: 1;
+  transform: none;
+}
+
 /* -----------------------------------------------------------------------------
- *  Titelleiste - floating pill instead of a full-width bar
+ *  Navigation zurück zum Gebäudeplan und zwischen den Rundgängen
+ * -------------------------------------------------------------------------- */
+
+.tnav {
+  position: absolute;
+  top: var(--edge);
+  left: var(--edge);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background-color: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: var(--ui-blur);
+  backdrop-filter: var(--ui-blur);
+}
+
+.tnav__home,
+.tnav__item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 38px;
+  padding: 0 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  transition: background-color 180ms var(--ui-ease), color 180ms var(--ui-ease);
+}
+
+.tnav__home:hover,
+a.tnav__item:hover {
+  color: var(--ui-fg);
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.tnav__home svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
+.tnav__sep {
+  width: 1px;
+  height: 20px;
+  margin-inline: 0.15rem;
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* The tour you are already in: filled, and not a link. */
+.tnav__item.is-current {
+  color: var(--ui-fg);
+  background-color: var(--ui-accent);
+  box-shadow: 0 3px 12px rgba(194, 0, 115, 0.5);
+  cursor: default;
+}
+
+/* -----------------------------------------------------------------------------
+ *  Titelleiste - der Ort, an dem man gerade steht
  * -------------------------------------------------------------------------- */
 
 #titleBar {
-  top: 14px !important;
+  top: var(--edge) !important;
   left: 50% !important;
   right: auto !important;
-  height: 42px !important;
+  height: auto !important;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  max-width: min(60%, 26rem);
-  padding: 0 1.1rem;
+  gap: 0.5rem;
+  max-width: min(46%, 24rem);
+  padding: 0.6rem 1.25rem;
   background-color: var(--ui-bg);
   border: 1px solid var(--ui-border);
   border-radius: 999px;
@@ -167,136 +328,128 @@ body.fullscreen-enabled #autorotateToggle {
   pointer-events: none;
 }
 
+/* A pin, so the bar reads as "you are here" rather than as a caption. */
+#titleBar::before {
+  content: "";
+  flex: none;
+  width: 15px;
+  height: 15px;
+  background-color: var(--ui-accent);
+  -webkit-mask: var(--pin) center / contain no-repeat;
+  mask: var(--pin) center / contain no-repeat;
+  --pin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E");
+}
+
 #titleBar .sceneName {
-  width: 100%;
+  width: auto;
+  height: auto !important;
   margin: 0;
+  padding: 0 !important;
+  background: none !important;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2 !important;
   color: var(--ui-fg);
-  text-align: center;
+  text-align: start;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 /* -----------------------------------------------------------------------------
- *  Szenenliste
- * -------------------------------------------------------------------------- */
-
-#sceneList {
-  top: 68px !important;
-  left: 14px !important;
-  width: 232px !important;
-  max-height: calc(100% - 96px) !important;
-  padding-top: 0 !important;
-  margin-left: -260px !important;
-  border-radius: 14px;
-  overflow: hidden auto;
-  scrollbar-width: thin;
-  transition: margin-left 420ms var(--ui-ease), opacity 260ms var(--ui-ease);
-  opacity: 0;
-}
-
-#sceneList.enabled {
-  margin-left: 0 !important;
-  opacity: 1;
-}
-
-#sceneList .scenes {
-  padding: 0.4rem;
-  background-color: var(--ui-bg) !important;
-  border: 1px solid var(--ui-border);
-  border-radius: 14px;
-  box-shadow: var(--ui-shadow);
-  -webkit-backdrop-filter: var(--ui-blur);
-  backdrop-filter: var(--ui-blur);
-}
-
-#sceneList .scene {
-  height: auto !important;
-  border-radius: 9px;
-  overflow: hidden;
-}
-
-#sceneList .scene .text {
-  padding: 0.6rem 0.75rem !important;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
-  line-height: 1.2 !important;
-  color: rgba(255, 255, 255, 0.72);
-  transition: color 160ms var(--ui-ease);
-}
-
-.no-touch #sceneList .scene:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.no-touch #sceneList .scene:hover .text {
-  color: var(--ui-fg);
-}
-
-#sceneList .scene.current {
-  background-color: var(--ui-accent) !important;
-}
-
-#sceneList .scene.current .text {
-  color: var(--ui-fg);
-  font-weight: 600;
-}
-
-/* -----------------------------------------------------------------------------
- *  Blicksteuerung - evenly spaced round buttons along the bottom
- *  Marzipano positions each one with its own margin-left from the centre, so
- *  the spacing is set the same way rather than with a flex container.
+ *  Blicksteuerung - D-Pad links unten, Zoom rechts unten
+ *  Marzipano positions each button from left: 50% with its own margin-left, so
+ *  both are reset here and every button is placed outright.
  * -------------------------------------------------------------------------- */
 
 .viewControlButton {
-  bottom: 22px !important;
+  left: auto !important;
+  right: auto !important;
+  margin-left: 0 !important;
 }
 
-.viewControlButton-1 { margin-left: -152px !important; }  /* up    */
-.viewControlButton-2 { margin-left: -100px !important; }  /* down  */
-.viewControlButton-3 { margin-left: -48px !important; }   /* left  */
-.viewControlButton-4 { margin-left: 4px !important; }     /* right */
-.viewControlButton-5 { margin-left: 64px !important; }    /* in    */
-.viewControlButton-6 { margin-left: 116px !important; }   /* out   */
-
+/* The cross: a 3x3 grid of --cell, anchored at the bottom-left corner. */
 #viewUp {
+  left: calc(var(--edge) + var(--cell)) !important;
+  bottom: calc(var(--edge) + 2 * var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 15l6-6 6 6'/%3E%3C/svg%3E");
 }
-#viewDown {
-  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-}
 #viewLeft {
+  left: var(--edge) !important;
+  bottom: calc(var(--edge) + var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E");
 }
 #viewRight {
+  left: calc(var(--edge) + 2 * var(--cell)) !important;
+  bottom: calc(var(--edge) + var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
 }
+#viewDown {
+  left: calc(var(--edge) + var(--cell)) !important;
+  bottom: var(--edge) !important;
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Zoom, the "buttons" side of the pad. */
 #viewIn {
+  right: var(--edge) !important;
+  bottom: calc(var(--edge) + var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
 }
 #viewOut {
+  right: var(--edge) !important;
+  bottom: var(--edge) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
 }
 
-/* The arrow cluster and the zoom pair are one row; a wider gap before the
-   zoom buttons groups them without needing extra markup. */
+/* -----------------------------------------------------------------------------
+ *  Klein
+ * -------------------------------------------------------------------------- */
 
 @media (max-width: 760px) {
-  #titleBar { max-width: calc(100% - 140px); }
+  :root {
+    --btn: 40px;
+    --cell: 44px;
+    --edge: 12px;
+  }
+
+  #autorotateToggle {
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  #titleBar {
+    max-width: calc(100% - 200px);
+    padding: 0.45rem 0.9rem;
+  }
+
+  #titleBar .sceneName { font-size: 0.86rem; }
+
+  .tnav__home span { display: none; }   /* icon only, to keep the bar short */
+
+  .tnav__home,
+  .tnav__item {
+    height: 32px;
+    padding: 0 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .ar-countdown {
+    top: calc(var(--edge) + 54px);
+    font-size: 0.66rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #autorotateToggle,
-  #sceneListToggle,
   #fullscreenToggle,
   .viewControlButton,
-  #sceneList {
+  .tnav__home,
+  .tnav__item {
     transition: none !important;
   }
+
+  .ar-ring__bar { animation: none !important; }
 }
