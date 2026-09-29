@@ -80,8 +80,10 @@ const stampPage = (page, assets, dir = ".") => {
 // --- 1. the tour pages, so their own stylesheet is versioned ----------------
 // Each floor has its own self-contained tour, so each gets stamped.
 const TOURS = [join("assets", "tour"), join("assets", "tour-1og")];
+// data.js is stamped too: it holds the scene names, so a cached copy would
+// keep showing the old ones even once the page itself has been refetched.
 const tours = TOURS.map((dir) =>
-  stampPage(join(dir, "index.html"), ["tour-skin.css"], dir)
+  stampPage(join(dir, "index.html"), ["tour-skin.css", "data.js"], dir)
 );
 
 // --- 2. the site page ------------------------------------------------------

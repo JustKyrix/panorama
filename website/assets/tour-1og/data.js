@@ -2,7 +2,7 @@ var APP_DATA = {
   "scenes": [
     {
       "id": "0-r0010030",
-      "name": "R0010030",
+      "name": "Flur B-Trakt",
       "levels": [
         {
           "tileSize": 256,
@@ -44,7 +44,7 @@ var APP_DATA = {
     },
     {
       "id": "1-r0010031",
-      "name": "R0010031",
+      "name": "Zahntechnik – Labor",
       "levels": [
         {
           "tileSize": 256,
@@ -116,7 +116,7 @@ var APP_DATA = {
     },
     {
       "id": "2-r0010032",
-      "name": "R0010032",
+      "name": "Flur vor der Küche",
       "levels": [
         {
           "tileSize": 256,
@@ -182,7 +182,7 @@ var APP_DATA = {
     },
     {
       "id": "3-r0010033",
-      "name": "R0010033",
+      "name": "Küche – Übersicht",
       "levels": [
         {
           "tileSize": 256,
@@ -248,7 +248,7 @@ var APP_DATA = {
     },
     {
       "id": "4-r0010034",
-      "name": "R0010034",
+      "name": "Küche – Kochzeile",
       "levels": [
         {
           "tileSize": 256,
@@ -314,7 +314,7 @@ var APP_DATA = {
     },
     {
       "id": "5-r0010035",
-      "name": "R0010035",
+      "name": "Zahntechnik – Arbeitsplätze",
       "levels": [
         {
           "tileSize": 256,
@@ -380,7 +380,7 @@ var APP_DATA = {
     },
     {
       "id": "6-r0010036",
-      "name": "R0010036",
+      "name": "Küche – Fensterseite",
       "levels": [
         {
           "tileSize": 256,
@@ -452,7 +452,7 @@ var APP_DATA = {
     },
     {
       "id": "7-r0010037",
-      "name": "R0010037",
+      "name": "Zahntechnik – Werkbänke",
       "levels": [
         {
           "tileSize": 256,
@@ -523,7 +523,7 @@ var APP_DATA = {
       "infoHotspots": []
     }
   ],
-  "name": "Project Title",
+  "name": "Zahntechnik",
   "settings": {
     "mouseViewMode": "drag",
     "autorotateEnabled": true,
