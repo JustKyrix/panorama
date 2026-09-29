@@ -258,6 +258,15 @@
   // keyboard is covered by the same handler.
   fab.addEventListener("click", () => (isOpen() ? close() : open()));
 
+  // Coming back from a 360° tour, whose "Gebäudeplan" link points at
+  // #gebaeudeplan: open the panel straight away so the way back lands on the
+  // plan rather than on the top of the page. The hash is then dropped, so a
+  // later reload starts from the normal closed state.
+  if (window.location.hash === "#gebaeudeplan") {
+    open();
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+
   closeBtn?.addEventListener("click", () => {
     close();
     fab.focus({ preventScroll: true });

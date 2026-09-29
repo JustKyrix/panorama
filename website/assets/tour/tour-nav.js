@@ -36,19 +36,24 @@
   //  Navigation
   // ---------------------------------------------------------------------------
 
-  var HOME_ICON =
+  // The stacked-plates mark from the site's own Gebäudeplan button, so the
+  // way back is recognisably the thing it leads to.
+  var PLAN_ICON =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-    'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" ' +
-    'aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>' +
-    "</svg>";
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+    'aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/>' +
+    '<path d="M3 13l9 5 9-5"/></svg>';
 
   var nav = document.createElement("nav");
   nav.className = "tnav";
   nav.setAttribute("aria-label", "Rundgänge");
 
+  // #gebaeudeplan rather than a plain link home: gebaeudeplan.js reads that
+  // hash on load and opens the panel, so this lands on the plan itself
+  // instead of on the top of the homepage.
   var html =
-    '<a class="tnav__home" href="../../index.html">' +
-    HOME_ICON +
+    '<a class="tnav__home" href="../../index.html#gebaeudeplan">' +
+    PLAN_ICON +
     "<span>Gebäudeplan</span></a>" +
     '<span class="tnav__sep"></span>';
 

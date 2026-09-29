@@ -14860,26 +14860,28 @@ p {
 
 .gplan__stage {
   --gap-rest: 40px;
-  --rail-w: 3.6rem;
+  --rail-w: 4.4rem;
   position: relative;
   flex: none;
   margin-inline: 0.7rem 1.25rem;
   padding-block: 0.5rem;
-  padding-inline-start: calc(var(--rail-w) + 0.6rem);
+  padding-inline-start: calc(var(--rail-w) + 1.5rem);
 }
 .gplan__stage:not(:has(.gplan__floor + .gplan__floor)) .gplan__floors {
   margin-block-start: 0;
 }
 @media (max-width: 454px) {
   .gplan__stage {
-    --gap-rest: 32px;
-    --rail-w: 2.8rem;
+    --gap-rest: 30px;
+    --rail-w: 3.5rem;
   }
 }
 
 .gplan__floors {
   position: relative;
   aspect-ratio: 2.4121621622;
+  inline-size: 88%;
+  margin-inline: auto;
   margin-block-start: calc(2 * var(--gap-rest));
 }
 
@@ -14905,9 +14907,9 @@ p {
 .gplan__pick {
   display: grid;
   place-items: center;
-  block-size: 2.5rem;
+  block-size: 2.9rem;
   padding: 0;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: #5c6675;
@@ -14915,9 +14917,6 @@ p {
   border-radius: 0.6rem;
   cursor: pointer;
   transition: color 160ms cubic-bezier(0.4, 0, 0.2, 1), background-color 160ms cubic-bezier(0.4, 0, 0.2, 1), scale 160ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-.gplan__pick + .gplan__pick {
-  box-shadow: 0 -1px 0 #eef0f4;
 }
 .gplan__pick:hover {
   color: #3357a1;
@@ -14929,13 +14928,6 @@ p {
 .gplan__pick[aria-pressed=true] {
   color: #fff;
   background-color: #3357a1;
-  box-shadow: none;
-}
-.gplan__pick[aria-pressed=true] + .gplan__pick[aria-pressed=true] {
-  box-shadow: none;
-}
-.gplan__pick[aria-pressed=true] + .gplan__pick {
-  box-shadow: none;
 }
 .gplan__pick:focus-visible {
   outline: 3px solid #3357a1;
@@ -15026,8 +15018,14 @@ p {
 .gplan-plate__tour {
   cursor: pointer;
   transform-origin: var(--px) var(--py);
-  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 120ms;
   filter: drop-shadow(0 3px 3px rgba(12, 23, 48, 0.4));
+}
+.gplan__floor[data-active] .gplan-plate__tour {
+  opacity: 1;
+  pointer-events: auto;
 }
 .gplan-plate__tour-pin {
   fill: #3357a1;

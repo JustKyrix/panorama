@@ -244,8 +244,8 @@ body.fullscreen-enabled #autorotateToggle {
 
 .tnav {
   position: absolute;
-  top: var(--edge);
-  left: var(--edge);
+  bottom: var(--edge);
+  right: var(--edge);
   z-index: 10;
   display: flex;
   align-items: center;
@@ -364,42 +364,64 @@ a.tnav__item:hover {
  *  both are reset here and every button is placed outright.
  * -------------------------------------------------------------------------- */
 
+/* The whole cluster is centred on the screen: the cross on the left of the
+   group, the zoom pair on its right, the way a controller puts the d-pad
+   under the left thumb and the buttons under the right. Offsets are multiples
+   of --cell from the centre line, so the arrangement scales with the buttons
+   instead of being re-typed for every size. */
 .viewControlButton {
-  left: auto !important;
+  left: 50% !important;
   right: auto !important;
-  margin-left: 0 !important;
 }
 
-/* The cross: a 3x3 grid of --cell, anchored at the bottom-left corner. */
+/* The four arrows carry their own colour so the directions read apart from
+   the zoom pair at a glance. */
+#viewUp,
+#viewDown,
+#viewLeft,
+#viewRight {
+  background-color: rgba(51, 87, 161, 0.74) !important;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+#viewUp:hover,
+#viewDown:hover,
+#viewLeft:hover,
+#viewRight:hover {
+  background-color: rgba(51, 87, 161, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* The cross. */
 #viewUp {
-  left: calc(var(--edge) + var(--cell)) !important;
+  margin-left: calc(-1.6 * var(--cell)) !important;
   bottom: calc(var(--edge) + 2 * var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 15l6-6 6 6'/%3E%3C/svg%3E");
 }
 #viewLeft {
-  left: var(--edge) !important;
+  margin-left: calc(-2.6 * var(--cell)) !important;
   bottom: calc(var(--edge) + var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E");
 }
 #viewRight {
-  left: calc(var(--edge) + 2 * var(--cell)) !important;
+  margin-left: calc(-0.6 * var(--cell)) !important;
   bottom: calc(var(--edge) + var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
 }
 #viewDown {
-  left: calc(var(--edge) + var(--cell)) !important;
+  margin-left: calc(-1.6 * var(--cell)) !important;
   bottom: var(--edge) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }
 
 /* Zoom, the "buttons" side of the pad. */
 #viewIn {
-  right: var(--edge) !important;
+  margin-left: calc(1.65 * var(--cell)) !important;
   bottom: calc(var(--edge) + var(--cell)) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
 }
 #viewOut {
-  right: var(--edge) !important;
+  margin-left: calc(1.65 * var(--cell)) !important;
   bottom: var(--edge) !important;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
 }
@@ -407,6 +429,15 @@ a.tnav__item:hover {
 /* -----------------------------------------------------------------------------
  *  Klein
  * -------------------------------------------------------------------------- */
+
+/* The cluster is centred and the nav is pinned right, so on a narrow window
+   the zoom pair ends up underneath the bar. Below roughly 2 x (nav + half a
+   cluster) they stop fitting side by side, and the controls move up above it.
+   `margin-bottom` on an absolutely positioned box with `bottom` set shifts it
+   clear, which keeps this to one rule instead of six new offsets. */
+@media (max-width: 980px) {
+  .viewControlButton { margin-bottom: 60px; }
+}
 
 @media (max-width: 760px) {
   :root {

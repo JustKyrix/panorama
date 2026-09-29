@@ -215,7 +215,7 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // anything above that reads as deliberately pulled apart rather than as
   // the building's own perspective.
   --gap-rest: 40px;
-  --rail-w: 3.6rem;
+  --rail-w: 4.4rem;
 
   position: relative;
   flex: none;
@@ -224,7 +224,7 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   margin-inline: 0.7rem 1.25rem;
   padding-block: 0.5rem;
   // Room for the floor picker, so it never covers the plan.
-  padding-inline-start: calc(var(--rail-w) + 0.6rem);
+  padding-inline-start: calc(var(--rail-w) + 1.5rem);
 
   // With a single floor there is no stack to leave room for. Reverts on its
   // own as soon as another floor is added back to the markup.
@@ -233,8 +233,8 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @include mx.down("small") {
-    --gap-rest: 32px;
-    --rail-w: 2.8rem;
+    --gap-rest: 30px;
+    --rail-w: 3.5rem;
   }
 }
 
@@ -244,6 +244,9 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // the stage sizes itself from the panel width instead of a hard-coded
   // height that has to be re-guessed whenever the layout moves.
   aspect-ratio: math.div(410.55, 170.2);
+  // Deliberately short of the full width: the plan was crowding the panel.
+  inline-size: 88%;
+  margin-inline: auto;
   // The stack grows upwards out of this box, so the room it needs is added
   // above it. Stage height therefore = one plate + two gaps.
   margin-block-start: calc(2 * var(--gap-rest));
@@ -287,9 +290,9 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 .gplan__pick {
   display: grid;
   place-items: center;
-  block-size: 2.5rem;
+  block-size: 2.9rem;
   padding: 0;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: #5c6675;
@@ -298,11 +301,6 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   transition: color 160ms $ease-soft, background-color 160ms $ease-soft,
               scale 160ms $ease-soft;
-
-  // Hairline between the rows, never after the last one.
-  & + & {
-    box-shadow: 0 -1px 0 #eef0f4;
-  }
 
   &:hover {
     color: v.$schulfarbe;
@@ -315,14 +313,6 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   &[aria-pressed="true"] {
     color: #fff;
     background-color: v.$schulfarbe;
-    box-shadow: none;
-
-    & + & { box-shadow: none; }
-  }
-
-  // The row after the active one must not draw its divider either.
-  &[aria-pressed="true"] + & {
-    box-shadow: none;
   }
 
   &:focus-visible {
@@ -446,12 +436,24 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   // thing reads as a control instead of as part of the drawing. Each marker
   // supplies its own tip through --px/--py, so every transform pivots on the
   // point it is actually marking.
+  // A marker belongs to a floor you have actually opened. While the stack is
+  // closed they would be pins on a building nobody has stepped into yet - and
+  // three floors' worth of them at once, on plates too small to aim at. They
+  // fade in with the floor that carries them; the resting state offers the
+  // tours as cards instead.
   &__tour {
     cursor: pointer;
     transform-origin: var(--px) var(--py);
-    transition: transform 260ms $ease-out;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 260ms $ease-out, opacity 300ms $ease-soft 120ms;
     // Lifts the pin off the coloured block underneath.
     filter: drop-shadow(0 3px 3px rgba(12, 23, 48, 0.4));
+  }
+
+  .gplan__floor[data-active] &__tour {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   &__tour-pin {
