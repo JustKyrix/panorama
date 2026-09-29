@@ -5,9 +5,10 @@
  *
  *    click the button -> the panel opens (and closes)
  *    hover a floor    -> highlight only. NOTHING MOVES.
- *    click a floor    -> the stack fans open around it: that floor holds its
- *                        position, the other two are pushed away. Clicking it
- *                        again collapses the stack.
+ *    pick a floor     -> from the rail on the left, or by clicking the plate:
+ *                        that floor moves to the centre and the other two are
+ *                        taken away. Picking the same one again brings the
+ *                        full stack back.
  *    click a room     -> its zone lights up in the plan, the rest recede
  *    click a zone     -> a zone with a 360° tour opens it in a new tab
  *
@@ -31,6 +32,7 @@
   const stage = root.querySelector("[data-gplan-stage]");
   const info = root.querySelector("[data-gplan-info]");
   const floors = [...root.querySelectorAll("[data-gplan-floor]")];
+  const picks = [...root.querySelectorAll("[data-gplan-pick]")];
   const groups = [...root.querySelectorAll("[data-gplan-rooms]")];
   const rooms = [...root.querySelectorAll("[data-gplan-room]")];
 
@@ -137,6 +139,15 @@
       floor.setAttribute("aria-pressed", String(on));
     });
 
+    // The rail reads off the same state, so the highlighted button and the
+    // floor on show can never disagree.
+    picks.forEach((pick) => {
+      pick.setAttribute(
+        "aria-pressed",
+        String(Number(pick.dataset.gplanPick) === index)
+      );
+    });
+
     groups.forEach((group) => {
       group.classList.toggle(
         "is-active",
@@ -154,11 +165,18 @@
     setInfo(index === null ? INFO_CLOSED : INFO_PICK);
   };
 
+  // Both ways in behave the same: pick a floor to isolate it, pick the one
+  // already showing to get the whole stack back.
+  const toggleFloor = (i) => selectFloor(selected === i ? null : i);
+
   floors.forEach((floor) => {
-    const i = indexOfFloor(floor);
-    floor.addEventListener("click", () => {
-      selectFloor(selected === i ? null : i);
-    });
+    floor.addEventListener("click", () => toggleFloor(indexOfFloor(floor)));
+  });
+
+  picks.forEach((pick) => {
+    pick.addEventListener("click", () =>
+      toggleFloor(Number(pick.dataset.gplanPick))
+    );
   });
 
   rooms.forEach((room) => {

@@ -3,23 +3,27 @@
 //  Floating building-plan navigator for the map view.
 //
 //  Closed        -> a button in the bottom-right corner.
-//  Click button  -> the panel opens.
+//  Click button  -> the panel opens on the spaced stack of all three floors.
 //  Hover a floor -> highlight only. NOTHING MOVES. Letting hover drive the
 //                   layout made the stack lurch every time the pointer
 //                   crossed a plate, which was unusable.
-//  Click a floor -> it opens: the gap to its neighbours widens.
+//  Pick a floor  -> either from the rail on the left or by clicking the plate
+//                   itself: that floor is centred and the other two are taken
+//                   away entirely. Picking it again brings the stack back.
 //  Click a zone  -> a zone with a 360° tour opens it (see components/tour).
 //
 //  GEOMETRY
 //  The ground floor is the anchor: it sits on the floor of the stage and
-//  never moves, the others stack upwards from it. Three distances shape it:
+//  never moves, the others stack upwards from it. A single distance shapes
+//  everything:
 //
-//    --gap-rest  closed: the floors almost touch and read as one building
-//    --gap-near  open: between the two floors that are not the open one
-//    --gap-open  open: between the open floor and each of its neighbours
+//    --gap-rest  the spacing between the plates at rest - and, because the
+//                stage is one plate plus two gaps tall, also the offset that
+//                centres whichever floor is on show
 //
-//  With a floor open the other two also drop back to pale ghosts, so the
-//  open storey is unmistakably the subject.
+//  One number rather than three: the two states cannot drift apart, and the
+//  stage height follows the panel width through `aspect-ratio` instead of a
+//  hard-coded plate height.
 //
 //  The panel must keep a CONSTANT height. It is anchored to the bottom of the
 //  viewport, so content that changes height makes it grow upwards and drags
@@ -28,6 +32,7 @@
 // =============================================================================
 
 @use "sass:map";
+@use "sass:math";
 @use "../abstracts/variables" as v;
 @use "../abstracts/mixins" as mx;
 
@@ -198,49 +203,110 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 // -----------------------------------------------------------------------------
 
 .gplan__stage {
-  // Scale matters as much as the ratio: a plate is --plate-h tall, so an open
-  // gap much below half of that leaves the floors overlapping into a single
-  // unreadable shape. --gap-rest is deliberately far smaller - closed, the
-  // floors are meant to overlap.
-  --gap-rest: 26px;    // closed stack - floors almost touching
-  --gap-near: 75px;    // open stack, between floors that are not the open one
-  --gap-open: 150px;   // open stack, between the open floor and each neighbour
-  --plate-h: 150px;    // matches the plan's 410 x 170 aspect at panel width
+  // ONE distance governs the whole thing. At rest the plates sit --gap-rest
+  // apart; with a floor open that same distance is what centres it, because
+  // the stage is exactly one plate plus two gaps tall - so one gap up from
+  // the resting line IS the middle. No second magic number to keep in sync.
+  //
+  // ADBK_plan.svg draws its own storeys about 50px apart at this size, so
+  // anything above that reads as deliberately pulled apart rather than as
+  // the building's own perspective.
+  --gap-rest: 64px;
+  --rail-w: 2.4rem;
 
   position: relative;
   flex: none;
-  margin-inline: 1.25rem;
+  // Tighter on the picker's side: the rail already provides the breathing
+  // space there, and the plan wants every pixel of width it can get.
+  margin-inline: 0.7rem 1.25rem;
   padding-block: 0.5rem;
+  // Room for the floor picker, so it never covers the plan.
+  padding-inline-start: calc(var(--rail-w) + 0.6rem);
 
-  // Tall enough for the highest the stack ever reaches: both gaps at their
-  // widest, plus one plate.
-  block-size: calc(var(--plate-h) + (2 * var(--gap-open)));
-
-  // With a single floor there is no stack, so the stage only needs one plate.
-  // Reverts on its own as soon as another floor is added back to the markup.
-  &:not(:has(.gplan__floor + .gplan__floor)) {
-    block-size: var(--plate-h);
+  // With a single floor there is no stack to leave room for. Reverts on its
+  // own as soon as another floor is added back to the markup.
+  &:not(:has(.gplan__floor + .gplan__floor)) .gplan__floors {
+    margin-block-start: 0;
   }
 
-  // Scaled down on phones, keeping the same 1:2 ratio, so the panel still
-  // fits without the stage pushing the room list off screen.
   @include mx.down("small") {
-    --gap-rest: 20px;
-    --gap-near: 62px;
-    --gap-open: 124px;
-    --plate-h: 126px;
+    --gap-rest: 50px;
+    --rail-w: 2.4rem;
   }
 }
 
 .gplan__floors {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  // Exactly one plate tall, straight from the drawing's own proportions, so
+  // the stage sizes itself from the panel width instead of a hard-coded
+  // height that has to be re-guessed whenever the layout moves.
+  aspect-ratio: math.div(410.55, 170.2);
+  // The stack grows upwards out of this box, so the room it needs is added
+  // above it. Stage height therefore = one plate + two gaps.
+  margin-block-start: calc(2 * var(--gap-rest));
+
   // The floors are listed bottom-to-top in the DOM - EG, 1. OG, 2. OG - so
   // they paint in the same order as ADBK_plan.svg draws them and the upper
   // floors sit in front, which is what the viewing angle calls for. Every
   // floor is positioned absolutely, so this order decides z-order only; the
   // layout comes from the `translate` offsets below, keyed on
   // data-floor-index. Reversing it makes the closed stack come apart.
+}
+
+// -----------------------------------------------------------------------------
+//  Etagenwahl
+//  A picker down the left-hand side, ordered like the building: 2. OG at the
+//  top, ground floor at the bottom, so it lines up with the stack beside it.
+// -----------------------------------------------------------------------------
+
+.gplan__rail {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  inline-size: var(--rail-w);
+}
+
+.gplan__pick {
+  display: grid;
+  place-items: center;
+  block-size: 2rem;
+  padding: 0;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #5c6675;
+  background-color: #fff;
+  border: 1px solid #e2e6ec;
+  border-radius: 0.55rem;
+  box-shadow: 0 1px 2px rgba(12, 23, 48, 0.06);
+  cursor: pointer;
+  transition: color 160ms $ease-soft, background-color 160ms $ease-soft,
+              border-color 160ms $ease-soft, scale 160ms $ease-soft;
+
+  &:hover {
+    color: v.$schulfarbe;
+    border-color: #c9d2de;
+  }
+
+  &:active { scale: 0.94; }
+
+  // Pressed = this floor is the one on show.
+  &[aria-pressed="true"] {
+    color: #fff;
+    background-color: v.$schulfarbe;
+    border-color: v.$schulfarbe;
+    box-shadow: 0 4px 10px rgba(51, 87, 161, 0.32);
+  }
+
+  &:focus-visible {
+    outline: 3px solid v.$schulfarbe;
+    outline-offset: 2px;
+  }
 }
 
 .gplan__floor {
@@ -251,7 +317,8 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0;
   background: none;
   cursor: pointer;
-  transition: translate 520ms $ease-out, filter 240ms $ease-soft;
+  transition: translate 520ms $ease-out, opacity 240ms $ease-soft,
+              filter 240ms $ease-soft;
 
   svg {
     display: block;
@@ -279,46 +346,31 @@ $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-// --- Die vier Anordnungen ----------------------------------------------------
-// Ground floor (index 2) is never translated: it is the anchor.
+// --- Die zwei Anordnungen ----------------------------------------------------
+// Ground floor (index 2) is never translated at rest: it is the anchor.
 
-// Rest: a tight sandwich, per the closed-state reference. The floors nearly
-// touch, so the stack reads as one solid building rather than three
-// separated slabs.
+// Rest: the three plates evenly spaced, far enough apart to read as separate
+// storeys rather than as one solid block.
 .gplan__floor[data-floor-index="2"] { translate: 0 0; }
 .gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-rest)); }
 .gplan__floor[data-floor-index="0"] { translate: 0 calc(-2 * var(--gap-rest)); }
 
-// Ground floor open: it keeps its place, the two above pull well clear.
-.gplan__stage[data-active="2"] {
-  .gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-open)); }
-  .gplan__floor[data-floor-index="0"] {
-    translate: 0 calc(-1 * (var(--gap-open) + var(--gap-near)));
-  }
+// One floor picked: it is the only one left, centred in the stage. The stage
+// is one plate plus two gaps tall, so a single gap up from the resting line
+// puts it exactly in the middle - whichever floor it is.
+.gplan__stage[data-active] .gplan__floor[data-active] {
+  translate: 0 calc(-1 * var(--gap-rest));
 }
 
-// 1. OG open: it gets the wide gap on both sides.
-.gplan__stage[data-active="1"] {
-  .gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-open)); }
-  .gplan__floor[data-floor-index="0"] { translate: 0 calc(-2 * var(--gap-open)); }
-}
-
-// 2. OG open: the two below it close up to 10, it takes 20 above them.
-.gplan__stage[data-active="0"] {
-  .gplan__floor[data-floor-index="1"] { translate: 0 calc(-1 * var(--gap-near)); }
-  .gplan__floor[data-floor-index="0"] {
-    translate: 0 calc(-1 * (var(--gap-near) + var(--gap-open)));
-  }
-}
-
-// With a floor open the others are not merely dimmed - they drop back to pale
-// ghosts so the open one is unmistakably the subject, and the stack still
-// reads as three storeys. A little saturation is left in so the zones stay
-// faintly recognisable rather than turning into grey slabs.
-.gplan__stage[data-active] .gplan__floor:not([data-active]) svg {
-  opacity: 0.18;
-  filter: saturate(0.14) brightness(1.4)
-          drop-shadow(0 3px 6px rgba(12, 23, 48, 0.08));
+// The other two are gone, not dimmed. `visibility` flips only once the fade
+// has finished, so they cannot be clicked or tabbed to on the way out; on the
+// way back this rule simply stops applying and they return at once.
+.gplan__stage[data-active] .gplan__floor:not([data-active]) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 240ms $ease-soft, visibility 0s linear 240ms,
+              translate 520ms $ease-out;
 }
 
 // The open floor keeps full colour and gains depth.

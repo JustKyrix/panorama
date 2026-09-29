@@ -6,7 +6,7 @@
   <title>ADBK</title>
   <meta name="description" content="Albrecht-Dürer-Berufskolleg, Städtische Schule der Sekundarstufe II, Düsseldorf.">
   <link rel="icon" href="assets/images/adbk-logo.png" type="image/png">
-  <link rel="stylesheet" href="assets/css/main.css?v=1b1b2350">
+  <link rel="stylesheet" href="assets/css/main.css?v=642c68ba">
 </head>
 
 <body>
@@ -403,6 +403,17 @@
 
       <!-- Bühne: die drei Etagen liegen übereinander und fächern beim Hovern auf -->
       <div class="gplan__stage" data-gplan-stage>
+
+        <!-- Etagenwahl, wie das Gebäude sortiert: 2. OG oben, EG unten. -->
+        <div class="gplan__rail" role="group" aria-label="Etage wählen">
+          <button class="gplan__pick" type="button" data-gplan-pick="0"
+                  aria-pressed="false">2.OG</button>
+          <button class="gplan__pick" type="button" data-gplan-pick="1"
+                  aria-pressed="false">1.OG</button>
+          <button class="gplan__pick" type="button" data-gplan-pick="2"
+                  aria-pressed="false">EG</button>
+        </div>
+
         <div class="gplan__floors">
 
           <!-- Erdgeschoss: Zuschnitt y 113.45..283.65 aus ADBK_plan.svg. -->
@@ -718,6 +729,6 @@
 
 
   <script src="assets/js/vendor/bootstrap.bundle.min.js" defer></script>
-  <script src="assets/js/gebaeudeplan.js?v=8c02a772" defer></script>
+  <script src="assets/js/gebaeudeplan.js?v=dc4000c9" defer></script>
 </body>
 </html>
