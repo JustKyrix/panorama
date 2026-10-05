@@ -41,140 +41,6 @@ $ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 $ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
 // -----------------------------------------------------------------------------
-//  KLICK MICH
-//  A curtain that lowers itself over the whole page and opens the Gebäudeplan
-//  when clicked. It starts entirely above the viewport, so until it has come
-//  down far enough the page underneath stays usable - a transformed box takes
-//  its clicks with it.
-// -----------------------------------------------------------------------------
-
-.klickmich {
-  // Set by the script while the party is running; until then the curtain
-  // keeps the school magenta.
-  --party: #{v.$druck-medien};
-
-  position: fixed;
-  inset: 0;
-  // Over everything, the plan's own panel (1080) included.
-  z-index: 2000;
-  display: grid;
-  place-items: center;
-  padding: 2rem;
-  color: #fff;
-  background-color: var(--party);
-  border: 0;
-  cursor: pointer;
-  animation: klickmich-drop 14s $ease-soft both;
-
-  &.is-gone {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 380ms $ease-soft;
-  }
-
-  // The colour is swapped from JS; the transition smooths each jump just
-  // enough that it reads as a light rather than as a repaint.
-  &.is-party {
-    transition: background-color 180ms linear;
-  }
-
-  // The flash is a separate layer on purpose. Adding it to the curtain's own
-  // `animation` re-declares the shorthand, which RESTARTS the drop - the
-  // curtain jumped back above the screen and began descending a second time.
-  // A pseudo-element leaves that animation untouched.
-  &.is-party::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: #fff;
-    opacity: 0;
-    pointer-events: none;
-    animation: klickmich-flash 0.8s steps(1, end) infinite;
-  }
-}
-
-// Deliberately NOT a fast strobe. Anything past about three flashes a second
-// is a photosensitivity risk, so this runs at well under half that, and the
-// colour behind it changes on the same slow beat.
-@keyframes klickmich-flash {
-  0%, 49%   { opacity: 0; }
-  50%, 100% { opacity: 0.25; }
-}
-
-// Only there when the browser turned the sound down on us.
-.klickmich__sound {
-  position: absolute;
-  inset-block-end: 1.5rem;
-  inset-inline-start: 1.5rem;
-  display: none;
-  padding: 0.7rem 1.2rem;
-  font-size: 0.95rem;
-  font-weight: bold;
-  color: #111;
-  background-color: #ffd400;
-  border-radius: 0.7rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-
-  .klickmich.is-muted & { display: block; }
-
-  &:focus-visible {
-    outline: 3px solid #111;
-    outline-offset: 3px;
-  }
-}
-
-.klickmich__stop {
-  position: absolute;
-  inset-block-end: 1.5rem;
-  inset-inline-end: 1.5rem;
-  padding: 0.7rem 1.2rem;
-  font-size: 0.95rem;
-  font-weight: bold;
-  color: #111;
-  background-color: #fff;
-  border-radius: 0.7rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-
-  &:hover { background-color: #f1f1f1; }
-
-  &:focus-visible {
-    outline: 3px solid #111;
-    outline-offset: 3px;
-  }
-}
-
-.klickmich__text {
-  font-size: clamp(3rem, 17vw, 15rem);
-  font-weight: 900;
-  letter-spacing: -0.045em;
-  line-height: 0.88;
-  text-align: center;
-  text-wrap: balance;
-  text-shadow: 0 0.06em 0.3em rgba(0, 0, 0, 0.25);
-}
-
-@keyframes klickmich-drop {
-  from { transform: translateY(-100%); }
-  to   { transform: translateY(0); }
-}
-
-// Sliding a full screen of colour down for fourteen seconds is exactly what
-// this setting is meant to spare people, so it just fades in instead - and
-// the flashing is dropped altogether, which is the whole point of the setting.
-@media (prefers-reduced-motion: reduce) {
-  .klickmich { animation: klickmich-fade 600ms ease both; }
-
-  .klickmich.is-party::after { animation: none; }
-}
-
-@keyframes klickmich-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-// -----------------------------------------------------------------------------
 //  Eigenständige Plan-Seite (assets/plan.html)
 //  Loaded in an overlay by the 360° tours, so pressing "Gebäudeplan" in a
 //  panorama opens the same panel as on the homepage. There is no button to
@@ -232,20 +98,19 @@ body.gplan-standalone {
   font-weight: bold;
   letter-spacing: -0.01em;
   color: #fff;
-  // Magenta from the school's own key ($druck-medien), not an invented one.
-  background-color: v.$druck-medien;
+  background-color: v.$schulfarbe;
   // A rounded rectangle rather than a full pill - softened, not a capsule.
   border-radius: 0.9rem;
-  box-shadow: 0 6px 16px -6px rgba(v.$druck-medien, 0.7),
+  box-shadow: 0 6px 16px -6px rgba(v.$schulfarbe, 0.7),
               0 2px 6px rgba(0, 0, 0, 0.16);
   cursor: pointer;
   transition: transform 260ms $ease-out, box-shadow 260ms $ease-out,
               background-color 200ms $ease-soft;
 
   &:hover {
-    background-color: color.adjust(v.$druck-medien, $lightness: -7%);
+    background-color: #2a4784;
     transform: translateY(-3px);
-    box-shadow: 0 14px 28px -10px rgba(v.$druck-medien, 0.75),
+    box-shadow: 0 14px 28px -10px rgba(v.$schulfarbe, 0.75),
                 0 3px 8px rgba(0, 0, 0, 0.2);
   }
 
@@ -262,7 +127,7 @@ body.gplan-standalone {
 
   // The icon flips over while the panel is open.
   &[aria-expanded="true"] {
-    background-color: color.adjust(v.$druck-medien, $lightness: -7%);
+    background-color: #2a4784;
 
     svg { transform: rotateX(180deg); }
   }
