@@ -1040,7 +1040,9 @@ a.tnav__item:hover {
  * -------------------------------------------------------------------------- */
 
 :root {
-  --plan-card: 7.4rem;                                   /* card width   */
+  /* Same size as the button on the homepage (.gplan__fab-art in
+     scss/components/_gebaeudeplan.scss) - same button, same measure. */
+  --plan-card: 10rem;
   --tour-chip-h: 2.4rem;                                 /* the blue tab */
   --tour-card-h: calc(var(--plan-card) * 0.977);         /* 432:422      */
   --tour-gap: 0.45rem;
@@ -1060,7 +1062,7 @@ a.tnav__item:hover {
 
 @media (max-width: 760px) {
   :root {
-    --plan-card: 5.2rem;
+    --plan-card: 7rem;
     --tour-chip-h: 2rem;
   }
 }

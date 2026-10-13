@@ -114,9 +114,11 @@ body.gplan-standalone {
   @include mx.focus-ring;
 
   .gplan__fab-art {
-    // Kept small on purpose - it sits in a corner, it is not a banner.
+    // Same size as the button in the 360 tours (--plan-card in
+    // tools/tour-shared/tour-skin.css) - it is the same button, so it should
+    // measure the same in both places.
     display: block;
-    inline-size: 9rem;
+    inline-size: 10rem;
     block-size: auto;
   }
 
