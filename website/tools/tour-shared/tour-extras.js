@@ -79,6 +79,36 @@
       ],
       note: "Schutzbrille tragen und den Wasserzulauf öffnen, bevor das " +
         "Gerät eingeschaltet wird."
+    },
+    {
+      scene: "Drucker",
+      kind: "info",
+      yaw: -0.0666,
+      // Also a solid box, so sized to the largest its outline gets.
+      pitch: 0.2352,
+      radius: 1000,
+      width: 210,
+      height: 340,
+      src: "../images/drucker-photon-m3-max.jpg",
+      label: "3D-Drucker Anycubic Photon M3 Max",
+      title: "3D-Drucker",
+      sub: "Anycubic Photon M3 Max",
+      text: [
+        "Ein Harzdrucker. Gedruckt wird nicht aus Kunststofffaden, sondern " +
+          "aus flüssigem Kunstharz, das Schicht für Schicht von " +
+          "einem Bildschirm mit UV-Licht ausgehärtet wird.",
+        "Die Bauplattform hängt über dem Harzbecken und wird nach " +
+          "jeder Schicht ein Stück angehoben – das Werkstück " +
+          "wächst also kopfüber nach oben. Weil die Schichten sehr " +
+          "fein sind, eignet sich das Verfahren für Modelle, Schienen " +
+          "und Schablonen.",
+        "Die gelbe Haube hält UV-Licht von außen ab, damit das Harz " +
+          "im Becken nicht vorzeitig aushärtet. Nach dem Druck wird das " +
+          "Teil in Isopropanol gewaschen und anschließend unter UV-Licht " +
+          "nachgehärtet."
+      ],
+      note: "Flüssiges Harz reizt Haut und Augen: Handschuhe tragen und " +
+        "die Haube geschlossen halten."
     }
   ];
 
