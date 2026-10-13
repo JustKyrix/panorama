@@ -123,7 +123,11 @@
     overlay.innerHTML =
       '<div class="tspot__stage"></div>' +
       '<button class="tspot__close" type="button" ' +
-      'aria-label="Schließen">×</button>' +
+      'aria-label="Schließen">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="2.6" stroke-linecap="round" aria-hidden="true">' +
+      '<path d="M6 6l12 12M18 6L6 18"/></svg>' +
+      "</button>" +
       '<p class="tspot__hint"></p>';
     document.body.appendChild(overlay);
 
@@ -195,7 +199,11 @@
       stage.innerHTML =
         '<article class="tcard">' +
         '<button class="tcard__close" type="button" ' +
-        'aria-label="Schließen">×</button>' +
+        'aria-label="Schließen">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="2.6" stroke-linecap="round" aria-hidden="true">' +
+      '<path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        "</button>" +
         '<div class="tcard__text">' +
         "<h2>" + spot.title + "</h2>" +
         '<p class="tcard__sub">' + spot.sub + "</p>" +
