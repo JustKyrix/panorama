@@ -1023,21 +1023,8 @@ a.tnav__item:hover {
 
 .tnav__home-art { width: var(--plan-card); }
 
-#titleBar {
-  top: auto !important;
-  left: auto !important;
-  right: 0.75rem !important;
-  /* The bar is exactly as tall as the card, and the card's aspect is fixed
-     at 432:422 - so its height is --plan-card * 0.977, no measuring needed. */
-  bottom: calc(var(--edge) + var(--plan-card) * 0.977 + 0.5rem) !important;
-  transform: none;
-  max-width: min(46%, 20rem);
-}
-
 @media (max-width: 760px) {
   :root { --plan-card: 4.2rem; }
-
-  #titleBar { max-width: calc(100% - 9rem); }
 }
 
 /* -----------------------------------------------------------------------------
@@ -1065,14 +1052,6 @@ a.tnav__item:hover {
 .tnav__home { order: 2; }
 
 .tnav__item.is-current { height: var(--tour-chip-h); }
-
-/* Clears the whole stack, so the name always sits just above the tab. */
-#titleBar {
-  bottom: calc(
-    var(--edge) + var(--tour-card-h) + var(--tour-gap) +
-    var(--tour-chip-h) + 0.5rem
-  ) !important;
-}
 
 @media (max-width: 760px) {
   :root {
