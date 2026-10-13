@@ -527,4 +527,59 @@
     info.setAttribute("aria-expanded", "false");
     info.classList.remove("is-open");
   });
+
+  // ---------------------------------------------------------------------------
+  //  Vor der Tuer steht der Blick still
+  //
+  //  In beiden Rundgaengen kommt man vor einer Tuer an. Dort soll sich die
+  //  Ansicht NICHT von selbst drehen, sonst schaut man nach zwei Sekunden an
+  //  der Tuer vorbei, die man eigentlich sehen soll. Drinnen darf sie wieder.
+  //
+  //  Die Tuer ist jeweils die Szene, in der man ankommt, also die erste -
+  //  daran festzumachen bleibt richtig, auch wenn die Namen sich wieder
+  //  aendern, was sie schon zweimal getan haben.
+  //
+  //  Zum Ablauf: switchScene() in index.js ruft an seinem Ende selbst
+  //  startAutorotate(). Deshalb laeuft die Regel hier eine Zustellung spaeter,
+  //  sonst hebt dieser Aufruf das Anhalten sofort wieder auf.
+  // ---------------------------------------------------------------------------
+
+  var entryScene = T.scenes[0] && T.scenes[0].scene;
+  var rotateBtn = T.autorotateToggle;
+
+  // Was der Besucher zuletzt wollte: eine von Hand gedrueckte Pause soll beim
+  // Betreten des naechsten Raums nicht stillschweigend aufgehoben werden.
+  var wantsRotation = rotateBtn
+    ? rotateBtn.classList.contains("enabled")
+    : true;
+
+  if (rotateBtn) {
+    rotateBtn.addEventListener("click", function () {
+      // index.js dreht die Klasse im eigenen Handler um; danach ablesen.
+      window.setTimeout(function () {
+        wantsRotation = rotateBtn.classList.contains("enabled");
+      }, 0);
+    });
+  }
+
+  function doorRule() {
+    if (!entryScene || typeof T.viewer.scene !== "function") return;
+
+    if (T.viewer.scene() === entryScene) {
+      // Auch den Knopf umstellen, sonst zeigt er Pause an, waehrend gar
+      // nichts laeuft.
+      if (rotateBtn) rotateBtn.classList.remove("enabled");
+      T.stopAutorotate();
+    } else if (wantsRotation) {
+      if (rotateBtn) rotateBtn.classList.add("enabled");
+      T.startAutorotate();
+    }
+  }
+
+  T.viewer.addEventListener("sceneChange", function () {
+    window.setTimeout(doorRule, 0);
+  });
+
+  doorRule();
+
 })();
