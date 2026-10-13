@@ -1039,3 +1039,49 @@ a.tnav__item:hover {
 
   #titleBar { max-width: calc(100% - 9rem); }
 }
+
+/* -----------------------------------------------------------------------------
+ *  Rechte untere Ecke, gestapelt
+ *      Ortsname
+ *      [ Zahntechnik ]      <- blau
+ *      [ 360-Karte    ]     <- weiss, gross
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --plan-card: 7.4rem;                                   /* card width   */
+  --tour-chip-h: 2.4rem;                                 /* the blue tab */
+  --tour-card-h: calc(var(--plan-card) * 0.977);         /* 432:422      */
+  --tour-gap: 0.45rem;
+}
+
+.tnav {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--tour-gap);
+}
+
+/* The blue tab on top, the card under it. */
+.tnav__item { order: 1; }
+.tnav__home { order: 2; }
+
+.tnav__item.is-current { height: var(--tour-chip-h); }
+
+/* Clears the whole stack, so the name always sits just above the tab. */
+#titleBar {
+  bottom: calc(
+    var(--edge) + var(--tour-card-h) + var(--tour-gap) +
+    var(--tour-chip-h) + 0.5rem
+  ) !important;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --plan-card: 5.2rem;
+    --tour-chip-h: 2rem;
+  }
+}
+
+/* Die Infokarte bringt ihren eigenen Schliessen-Knopf auf der Ecke mit, der
+   in der Bildschirmecke ist daneben nur ein zweiter fuer dasselbe. Beim
+   Plakat bleibt er: dort gibt es sonst keinen sichtbaren Weg hinaus. */
+.tspot--card .tspot__close { display: none; }
