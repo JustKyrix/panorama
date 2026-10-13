@@ -110,7 +110,7 @@
       // out - from inside a panorama the plan should only offer somewhere
       // else to go. Built up rather than written into the string, because the
       // literal below is what stamp.mjs rewrites with the plan's version.
-      var src = "../plan.html?v=3b3c4312";
+      var src = "../plan.html?v=850e21bf";
       planFrame.src = src + (src.indexOf("?") === -1 ? "?" : "&") +
         "here=" + encodeURIComponent(current || "");
       loaded = true;

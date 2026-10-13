@@ -389,4 +389,18 @@
   // Display the initial scene.
   switchScene(scenes[0]);
 
+
+  // --- Angehaengt von tools/sync-tour.mjs ---------------------------------
+  // Handle fuer tour-nav.js. Nichts davon wird hier veraendert, nur gereicht.
+  window.__tour = {
+    viewer: viewer,
+    scenes: scenes,
+    data: data,
+    switchScene: switchScene,
+    findSceneById: findSceneById,
+    startAutorotate: startAutorotate,
+    stopAutorotate: stopAutorotate,
+    autorotateToggle: autorotateToggleElement
+  };
+
 })();

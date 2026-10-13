@@ -133,7 +133,7 @@ for (const dir of TOURS) {
 const tours = TOURS.map((dir) =>
   stampPage(
     join(dir, "index.html"),
-    ["tour-skin.css", "tour-nav.js", "data.js"],
+    ["tour-skin.css", "tour-nav.js", "tour-extras.js", "data.js"],
     dir
   )
 );

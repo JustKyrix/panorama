@@ -89,65 +89,39 @@ body.gplan-standalone {
 // -----------------------------------------------------------------------------
 
 .gplan__fab {
-  // Relative to THIS stylesheet (assets/css/), which happens to be the same
-  // hop as from a tour folder - so the tours can point at the identical file.
-  --gplan-mark: url("../images/gebaeudeplan-icon.png");
-
   order: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.95rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  letter-spacing: -0.01em;
-  color: #fff;
-  background-color: v.$schulfarbe;
-  // A rounded rectangle rather than a full pill - softened, not a capsule.
-  border-radius: 0.9rem;
-  box-shadow: 0 6px 16px -6px rgba(v.$schulfarbe, 0.7),
-              0 2px 6px rgba(0, 0, 0, 0.16);
+  display: block;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 1.1rem;
+  line-height: 0;
   cursor: pointer;
-  transition: transform 260ms $ease-out, box-shadow 260ms $ease-out,
-              background-color 200ms $ease-soft;
+  // The supplied card IS the button - nothing is drawn behind it, so the
+  // depth comes from a shadow on the artwork itself rather than on a box.
+  filter: drop-shadow(0 10px 20px rgba(12, 23, 48, 0.3));
+  transition: transform 260ms $ease-out, filter 260ms $ease-out;
 
   &:hover {
-    background-color: #2a4784;
     transform: translateY(-3px);
-    box-shadow: 0 14px 28px -10px rgba(v.$schulfarbe, 0.75),
-                0 3px 8px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(0 16px 28px rgba(12, 23, 48, 0.38));
   }
 
-  &:active {
-    transform: translateY(-1px) scale(0.98);
-  }
+  &:active { transform: translateY(-1px) scale(0.98); }
 
-  // The supplied mark, carried as a mask rather than as a picture: the shape
-  // comes from the file's alpha and the colour from here, so it stays white
-  // on the blue button instead of being a fixed dark blue that would vanish
-  // against it. Kept small on purpose - it sits beside the label, not above
-  // it.
-  .gplan__fab-icon {
-    inline-size: 1.35rem;
-    block-size: 1.35rem;
-    flex: none;
-    background-color: currentColor;
-    -webkit-mask: var(--gplan-mark) center / contain no-repeat;
-    mask: var(--gplan-mark) center / contain no-repeat;
-    transition: transform 420ms $ease-out;
-  }
+  &[aria-expanded="true"] { transform: translateY(-2px) scale(0.97); }
 
-  // The mark tips over while the panel is open.
-  &[aria-expanded="true"] {
-    background-color: #2a4784;
+  @include mx.focus-ring;
 
-    .gplan__fab-icon { transform: rotateX(180deg); }
+  .gplan__fab-art {
+    // Kept small on purpose - it sits in a corner, it is not a banner.
+    display: block;
+    inline-size: 6.5rem;
+    block-size: auto;
   }
 
   @include mx.down("small") {
-    padding: 1rem;
-
-    .gplan__fab-text { @include mx.visually-hidden; }
+    .gplan__fab-art { inline-size: 5.25rem; }
   }
 }
 

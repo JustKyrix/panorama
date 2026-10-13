@@ -23,25 +23,78 @@ const SRC = join("tools", "tour-shared");
 
 // Each shared file, with the tag that has to be present in index.html.
 const FILES = [
-  {
+{
     name: "tour-skin.css",
     // After style.css, so it overrides the generated defaults.
     tag: '<link rel="stylesheet" href="tour-skin.css">',
     after: /<link rel="stylesheet" href="style\.css">/,
     present: /href="tour-skin\.css/,
-  },
-  {
+  },{
     name: "tour-nav.js",
     // After index.js: the countdown reads the class index.js puts on the
     // autorotate button, so that file has to have run first.
     tag: '<script src="tour-nav.js"></script>',
     after: /<script src="index\.js"><\/script>/,
     present: /src="tour-nav\.js/,
+  },{
+    name: "tour-extras.js",
+    // Last: it reads window.__tour, which index.js only defines once it has
+    // run, and it leans on the same skin as tour-nav.js.
+    tag: '<script src="tour-extras.js"></script>',
+    // Tolerates the ?v= stamp that will already be on that tag.
+    after: /<script src="tour-nav\.js[^"]*"><\/script>/,
+    present: /src="tour-extras\.js/,
   },
 ];
 
+/* -----------------------------------------------------------------------------
+ *  Bruecke zu index.js
+ *
+ *  index.js is generated and keeps `viewer`, the scene list and switchScene
+ *  inside an IIFE, so nothing outside can move the camera or change scene.
+ *  tour-nav.js needs both - keyboard navigation and the poster hotspot - so
+ *  one small handle is appended rather than forking the whole file. Applied
+ *  here so that re-exporting a tour and running this script restores it.
+ * -------------------------------------------------------------------------- */
+
+const BRIDGE_MARK = "window.__tour =";
+
+const BRIDGE = `
+  // --- Angehaengt von tools/sync-tour.mjs ---------------------------------
+  // Handle fuer tour-nav.js. Nichts davon wird hier veraendert, nur gereicht.
+  window.__tour = {
+    viewer: viewer,
+    scenes: scenes,
+    data: data,
+    switchScene: switchScene,
+    findSceneById: findSceneById,
+    startAutorotate: startAutorotate,
+    stopAutorotate: stopAutorotate,
+    autorotateToggle: autorotateToggleElement
+  };
+
+`;
+
+const bridge = (dir) => {
+  const file = join(dir, "index.js");
+  const js = readFileSync(file, "utf8");
+
+  if (js.includes(BRIDGE_MARK)) return false;
+
+  // The IIFE's own closing line, which is the last thing in the file.
+  const at = js.lastIndexOf("})();");
+  if (at === -1) {
+    console.error(`✗ ${file}: could not find the end of the IIFE`);
+    process.exit(1);
+  }
+
+  writeFileSync(file, js.slice(0, at) + BRIDGE + js.slice(at));
+  return true;
+};
+
 let copied = 0;
 let linked = 0;
+let bridged = 0;
 
 for (const dir of TOURS) {
   if (!existsSync(dir)) {
@@ -80,9 +133,12 @@ for (const dir of TOURS) {
   }
 
   if (html !== before) writeFileSync(page, html);
+
+  if (bridge(dir)) bridged++;
 }
 
 console.log(
   `✓ synced — ${copied} files into ${TOURS.length} tours` +
-    (linked ? `, added ${linked} missing link(s)` : "")
+    (linked ? `, added ${linked} missing link(s)` : "") +
+    (bridged ? `, bridged ${bridged} index.js` : "")
 );
