@@ -53,10 +53,15 @@
       scene: "Erste Hilfe",
       kind: "info",
       yaw: 0.3511,
-      pitch: 0.271,                       // the box sat low on the machine
+      // The trimmer is a solid object, not a flat sheet: look further down on
+      // it and more of its top face comes into view, so its outline on screen
+      // genuinely grows. A fixed box cannot match every angle, so it is sized
+      // to the LARGEST it gets - a little slack around it reads far better
+      // than an outline cutting through its base.
+      pitch: 0.288,
       radius: 1000,
-      width: 284,
-      height: 268,
+      width: 300,
+      height: 320,
       src: "../images/gipstrimmer-hss99.jpg",
       label: "Gipstrimmer Wassermann HSS 99",
       title: "Gipstrimmer",

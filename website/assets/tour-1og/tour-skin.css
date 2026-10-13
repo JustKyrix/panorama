@@ -678,16 +678,22 @@ a.tnav__item:hover {
   right: var(--edge);
   width: var(--btn);
   height: var(--btn);
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   line-height: 1;
-  color: var(--ui-fg);
-  background-color: var(--ui-bg);
-  border: 1px solid var(--ui-border);
+  color: #fff;
+  background-color: var(--ui-accent);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   cursor: pointer;
+  transition: background-color 180ms var(--ui-ease),
+              transform 180ms var(--ui-ease);
 }
 
-.tspot__close:hover { background-color: var(--ui-bg-hover); }
+.tspot__close:hover {
+  background-color: #2a4784;
+  transform: scale(1.08);
+}
 
 .tspot__hint {
   position: absolute;
@@ -905,25 +911,27 @@ a.tnav__item:hover {
 
 .tcard__close {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  top: 0.75rem;
+  right: 0.75rem;
   display: grid;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.4rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.7rem;
   line-height: 1;
-  color: #5c6675;
-  background-color: #eef1f5;
+  color: #fff;
+  background-color: var(--ui-accent);
   border: 0;
   border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(51, 87, 161, 0.45);
   cursor: pointer;
-  transition: background-color 180ms var(--ui-ease), color 180ms var(--ui-ease);
+  transition: background-color 180ms var(--ui-ease),
+              transform 180ms var(--ui-ease);
 }
 
 .tcard__close:hover {
-  color: #1b2432;
-  background-color: #dfe4ea;
+  background-color: #2a4784;
+  transform: scale(1.08);
 }
 
 /* --- Gebaeudeplan-Knopf: dieselbe Karte wie auf der Startseite --------------
@@ -955,3 +963,18 @@ a.tnav__item:hover {
 @media (max-width: 760px) {
   .tnav__home-art { width: 3.6rem; }
 }
+
+/* Die Leiste selbst traegt keinen Hintergrund mehr: die Karte bringt ihren
+   eigenen mit, und der Ortsname oben behaelt seinen. Nur der Reiter des
+   laufenden Rundgangs bleibt gefuellt, damit er lesbar bleibt. */
+.tnav {
+  padding: 0;
+  gap: 0.5rem;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.tnav__sep { display: none; }
