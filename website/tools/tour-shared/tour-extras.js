@@ -41,22 +41,22 @@
     {
       scene: "Erste Hilfe",               // matched loosely on the scene name
       kind: "poster",
-      yaw: 0.19,
-      pitch: -0.13,
+      yaw: 0.1915,
+      pitch: -0.1296,
       radius: 1000,
-      width: 252,                         // 0.252 rad across
-      height: 367,                        // 0.367 rad tall
+      width: 240,                         // trimmed to sit just outside it
+      height: 352,
       src: "../images/erste-hilfe-plakat.jpg",
       label: "Erste Hilfe – Aushang"
     },
     {
       scene: "Erste Hilfe",
       kind: "info",
-      yaw: 0.408,
-      pitch: 0.282,
+      yaw: 0.3511,
+      pitch: 0.271,                       // the box sat low on the machine
       radius: 1000,
-      width: 242,
-      height: 265,
+      width: 284,
+      height: 268,
       src: "../images/gipstrimmer-hss99.jpg",
       label: "Gipstrimmer Wassermann HSS 99",
       title: "Gipstrimmer",
@@ -159,6 +159,8 @@
       // Reading matter on the left, the machine on the right.
       stage.innerHTML =
         '<article class="tcard">' +
+        '<button class="tcard__close" type="button" ' +
+        'aria-label="Schließen">×</button>' +
         '<div class="tcard__text">' +
         "<h2>" + spot.title + "</h2>" +
         '<p class="tcard__sub">' + spot.sub + "</p>" +
@@ -170,6 +172,9 @@
         "</div>" +
         "</article>";
       box.querySelector(".tspot__hint").textContent = "Esc schließt";
+      stage
+        .querySelector(".tcard__close")
+        .addEventListener("click", closeSpot);
     } else {
       stage.innerHTML =
         '<img class="tspot__sheet" src="' + spot.src + '" alt="' +
@@ -226,7 +231,6 @@
       el.setAttribute("aria-label", spot.label);
       el.style.width = spot.width + "px";
       el.style.height = spot.height + "px";
-      el.innerHTML = '<span class="tmark__glow"></span>';
 
       // Hovering holds the panorama still, so the thing does not drift away
       // from under the pointer while being aimed at.

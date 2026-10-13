@@ -593,68 +593,37 @@ a.tnav__item:hover {
 }
 
 /* -----------------------------------------------------------------------------
- *  Plakat im Panorama
- *  The marker lies ON the poster - Marzipano places it with a perspective
- *  hotspot, so it keeps covering the same patch of wall as you zoom. The glow
- *  is a rotating conic gradient behind a transparent middle, which is what
- *  makes the light appear to travel around the edge rather than just pulse.
+ *  Marken im Panorama
+ *  A marker lies ON the thing it names - Marzipano places it with a
+ *  perspective hotspot, so it keeps covering the same patch as you zoom. The
+ *  ring is drawn with an outward box-shadow spread, which puts it AROUND the
+ *  object rather than over it.
  * -------------------------------------------------------------------------- */
 
 .tmark {
   position: relative;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 5px;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.95),
-              0 0 16px 4px rgba(255, 255, 255, 0.55);
-  animation: tmark-breathe 2.8s ease-in-out infinite;
+              0 0 18px 5px rgba(255, 255, 255, 0.5);
+  animation: tmark-breathe 3s ease-in-out infinite;
   transition: box-shadow 220ms var(--ui-ease);
-}
-
-.tmark__glow {
-  position: absolute;
-  inset: -6px;
-  border-radius: 7px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 220ms var(--ui-ease);
-  /* The band of light that runs round the edge. The mask punches out the
-     middle, leaving only a rim, so the poster underneath stays readable. */
-  background: conic-gradient(
-    from 0turn,
-    rgba(255, 150, 20, 0) 0deg,
-    rgba(255, 170, 40, 0.95) 60deg,
-    rgba(255, 110, 0, 1) 110deg,
-    rgba(255, 150, 20, 0) 190deg,
-    rgba(255, 150, 20, 0) 360deg
-  );
-  -webkit-mask: linear-gradient(#000 0 0) content-box exclude,
-                linear-gradient(#000 0 0);
-  mask: linear-gradient(#000 0 0) content-box exclude,
-        linear-gradient(#000 0 0);
-  padding: 5px;
-  animation: tmark-spin 2.4s linear infinite;
 }
 
 .tmark:hover,
 .tmark:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 170, 40, 1),
-              0 0 26px 8px rgba(255, 130, 0, 0.75);
   animation: none;
-}
-
-.tmark:hover .tmark__glow,
-.tmark:focus-visible .tmark__glow { opacity: 1; }
-
-@keyframes tmark-spin {
-  to { transform: rotate(1turn); }
+  box-shadow: 0 0 0 3px #4a90ff,
+              0 0 26px 9px rgba(74, 144, 255, 0.8),
+              0 0 60px 18px rgba(51, 87, 161, 0.5);
 }
 
 @keyframes tmark-breathe {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.95),
-                         0 0 14px 3px rgba(255, 255, 255, 0.45); }
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
+                         0 0 14px 4px rgba(255, 255, 255, 0.4); }
   50%      { box-shadow: 0 0 0 2px rgba(255, 255, 255, 1),
-                         0 0 24px 7px rgba(255, 255, 255, 0.75); }
+                         0 0 24px 8px rgba(255, 255, 255, 0.7); }
 }
 
 /* -----------------------------------------------------------------------------
@@ -840,8 +809,7 @@ a.tnav__item:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tmark,
-  .tmark__glow { animation: none; }
+  .tmark { animation: none; }
   .tspot,
   .tspot__stage,
   .tspot__sheet,
@@ -929,4 +897,61 @@ a.tnav__item:hover {
   .tcard__media { order: -1; }
   .tcard__media img { max-height: 32vh; }
   .tcard h2 { font-size: 1.2rem; }
+}
+
+/* Eigener Schliessen-Knopf auf der Karte - der auf dem Hintergrund steht weit
+   weg vom Text, und auf der Karte sucht man ihn an der Karte. */
+.tcard { position: relative; }
+
+.tcard__close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #5c6675;
+  background-color: #eef1f5;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 180ms var(--ui-ease), color 180ms var(--ui-ease);
+}
+
+.tcard__close:hover {
+  color: #1b2432;
+  background-color: #dfe4ea;
+}
+
+/* --- Gebaeudeplan-Knopf: dieselbe Karte wie auf der Startseite --------------
+   Vorher ein Textknopf, jetzt dasselbe Bild, damit beide Stellen wirklich
+   dasselbe zeigen. */
+.tnav__home {
+  padding: 0 !important;
+  background: none !important;
+  border-radius: 0.8rem !important;
+  line-height: 0;
+}
+
+.tnav__home:hover { background: none !important; }
+
+.tnav__home::before { content: none !important; }
+
+.tnav__home span { display: none !important; }
+
+.tnav__home-art {
+  display: block;
+  width: 4.6rem;
+  height: auto;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+  transition: transform 240ms var(--ui-ease);
+}
+
+.tnav__home:hover .tnav__home-art { transform: translateY(-2px); }
+
+@media (max-width: 760px) {
+  .tnav__home-art { width: 3.6rem; }
 }

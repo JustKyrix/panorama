@@ -58,9 +58,11 @@
   // got into this one, so a panorama never advertises a room in a part of the
   // building you have not navigated to.
   nav.innerHTML =
-    '<button class="tnav__home" type="button" data-plan-open>' +
-    PLAN_ICON +
-    "<span>Gebäudeplan</span></button>" +
+    '<button class="tnav__home" type="button" data-plan-open ' +
+    'aria-label="Gebäudeplan">' +
+    '<img class="tnav__home-art" src="../images/btn-360-rundgang.svg" ' +
+    'alt="" aria-hidden="true">' +
+    "</button>" +
     '<span class="tnav__sep"></span>' +
     '<span class="tnav__item is-current" aria-current="page">' +
     label +
