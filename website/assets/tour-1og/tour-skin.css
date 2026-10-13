@@ -661,7 +661,7 @@ a.tnav__item:hover {
  *  Plakat gross
  * -------------------------------------------------------------------------- */
 
-.tposter {
+.tspot {
   position: fixed;
   inset: 0;
   z-index: 12500;
@@ -674,18 +674,18 @@ a.tnav__item:hover {
   transition: opacity 240ms var(--ui-ease);
 }
 
-.tposter[hidden] { display: none; }
-.tposter.is-open { opacity: 1; }
+.tspot[hidden] { display: none; }
+.tspot.is-open { opacity: 1; }
 
 /* The stage carries the flight out of the wall; the sheet inside carries the
    turning. Two elements, because one cannot be transitioned and dragged on
    the same property at once. */
-.tposter__stage {
+.tspot__stage {
   transition: transform 420ms var(--ui-ease), opacity 240ms var(--ui-ease);
   will-change: transform;
 }
 
-.tposter__sheet {
+.tspot__sheet {
   display: block;
   max-width: min(88vw, 60vh);
   max-height: 86vh;
@@ -698,12 +698,12 @@ a.tnav__item:hover {
   transition: transform 160ms var(--ui-ease);
 }
 
-.tposter__sheet.is-held {
+.tspot__sheet.is-held {
   cursor: grabbing;
   transition: none;
 }
 
-.tposter__close {
+.tspot__close {
   position: absolute;
   top: var(--edge);
   right: var(--edge);
@@ -718,9 +718,9 @@ a.tnav__item:hover {
   cursor: pointer;
 }
 
-.tposter__close:hover { background-color: var(--ui-bg-hover); }
+.tspot__close:hover { background-color: var(--ui-bg-hover); }
 
-.tposter__hint {
+.tspot__hint {
   position: absolute;
   bottom: var(--edge);
   left: 50%;
@@ -842,8 +842,91 @@ a.tnav__item:hover {
 @media (prefers-reduced-motion: reduce) {
   .tmark,
   .tmark__glow { animation: none; }
-  .tposter,
-  .tposter__stage,
-  .tposter__sheet,
+  .tspot,
+  .tspot__stage,
+  .tspot__sheet,
   .tkeys { transition: none; animation: none; }
+}
+
+/* -----------------------------------------------------------------------------
+ *  Infokarte - Text links, Bild rechts
+ *  Shares the overlay, the backdrop and the flight-out-of-the-wall with the
+ *  poster; only what sits on the stage differs.
+ * -------------------------------------------------------------------------- */
+
+.tcard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 1.75rem;
+  align-items: center;
+  width: min(54rem, 90vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 1.6rem 1.8rem;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+}
+
+.tcard h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: #1b2432;
+}
+
+.tcard__sub {
+  margin: 0.15rem 0 1rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ui-accent);
+}
+
+.tcard__text p {
+  margin: 0 0 0.7rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #44505f;
+}
+
+.tcard__note {
+  margin: 1rem 0 0 !important;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.84rem !important;
+  color: #7a4a00 !important;
+  background-color: #fff6e5;
+  border-inline-start: 3px solid #f0a020;
+  border-radius: 0.4rem;
+}
+
+.tcard__media {
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background-color: #f4f6f9;
+  border-radius: 0.75rem;
+}
+
+.tcard__media img {
+  display: block;
+  max-width: 100%;
+  max-height: 58vh;
+  object-fit: contain;
+}
+
+/* Narrow: the picture goes above the text rather than beside it. */
+@media (max-width: 860px) {
+  .tcard {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.1rem 1.2rem;
+  }
+
+  .tcard__media { order: -1; }
+  .tcard__media img { max-height: 32vh; }
+  .tcard h2 { font-size: 1.2rem; }
 }

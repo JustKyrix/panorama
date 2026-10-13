@@ -33,46 +33,73 @@
   //  size on top of it.
   // ---------------------------------------------------------------------------
 
-  var POSTERS = [
+  // Angles measured in the panorama rather than guessed: a marker has to sit
+  // ON the thing, not near it. `radius` turns the element's pixel size into an
+  // angular one (size / radius), so the outline keeps covering the same patch
+  // as you zoom instead of floating at a fixed size on top of it.
+  var SPOTS = [
     {
-      scene: "Erste Hilfe",                 // matched loosely on the name
+      scene: "Erste Hilfe",               // matched loosely on the scene name
+      kind: "poster",
       yaw: 0.19,
       pitch: -0.13,
       radius: 1000,
-      width: 252,                           // 0.252 rad across
-      height: 367,                          // 0.367 rad tall
+      width: 252,                         // 0.252 rad across
+      height: 367,                        // 0.367 rad tall
       src: "../images/erste-hilfe-plakat.jpg",
       label: "Erste Hilfe – Aushang"
+    },
+    {
+      scene: "Erste Hilfe",
+      kind: "info",
+      yaw: 0.408,
+      pitch: 0.282,
+      radius: 1000,
+      width: 242,
+      height: 265,
+      src: "../images/gipstrimmer-hss99.jpg",
+      label: "Gipstrimmer Wassermann HSS 99",
+      title: "Gipstrimmer",
+      sub: "Wassermann HSS 99",
+      text: [
+        "Mit dem Trimmer werden Gipsmodelle in Form gebracht: Überschüssiger " +
+          "Gips wird abgetragen, die Ränder begradigt und der Sockel plan " +
+          "geschliffen.",
+        "Geschliffen wird nass. Das zulaufende Wasser kühlt die Scheibe und " +
+          "bindet den Gipsstaub, der sonst in der Luft hängt und die Scheibe " +
+          "zusetzt.",
+        "Das Modell wird dabei auf den Tisch gelegt und gegen die laufende " +
+          "Scheibe geführt. Über den Anschlag lassen sich Flächen in " +
+          "einem gleichmäßigen Winkel trimmen."
+      ],
+      note: "Schutzbrille tragen und den Wasserzulauf öffnen, bevor das " +
+        "Gerät eingeschaltet wird."
     }
   ];
 
-  var lightbox = null;
+  var overlay = null;
 
-  function buildLightbox() {
-    if (lightbox) return lightbox;
+  function buildOverlay() {
+    if (overlay) return overlay;
 
-    lightbox = document.createElement("div");
-    lightbox.className = "tposter";
-    lightbox.hidden = true;
-    lightbox.innerHTML =
-      '<div class="tposter__stage">' +
-      '<img class="tposter__sheet" alt="">' +
-      "</div>" +
-      '<button class="tposter__close" type="button" ' +
+    overlay = document.createElement("div");
+    overlay.className = "tspot";
+    overlay.hidden = true;
+    overlay.innerHTML =
+      '<div class="tspot__stage"></div>' +
+      '<button class="tspot__close" type="button" ' +
       'aria-label="Schließen">×</button>' +
-      '<p class="tposter__hint">Ziehen zum Drehen · Mausrad zum Zoomen · ' +
-      "Esc schließt</p>";
-    document.body.appendChild(lightbox);
+      '<p class="tspot__hint"></p>';
+    document.body.appendChild(overlay);
 
-    lightbox.addEventListener("pointerdown", function (e) {
-      if (e.target === lightbox) closePoster();
+    overlay.addEventListener("pointerdown", function (e) {
+      if (e.target === overlay) closeSpot();
     });
-    lightbox
-      .querySelector(".tposter__close")
-      .addEventListener("click", closePoster);
+    overlay
+      .querySelector(".tspot__close")
+      .addEventListener("click", closeSpot);
 
-    holdable(lightbox.querySelector(".tposter__sheet"));
-    return lightbox;
+    return overlay;
   }
 
   /**
@@ -92,7 +119,7 @@
       dragging = true;
       lastX = e.clientX;
       lastY = e.clientY;
-      sheet.setPointerCapture(e.pointerId);
+      try { sheet.setPointerCapture(e.pointerId); } catch (err) {}
       sheet.classList.add("is-held");
     });
 
@@ -119,33 +146,49 @@
       apply();
     }, { passive: false });
 
-    // Each opening starts flat and unzoomed.
-    sheet.reset = function () {
-      rx = ry = 0;
-      scale = 1;
-      apply();
-    };
+    apply();
   }
 
-  function openPoster(poster, fromEl) {
-    var box = buildLightbox();
-    var sheet = box.querySelector(".tposter__sheet");
+  function openSpot(spot, fromEl) {
+    var box = buildOverlay();
+    var stage = box.querySelector(".tspot__stage");
 
-    sheet.src = poster.src;
-    sheet.alt = poster.label;
-    sheet.reset();
+    box.classList.toggle("tspot--card", spot.kind === "info");
+
+    if (spot.kind === "info") {
+      // Reading matter on the left, the machine on the right.
+      stage.innerHTML =
+        '<article class="tcard">' +
+        '<div class="tcard__text">' +
+        "<h2>" + spot.title + "</h2>" +
+        '<p class="tcard__sub">' + spot.sub + "</p>" +
+        spot.text.map(function (p) { return "<p>" + p + "</p>"; }).join("") +
+        '<p class="tcard__note">' + spot.note + "</p>" +
+        "</div>" +
+        '<div class="tcard__media">' +
+        '<img src="' + spot.src + '" alt="' + spot.label + '">' +
+        "</div>" +
+        "</article>";
+      box.querySelector(".tspot__hint").textContent = "Esc schließt";
+    } else {
+      stage.innerHTML =
+        '<img class="tspot__sheet" src="' + spot.src + '" alt="' +
+        spot.label + '">';
+      holdable(stage.querySelector(".tspot__sheet"));
+      box.querySelector(".tspot__hint").textContent =
+        "Ziehen zum Drehen · Mausrad zum Zoomen · Esc schließt";
+    }
 
     // Grow out of the marker: the first frame is placed and scaled onto the
     // spot on the wall, the next one lets it travel to the middle.
     var from = fromEl.getBoundingClientRect();
-    var stage = box.querySelector(".tposter__stage");
     var cx = from.left + from.width / 2 - window.innerWidth / 2;
     var cy = from.top + from.height / 2 - window.innerHeight / 2;
 
     stage.style.transition = "none";
     stage.style.transform =
-      "translate(" + cx + "px," + cy + "px) scale(" + Math.max(0.05,
-        from.height / window.innerHeight) + ")";
+      "translate(" + cx + "px," + cy + "px) scale(" +
+      Math.max(0.05, from.height / window.innerHeight) + ")";
     stage.style.opacity = "0";
 
     box.hidden = false;
@@ -160,54 +203,54 @@
     T.stopAutorotate();
   }
 
-  function closePoster() {
-    if (!lightbox || lightbox.hidden) return;
-    lightbox.classList.remove("is-open");
+  function closeSpot() {
+    if (!overlay || overlay.hidden) return;
+    overlay.classList.remove("is-open");
     // Matches the fade in the stylesheet. A timer, not `transitionend`, which
     // never arrives while the tab is in the background.
     window.setTimeout(function () {
-      if (!lightbox.classList.contains("is-open")) lightbox.hidden = true;
+      if (!overlay.classList.contains("is-open")) overlay.hidden = true;
     }, 260);
     T.startAutorotate();
   }
 
   // --- place the markers ------------------------------------------------------
   T.scenes.forEach(function (scene) {
-    POSTERS.forEach(function (poster) {
-      if (scene.data.name.indexOf(poster.scene) === -1) return;
+    SPOTS.forEach(function (spot) {
+      if (scene.data.name.indexOf(spot.scene) === -1) return;
 
       var el = document.createElement("div");
       el.className = "tmark";
       el.setAttribute("role", "button");
       el.setAttribute("tabindex", "0");
-      el.setAttribute("aria-label", poster.label);
-      el.style.width = poster.width + "px";
-      el.style.height = poster.height + "px";
+      el.setAttribute("aria-label", spot.label);
+      el.style.width = spot.width + "px";
+      el.style.height = spot.height + "px";
       el.innerHTML = '<span class="tmark__glow"></span>';
 
-      // Hovering it holds the panorama still, so the poster does not drift
-      // away from under the pointer while being aimed at.
+      // Hovering holds the panorama still, so the thing does not drift away
+      // from under the pointer while being aimed at.
       el.addEventListener("pointerenter", function () {
         T.stopAutorotate();
       });
       el.addEventListener("pointerleave", function () {
-        if (!lightbox || lightbox.hidden) T.startAutorotate();
+        if (!overlay || overlay.hidden) T.startAutorotate();
       });
 
       el.addEventListener("click", function () {
-        openPoster(poster, el);
+        openSpot(spot, el);
       });
       el.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          openPoster(poster, el);
+          openSpot(spot, el);
         }
       });
 
       scene.scene.hotspotContainer().createHotspot(
         el,
-        { yaw: poster.yaw, pitch: poster.pitch },
-        { perspective: { radius: poster.radius, extraTransforms: "" } }
+        { yaw: spot.yaw, pitch: spot.pitch },
+        { perspective: { radius: spot.radius, extraTransforms: "" } }
       );
     });
   });
@@ -349,8 +392,8 @@
 
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
-    if (lightbox && !lightbox.hidden) {
-      closePoster();
+    if (overlay && !overlay.hidden) {
+      closeSpot();
     } else if (!sheet.hidden) {
       sheet.hidden = true;
       info.setAttribute("aria-expanded", "false");
