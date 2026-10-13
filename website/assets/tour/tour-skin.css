@@ -961,6 +961,10 @@ a.tnav__item:hover {
   background: none !important;
   border-radius: 0.8rem !important;
   line-height: 0;
+  /* The shared rule pins both items to 38px. The card is taller than that, so
+     it was overflowing the bar - which then stayed 38px tall and the room
+     name above it overlapped the card. */
+  height: auto !important;
 }
 
 .tnav__home:hover { background: none !important; }
@@ -997,3 +1001,41 @@ a.tnav__item:hover {
 }
 
 .tnav__sep { display: none; }
+
+/* -----------------------------------------------------------------------------
+ *  Ortsname ueber den Gebaeudeplan-Knopf
+ *  Both belong to the same corner now, stacked: the name sits directly above
+ *  the card. The offset is derived from --plan-card rather than typed, so
+ *  resizing the card moves the name with it.
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --plan-card: 5.8rem;          /* width of the card; it is nearly square */
+}
+
+/* The card goes last in the row, so it ends up hard against the right edge. */
+.tnav {
+  right: 0.75rem;
+  gap: 0.45rem;
+}
+
+.tnav__home { order: 2; }
+
+.tnav__home-art { width: var(--plan-card); }
+
+#titleBar {
+  top: auto !important;
+  left: auto !important;
+  right: 0.75rem !important;
+  /* The bar is exactly as tall as the card, and the card's aspect is fixed
+     at 432:422 - so its height is --plan-card * 0.977, no measuring needed. */
+  bottom: calc(var(--edge) + var(--plan-card) * 0.977 + 0.5rem) !important;
+  transform: none;
+  max-width: min(46%, 20rem);
+}
+
+@media (max-width: 760px) {
+  :root { --plan-card: 4.2rem; }
+
+  #titleBar { max-width: calc(100% - 9rem); }
+}
