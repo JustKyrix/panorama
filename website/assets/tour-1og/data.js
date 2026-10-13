@@ -2,7 +2,7 @@ var APP_DATA = {
   "scenes": [
     {
       "id": "0-r0010030",
-      "name": "Flur B-Trakt",
+      "name": "Flur: Tür vorm Labor",
       "levels": [
         {
           "tileSize": 256,
@@ -116,7 +116,7 @@ var APP_DATA = {
     },
     {
       "id": "2-r0010032",
-      "name": "Flur vor der Küche",
+      "name": "Zahntechnik – Raummitte",
       "levels": [
         {
           "tileSize": 256,
@@ -182,7 +182,7 @@ var APP_DATA = {
     },
     {
       "id": "3-r0010033",
-      "name": "Küche – Übersicht",
+      "name": "Technik: Drucker und mehr",
       "levels": [
         {
           "tileSize": 256,
@@ -248,7 +248,7 @@ var APP_DATA = {
     },
     {
       "id": "4-r0010034",
-      "name": "Küche – Kochzeile",
+      "name": "Zahntechnik – Erste Hilfe und Spüle",
       "levels": [
         {
           "tileSize": 256,
@@ -314,7 +314,7 @@ var APP_DATA = {
     },
     {
       "id": "5-r0010035",
-      "name": "Zahntechnik – Arbeitsplätze",
+      "name": "Broschüren",
       "levels": [
         {
           "tileSize": 256,
@@ -380,7 +380,7 @@ var APP_DATA = {
     },
     {
       "id": "6-r0010036",
-      "name": "Küche – Fensterseite",
+      "name": "Zahntechnik – Hygieneplan",
       "levels": [
         {
           "tileSize": 256,
@@ -452,7 +452,7 @@ var APP_DATA = {
     },
     {
       "id": "7-r0010037",
-      "name": "Zahntechnik – Werkbänke",
+      "name": "Lehrerpult",
       "levels": [
         {
           "tileSize": 256,

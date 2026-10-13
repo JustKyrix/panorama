@@ -89,6 +89,10 @@ body.gplan-standalone {
 // -----------------------------------------------------------------------------
 
 .gplan__fab {
+  // Relative to THIS stylesheet (assets/css/), which happens to be the same
+  // hop as from a tour folder - so the tours can point at the identical file.
+  --gplan-mark: url("../images/gebaeudeplan-icon.png");
+
   order: 2;
   display: inline-flex;
   align-items: center;
@@ -118,18 +122,26 @@ body.gplan-standalone {
     transform: translateY(-1px) scale(0.98);
   }
 
-  svg {
-    inline-size: 1.25rem;
-    block-size: 1.25rem;
+  // The supplied mark, carried as a mask rather than as a picture: the shape
+  // comes from the file's alpha and the colour from here, so it stays white
+  // on the blue button instead of being a fixed dark blue that would vanish
+  // against it. Kept small on purpose - it sits beside the label, not above
+  // it.
+  .gplan__fab-icon {
+    inline-size: 1.35rem;
+    block-size: 1.35rem;
     flex: none;
+    background-color: currentColor;
+    -webkit-mask: var(--gplan-mark) center / contain no-repeat;
+    mask: var(--gplan-mark) center / contain no-repeat;
     transition: transform 420ms $ease-out;
   }
 
-  // The icon flips over while the panel is open.
+  // The mark tips over while the panel is open.
   &[aria-expanded="true"] {
     background-color: #2a4784;
 
-    svg { transform: rotateX(180deg); }
+    .gplan__fab-icon { transform: rotateX(180deg); }
   }
 
   @include mx.down("small") {

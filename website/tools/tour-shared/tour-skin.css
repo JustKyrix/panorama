@@ -270,21 +270,17 @@ body.fullscreen-enabled #autorotateToggle {
   place-items: center;
   width: var(--btn);
   height: var(--btn);
-  color: rgba(255, 255, 255, 0.82);
-  background-color: var(--ui-bg);
-  border: 1px solid var(--ui-border);
+  color: #fff;
+  background-color: var(--ui-accent);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 50%;
   box-shadow: var(--ui-shadow);
-  -webkit-backdrop-filter: var(--ui-blur);
-  backdrop-filter: var(--ui-blur);
   transition: background-color 200ms var(--ui-ease),
-              color 200ms var(--ui-ease),
               transform 260ms var(--ui-ease);
 }
 
 .thome:hover {
-  color: #fff;
-  background-color: var(--ui-bg-hover);
+  background-color: #2a4784;
   transform: translateY(-2px);
 }
 
@@ -329,6 +325,35 @@ a.tnav__item:hover {
   height: 15px;
   flex: none;
 }
+
+/* The same button as on the homepage: the supplied mark as a mask so it takes
+   the colour from here, the same blue, the same rounded rectangle. The path is
+   one hop up from this file, exactly as it is from assets/css/main.css, so
+   both stylesheets name the identical file. */
+.tnav__home {
+  gap: 0.5rem;
+  padding: 0 1rem;
+  color: #fff !important;
+  background-color: var(--ui-accent);
+  border-radius: 0.7rem;
+}
+
+.tnav__home:hover {
+  background-color: #2a4784 !important;
+}
+
+.tnav__home::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  -webkit-mask: var(--gplan-mark) center / contain no-repeat;
+  mask: var(--gplan-mark) center / contain no-repeat;
+  --gplan-mark: url("../images/gebaeudeplan-icon.png");
+}
+
+.tnav__home svg { display: none; }
 
 .tnav__sep {
   width: 1px;

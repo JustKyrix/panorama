@@ -14746,6 +14746,7 @@ body.gplan-standalone .gplan__panel {
 }
 
 .gplan__fab {
+  --gplan-mark: url("../images/gebaeudeplan-icon.png");
   order: 2;
   display: inline-flex;
   align-items: center;
@@ -14769,16 +14770,19 @@ body.gplan-standalone .gplan__panel {
 .gplan__fab:active {
   transform: translateY(-1px) scale(0.98);
 }
-.gplan__fab svg {
-  inline-size: 1.25rem;
-  block-size: 1.25rem;
+.gplan__fab .gplan__fab-icon {
+  inline-size: 1.35rem;
+  block-size: 1.35rem;
   flex: none;
+  background-color: currentColor;
+  -webkit-mask: var(--gplan-mark) center/contain no-repeat;
+  mask: var(--gplan-mark) center/contain no-repeat;
   transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .gplan__fab[aria-expanded=true] {
   background-color: #2a4784;
 }
-.gplan__fab[aria-expanded=true] svg {
+.gplan__fab[aria-expanded=true] .gplan__fab-icon {
   transform: rotateX(180deg);
 }
 @media (max-width: 454px) {
