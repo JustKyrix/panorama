@@ -115,8 +115,9 @@
       kind: "info",
       yaw: -0.5027,
       pitch: 0.188,
-      width: 287,
-      height: 365,
+      // Widened: the ring sat just inside the cabinet's left edge and base.
+      width: 333,
+      height: 400,
       src: "../images/strahlbox.jpg",
       label: "Dampfstrahler",
       title: "Dampfstrahler",
