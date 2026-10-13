@@ -41,8 +41,8 @@
     {
       scene: "Erste Hilfe",               // matched loosely on the scene name
       kind: "poster",
-      yaw: 0.1915,
-      pitch: -0.1296,
+      yaw: 0.1936,
+      pitch: -0.1232,
       radius: 1000,
       width: 240,                         // trimmed to sit just outside it
       height: 352,
@@ -109,6 +109,28 @@
       ],
       note: "Flüssiges Harz reizt Haut und Augen: Handschuhe tragen und " +
         "die Haube geschlossen halten."
+    },
+    {
+      scene: "Drucker",
+      kind: "info",
+      yaw: -0.5027,
+      pitch: 0.188,
+      width: 287,
+      height: 365,
+      src: "../images/strahlbox.jpg",
+      label: "Dampfstrahler",
+      title: "Dampfstrahler",
+      sub: "Reinigungsplatz",
+      text: [
+        "Mit heißem Dampf werden Modelle, Prothesen und Arbeitsteile " +
+          "gereinigt. Wachsreste, Politurpaste und Gipsstaub lösen sich " +
+          "dabei ab, ohne dass gebürstet werden muss.",
+        "Der Dampf kommt aus dem Kessel daneben und wird mit der Handdüse " +
+          "geführt. Gearbeitet wird in der offenen Edelstahlkammer, damit " +
+          "das Spritzwasser aufgefangen wird und ablaufen kann."
+      ],
+      note: "Der Dampf ist heiß und steht unter Druck: Werkstücke " +
+        "mit einer Zange halten und den Strahl nie auf die Hand richten."
     }
   ];
 
@@ -264,6 +286,41 @@
   }
 
   // --- place the markers ------------------------------------------------------
+  var marks = [];
+
+  /**
+   * Give every marker the on-screen size its object has right now.
+   *
+   * Marzipano draws the panorama rectilinearly, so something `a` radians wide
+   * covers 2 * p * tan(a / 2) pixels, where p is the same focal length the
+   * viewer uses: half the viewport height over tan(half the field of view).
+   * The widths in SPOTS are milliradians, which is what they already were
+   * when they doubled as pixel sizes at radius 1000.
+   */
+  function sizeMarks() {
+    var view = T.viewer.view();
+    var h = pano.clientHeight;
+    if (!h) return;
+
+    var p = h / 2 / Math.tan(view.fov() / 2);
+
+    marks.forEach(function (m) {
+      var w = 2 * p * Math.tan(m.spot.width / 2000);
+      var h = 2 * p * Math.tan(m.spot.height / 2000);
+
+      m.el.style.width = w + "px";
+      m.el.style.height = h + "px";
+
+      // Marzipano puts the element's TOP-LEFT on the anchor for a plain
+      // hotspot - only the perspective kind centres it for you - so without
+      // this every marker sat half its own size down and to the right of the
+      // thing it marks. Margins rather than a transform, because Marzipano
+      // writes the transform itself on every view change.
+      m.el.style.marginLeft = -w / 2 + "px";
+      m.el.style.marginTop = -h / 2 + "px";
+    });
+  }
+
   T.scenes.forEach(function (scene) {
     SPOTS.forEach(function (spot) {
       if (scene.data.name.indexOf(spot.scene) === -1) return;
@@ -273,8 +330,6 @@
       el.setAttribute("role", "button");
       el.setAttribute("tabindex", "0");
       el.setAttribute("aria-label", spot.label);
-      el.style.width = spot.width + "px";
-      el.style.height = spot.height + "px";
 
       // Hovering holds the panorama still, so the thing does not drift away
       // from under the pointer while being aimed at.
@@ -295,13 +350,25 @@
         }
       });
 
+      // NO perspective option. A perspective hotspot is a flat sticker glued
+      // to a sphere, and a flat plane only lines up with the picture where it
+      // faces the camera - the further the object sits from the middle of the
+      // screen, the more it skews off its object. A plain hotspot is placed
+      // by projecting its anchor point, so it is centred on the object in
+      // every view; the only thing it does not do by itself is change size
+      // with the zoom, which is what sizeMarks() below is for.
       scene.scene.hotspotContainer().createHotspot(
         el,
-        { yaw: spot.yaw, pitch: spot.pitch },
-        { perspective: { radius: spot.radius, extraTransforms: "" } }
+        { yaw: spot.yaw, pitch: spot.pitch }
       );
+
+      marks.push({ el: el, spot: spot });
     });
   });
+
+  T.viewer.addEventListener("viewChange", sizeMarks);
+  window.addEventListener("resize", sizeMarks);
+  sizeMarks();
 
   // ---------------------------------------------------------------------------
   //  Tastatur

@@ -116,12 +116,12 @@ body.gplan-standalone {
   .gplan__fab-art {
     // Kept small on purpose - it sits in a corner, it is not a banner.
     display: block;
-    inline-size: 6.5rem;
+    inline-size: 9rem;
     block-size: auto;
   }
 
   @include mx.down("small") {
-    .gplan__fab-art { inline-size: 5.25rem; }
+    .gplan__fab-art { inline-size: 7rem; }
   }
 }
 

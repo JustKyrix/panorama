@@ -14773,12 +14773,12 @@ body.gplan-standalone .gplan__panel {
 }
 .gplan__fab .gplan__fab-art {
   display: block;
-  inline-size: 6.5rem;
+  inline-size: 9rem;
   block-size: auto;
 }
 @media (max-width: 454px) {
   .gplan__fab .gplan__fab-art {
-    inline-size: 5.25rem;
+    inline-size: 7rem;
   }
 }
 

@@ -803,8 +803,13 @@ a.tnav__item:hover {
 .tkeys kbd {
   display: grid;
   place-items: center;
-  min-width: 1.5rem;
-  padding: 0.15rem 0.35rem;
+  /* Every key the same square, whatever is printed on it - an arrow is a
+     wider glyph than a letter, so letting them size to content made the rows
+     ragged. */
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
   font-family: inherit;
   font-size: 0.72rem;
   font-weight: 700;
