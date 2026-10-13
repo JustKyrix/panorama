@@ -120,23 +120,15 @@
     overlay = document.createElement("div");
     overlay.className = "tspot";
     overlay.hidden = true;
+    // No button in the screen corner. Each kind puts its own on the corner of
+    // the thing it opened, which is where people look for it.
     overlay.innerHTML =
-      '<div class="tspot__stage"></div>' +
-      '<button class="tspot__close" type="button" ' +
-      'aria-label="Schließen">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-      'stroke-width="2.6" stroke-linecap="round" aria-hidden="true">' +
-      '<path d="M6 6l12 12M18 6L6 18"/></svg>' +
-      "</button>" +
-      '<p class="tspot__hint"></p>';
+      '<div class="tspot__stage"></div>' + '<p class="tspot__hint"></p>';
     document.body.appendChild(overlay);
 
     overlay.addEventListener("pointerdown", function (e) {
       if (e.target === overlay) closeSpot();
     });
-    overlay
-      .querySelector(".tspot__close")
-      .addEventListener("click", closeSpot);
 
     return overlay;
   }
@@ -221,8 +213,17 @@
     } else {
       stage.innerHTML =
         '<img class="tspot__sheet" src="' + spot.src + '" alt="' +
-        spot.label + '">';
+        spot.label + '">' +
+        '<button class="tsheet__close" type="button" ' +
+        'aria-label="Schließen">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="2.6" stroke-linecap="round" aria-hidden="true">' +
+      '<path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        "</button>";
       holdable(stage.querySelector(".tspot__sheet"));
+      stage
+        .querySelector(".tsheet__close")
+        .addEventListener("click", closeSpot);
       box.querySelector(".tspot__hint").textContent =
         "Ziehen zum Drehen · Mausrad zum Zoomen · Esc schließt";
     }

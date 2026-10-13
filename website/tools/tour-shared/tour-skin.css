@@ -1064,3 +1064,41 @@ a.tnav__item:hover {
    in der Bildschirmecke ist daneben nur ein zweiter fuer dasselbe. Beim
    Plakat bleibt er: dort gibt es sonst keinen sichtbaren Weg hinaus. */
 .tspot--card .tspot__close { display: none; }
+
+/* Der Schliessen-Knopf in der Bildschirmecke ist weg - beide Arten tragen
+   ihren eigenen auf der Ecke dessen, was sie geoeffnet haben. */
+.tspot__close { display: none !important; }
+
+/* Auf der Ecke des Plakats. Sitzt auf der Buehne, nicht auf dem Blatt: das
+   Blatt dreht sich beim Ziehen, der Knopf soll stehen bleiben. */
+.tspot__stage { position: relative; }
+
+.tsheet__close {
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  color: #fff;
+  background-color: var(--ui-accent);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(12, 23, 48, 0.5);
+  cursor: pointer;
+  transition: background-color 180ms var(--ui-ease),
+              box-shadow 180ms var(--ui-ease);
+}
+
+.tsheet__close:hover {
+  background-color: #2a4784;
+  box-shadow: 0 8px 22px rgba(12, 23, 48, 0.65);
+}
+
+.tsheet__close svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  display: block;
+}
