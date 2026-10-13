@@ -113,10 +113,13 @@
     {
       scene: "Drucker",
       kind: "info",
-      yaw: -0.5027,
-      pitch: 0.188,
-      // Widened: the ring sat just inside the cabinet's left edge and base.
-      width: 333,
+      // Re-measured with the cabinet centred on screen: the anchor was
+      // 0.0245 rad left of its true middle, so the ring was offset as well as
+      // small. Bounds yaw -0.661..-0.296, pitch -0.009..0.371, plus a margin
+      // so it sits just outside the casing.
+      yaw: -0.4782,
+      pitch: 0.1811,
+      width: 385,
       height: 400,
       src: "../images/strahlbox.jpg",
       label: "Dampfstrahler",
