@@ -660,16 +660,10 @@ a.tnav__item:hover {
   max-height: 86vh;
   border-radius: 6px;
   box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
-  cursor: grab;
-  touch-action: none;
+  /* Just shown - it does not turn and does not zoom, so it should not invite
+     a grab either. */
   user-select: none;
   -webkit-user-drag: none;
-  transition: transform 160ms var(--ui-ease);
-}
-
-.tspot__sheet.is-held {
-  cursor: grabbing;
-  transition: none;
 }
 
 .tspot__close {
@@ -823,7 +817,6 @@ a.tnav__item:hover {
   .tmark { animation: none; }
   .tspot,
   .tspot__stage,
-  .tspot__sheet,
   .tkeys { transition: none; animation: none; }
 }
 

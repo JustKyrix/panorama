@@ -7,8 +7,8 @@
  *  Two things the Marzipano Tool has no notion of:
  *
  *  1. A marker lying ON the Erste-Hilfe poster that opens the poster full
- *     size, with a backdrop, growing out of the spot it sits on, and holdable
- *     like a sheet of paper.
+ *     size, with a backdrop, growing out of the spot it sits on. It is
+ *     then simply shown - it cannot be turned or zoomed.
  *  2. Keyboard control, and a panel that says what the keys are.
  *
  *  Both need the viewer and the scene list, which index.js keeps inside an
@@ -159,53 +159,6 @@
     return overlay;
   }
 
-  /**
-   * Hold it like a sheet of paper: dragging turns it in space, the wheel
-   * brings it closer. Pointer events, so a finger works the same as a mouse.
-   */
-  function holdable(sheet) {
-    var rx = 0, ry = 0, scale = 1, dragging = false, lastX = 0, lastY = 0;
-
-    function apply() {
-      sheet.style.transform =
-        "perspective(1400px) rotateX(" + rx + "deg) rotateY(" + ry +
-        "deg) scale(" + scale + ")";
-    }
-
-    sheet.addEventListener("pointerdown", function (e) {
-      dragging = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      try { sheet.setPointerCapture(e.pointerId); } catch (err) {}
-      sheet.classList.add("is-held");
-    });
-
-    sheet.addEventListener("pointermove", function (e) {
-      if (!dragging) return;
-      ry += (e.clientX - lastX) * 0.4;
-      rx -= (e.clientY - lastY) * 0.4;
-      rx = Math.max(-80, Math.min(80, rx));
-      lastX = e.clientX;
-      lastY = e.clientY;
-      apply();
-    });
-
-    ["pointerup", "pointercancel"].forEach(function (type) {
-      sheet.addEventListener(type, function () {
-        dragging = false;
-        sheet.classList.remove("is-held");
-      });
-    });
-
-    sheet.addEventListener("wheel", function (e) {
-      e.preventDefault();
-      scale = Math.max(0.4, Math.min(4, scale * (e.deltaY < 0 ? 1.12 : 0.89)));
-      apply();
-    }, { passive: false });
-
-    apply();
-  }
-
   function openSpot(spot, fromEl) {
     var box = buildOverlay();
     var stage = box.querySelector(".tspot__stage");
@@ -246,12 +199,11 @@
       'stroke-width="2.6" stroke-linecap="round" aria-hidden="true">' +
       '<path d="M6 6l12 12M18 6L6 18"/></svg>' +
         "</button>";
-      holdable(stage.querySelector(".tspot__sheet"));
       stage
         .querySelector(".tsheet__close")
         .addEventListener("click", closeSpot);
       box.querySelector(".tspot__hint").textContent =
-        "Ziehen zum Drehen · Mausrad zum Zoomen · Esc schließt";
+        "Esc schließt";
     }
 
     // Grow out of the marker: the first frame is placed and scaled onto the
